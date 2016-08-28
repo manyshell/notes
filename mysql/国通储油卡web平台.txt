@@ -1,0 +1,13 @@
+目标主机：192.168.0.240
+
+1、进入mysql
+mysql --user=root --password="vmnode0mysql"
+
+2、创建数据库
+CREATE DATABASE IF NOT EXISTS GtCardWeb DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+
+3、创建用户
+CREATE USER 'GtCardWeb'@'%';
+
+4、为用户授权数据库
+GRANT ALL PRIVILEGES ON GtCardWeb.* TO 'GtCardWeb'@'%'WITH GRANT OPTION;

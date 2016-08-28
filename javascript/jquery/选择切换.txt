@@ -1,0 +1,17 @@
+	$(".mynavs p").click(function(){
+        if ($(this).hasClass("b_ff00") == false) {
+            $(".mynavs p").removeClass("b_ff00");
+            $(this).addClass("b_ff00");
+            $(".home_nav>div").hide().eq($(this).parent().index()).show();
+        }
+	})
+
+    $(".mynavs li").click(function(){
+        $(".mynavs li p").removeClass("b_ff00").eq($(this).index()).addClass("b_ff00");
+        $(".home_nav>div").hide().eq($(this).index()).show();
+    });
+
+    $(".mynavs li").click(function(){
+        $(this).children().addClass("b_ff00").parent().siblings().children().removeClass("b_ff00");
+        $(".home_nav>div").hide().eq($(this).index()).show();
+    });

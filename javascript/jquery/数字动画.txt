@@ -1,0 +1,15 @@
+    function showMoney(n,m) {
+        if (n > m) {
+            n=m;
+        }
+        $("#all_money").text(n);
+        if (n < m) {
+            n += 3;
+            var moneyTime = setTimeout(function() {
+                showMoney(n,m);
+            },10);
+        }
+    }
+    showMoney(0,all_money);
+
+数字从n增长到m，动画效果，不停的增长

@@ -1,0 +1,44 @@
+客户端建立私钥和公钥
+
+1、客户端
+D:\>ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (//.ssh/id_rsa): d:\id_rsa                      //存放路径及私钥文件名
+Enter passphrase (empty for no passphrase):                                         //加密字符串：123456
+Enter same passphrase again:                                                        //确认加密字符串：123456
+Your identification has been saved in d:\id_rsa.                                    //得到私钥：d:\id_rsa
+Your public key has been saved in d:\id_rsa.pub.                                    //得到公钥：d:\id_rsa.pub
+The key fingerprint is:
+1f:ea:ff:84:5f:b0:15:7b:2d:07:a8:61:96:56:bb:9f Administrator@TTT-DEV
+The key's randomart image is:
++--[ RSA 2048]----+
+|            .    |
+|           o o   |
+|          * o o  |
+|         + o . +.|
+|        S o o + +|
+|         o o = = |
+|        . o o E  |
+|       .   o .   |
+|        ....o    |
++-----------------+
+
+2、服务端
+------
+vim /etc/ssh/sshd_config
+
+RSAAuthentication yes 
+PubkeyAuthentication yes 
+
+AuthorizedKeysFile      .ssh/authorized_keys
+------
+
+把客户端生成的[id_rsa.pub]上传至[~/.ssh], 更名为  authorized_keys
+如果使用putty登录，则使用[puttygen.exe]，选择客户端生成的[id_rsa]，另存为新的私钥[id_rsa.ppk]
+
+
+
+
+
+
+

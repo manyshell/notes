@@ -1,0 +1,12 @@
+<script>
+    function factorial(num) {
+        if (num <= 1) {
+            return 1;
+        } else {
+            return num * arguments.callee(num - 1);
+        }
+    }
+
+factorial(6) = 6*5*4*3*2*1
+factorial(3) = 3*2*1 = 6
+</script>

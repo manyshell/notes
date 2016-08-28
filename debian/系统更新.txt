@@ -1,0 +1,16 @@
+正常的更新命令：
+apt-get update
+apt-get upgrade
+
+但如果是首次使用，很多时候都会出现源太老，或被地址屏蔽等情况。
+更新源/etc/apt/sources.list
+
+而在更新源时，又会遇到公钥等问题
+W: GPG error: http://mirrors.163.com trusty-backports InRelease: 
+The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 40976EAF437D05B5 NO_PUBKEY 3B4FE6ACC0B21F32
+W: There is no public key available for the following key IDs:
+3B4FE6ACC0B21F32
+
+手动添加这些KEY，就可以排除问题，出现的key ID就放到下面两条命令中去执行即可。
+gpg --keyserver pgp.mit.edu --recv-keys 3B4FE6ACC0B21F32
+gpg -a --export 3B4FE6ACC0B21F32 | apt-key add -

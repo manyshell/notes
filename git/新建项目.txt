@@ -1,0 +1,58 @@
+---创建以系统系统帐号为git帐号的项目---\
+1、创建仓库
+仓库只能存放代码，不能做任何操作
+例如：
+在/acs目录下，建tianmao.git项目，实际上tianmao.git是一个代码仓库的目录
+git --bare init /acs/tianmao.git
+
+2、使用仓库
+ssh://root@121.199.167.234/acs/tianmao.git
+主机ip:         121.199.167.234
+系统帐户:       root(所以使用时应输入root的系统密码)
+git绝对地址:    /acs/tianmao.git
+远程拉取:       git clone ssh://root@121.199.167.234/acs/tianmao.git /obj
+本地拉取:       git clone /acs/tianmao.git /obj
+---创建以系统系统帐号为git帐号的项目---/
+
+
+
+
+
+mkdir GTCardWXPlatform
+cd GTCardWXPlatform
+git init
+touch README.md
+git add README.md
+git commit -m "the new project"
+git remote add origin git@worksource.com:GT/GTCardWXPlatform.git
+git push -u origin master
+
+
+
+Command line instructions
+
+---
+Git global setup
+---
+git config --global user.name "hzg"
+git config --global user.email "hzg@qq.com"
+
+---
+Create a new repository
+---
+mkdir SaleReadcard
+cd SaleReadcard
+git init
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin git@worksource.com:GT/SaleReadcard.git
+git push -u origin master
+
+---
+Push an existing Git repository
+---
+cd existing_git_repo
+git remote add origin git@worksource.com:GT/SaleReadcard.git
+git push -u origin master
+

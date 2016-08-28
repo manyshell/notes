@@ -1,0 +1,41 @@
+<style>
+        .sweet-alert.cylons {
+            background-color: #fff;
+            font-family: '宋体';
+            padding: 0px;
+            border-radius: 8px;
+            text-align: center;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            margin-left: -256px;
+            margin-top: -200px;
+            overflow: hidden;
+            display: none;
+            z-index: 99999;
+        }
+        .sweet-alert.cylons h2 {
+            color: #575757;
+            font-size: 30px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: none;
+            position: relative;
+            margin: 0px 0;
+            padding: 0;
+            line-height: 50px;
+            display: block;
+        }
+        .sweet-alert[data-has-confirm-button=false][data-has-cancel-button=false] {
+            padding-bottom: 10px;
+        }
+</style>
+
+swal({   title: '加载失败',   timer: 2000,   showConfirmButton: false });
+
+swal({
+	title: "<span style='font-size:22px;'>加载中</span>",
+	html: true,
+	showConfirmButton: false,
+	customClass: 'cylons'
+});

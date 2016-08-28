@@ -1,0 +1,162 @@
+天猫充值码      tian mao charge cost code
+tianmaoccc.guotongshiyou.com
+
+//---本地centos---\
+mkdir /mnt/code/maomao
+cd /mnt/code/maomao
+git --bare init /mnt/code/maomao                //初始化服务端仓库
+ssh://root@192.168.1.145/mnt/code/maomao
+//---本地centos---/
+
+//---git指定用户---\
+groupadd developers
+useradd -G developers -d /home/hzg -m -s /bin/bash hzg
+passwd hzg                                      //密码::hzg123456
+mkdir ~/maomao
+cd ~/maomao
+git --bare init
+hzg@192.168.1.145:/home/hzg/maomao
+http://192.168.1.145:/home/hzg/maomao
+
+https://github.com/vic317yeh/One-Click-to-Be-Pro.git
+git@github.com:vic317yeh/One-Click-to-Be-Pro.git
+git remote add origin git@localhost:/home/hzg/maomao
+
+git clone ~/maomao
+
+touch README.md
+git add README.md
+git commit -m "the Tian Mao charge cost code project"
+git remote add origin git@localhost:~/maomao
+git push -u origin master
+
+
+
+git --bare init maomao.git
+chown -R hzg:developers maomao.git
+git clone git@192.168.1.145:/root/maomao.git
+
+//---git指定用户---/
+
+
+//---天猫Tae---\
+http://wower.hz.taeapp.com
+
+git --bare init /acs/tianmao.git
+
+ssh://root@121.199.167.234/acs/tianmao.git
+
+git clone /acs/tianmao.git /acs/15844/code
+git pull origin "factory"
+
+/acs/15844/code/
+/acs/15844/code/public
+
+121.199.167.234::root::Gtali0node
+
+autoPull.sh
+#!/bin/bash
+
+while true  
+do  
+    cd /web/tmall
+    git pull origin "factory"
+    sleep 20s
+done
+
+Fatal error: Class 'Composer\Autoload\ClassLoader' not found in C:\wamp\www\Wkayet_project\PFESymfony2\vendor\composer\autoload_real.php on line 23
+http://stackoverflow.com/questions/33258557/how-to-handle-this-error-on-wampserver-class-composer-autoload-classloader-no
+
+tail -f /var/log/nginx/access.log
+tail -f /var/log/nginx/error.log
+//---天猫Tae---/
+
+
+git init
+touch README.md
+git add README.md
+git commit -m "the Tian Mao charge cost code project"
+git remote add origin git@192.168.1.145:mao.git
+#git push -u origin master
+git branch test_v1.0
+git checkout test_v1.0
+
+
+
+mkdir /web/tianmaoccc.guotongshiyou.com
+cd /web/tianmaoccc.guotongshiyou.com
+git init
+touch README.md
+git add README.md
+git commit -m "the Tian Mao charge cost code project"
+git remote add origin git@192.168.1.145:GTTianmao.git
+git remote add origin ssh://localhost/web/tianmaoccc.guotongshiyou.com/.git
+#git push -u origin master
+git branch test_v1.0
+git checkout test_v1.0
+
+vi /usr/local/nginx/conf/vhosts/tianmaoccc.guotongshiyou.conf
+server {
+    listen           80;
+    server_name      tianmaoccc.guotongshiyou.com; 
+    index            index.html index.htm index.php;
+    root            /web/tianmaoccc.guotongshiyou.com/public;
+    
+    location / {
+        index  index.html index.htm index.php;
+        if (!-e $request_filename) {
+             rewrite ^.*$ /index.php last;
+        }
+    }
+   
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+     
+    location ~ .*\.(php|php5)?$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  /web/tianmaoccc.guotongshiyou.com/public/$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+    access_log logs/tianmaoccc.guotongshiyou.com-access.log;
+    error_log  logs/tianmaoccc.guotongshiyou.com-error.log;
+}
+
+/usr/local/nginx/sbin/nginx -s reload
+
+
+
+
+mkdir tianmaoccc.guotongshiyou.com
+cd tianmaoccc.guotongshiyou.com
+git init
+touch README.md
+git add README.md
+git commit -m "the Tian Mao charge cost code project"
+git remote add origin git@192.168.1.145:GTTianmao.git
+git push -u origin master
+
+
+
+git branch test_v1.0
+
+
+ssh://wechatplt.guotongshiyou.com/~/gitreps/wxplt/
+ssh://192.168.1.145/mnt/code/tianmaoccc.guotongshiyou.com/.git
+
+ssh://tianmaoccc.guotongshiyou.com/web/tianmaoccc.guotongshiyou.com/.git
+
+
+
+/usr/local/nginx
+
+/usr/local/nginx/conf/vhosts/tianmaoccc.guotongshiyou.conf
+
+
+
+
+
+docker cp 15844:/acs/code/vendor/composer/autoload_real.php /acs/15844/log
+

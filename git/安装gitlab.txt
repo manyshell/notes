@@ -1,0 +1,44 @@
+安装GIT的web管理平台
+centos7 - gitlab-ce-8.6.6 - 仅支持64位操作系统
+
+gitlab官方
+https://about.gitlab.com
+https://about.gitlab.com/downloads
+
+gitlab国内镜像
+https://mirror.tuna.tsinghua.edu.cn/help/gitlab-ce/
+
+最新的rpm位于
+https://packages.gitlab.com/gitlab/gitlab-ce/
+
+手动安装gitlab-ce-8.6.6-ce.0.el7.x86_64.rpm(253M-已下载)
+curl -LJO https://packages.gitlab.com/gitlab/gitlab-ce/el/7/x86_64/gitlab-ce-8.6.6-ce.0.el7.x86_64.rpm
+rpm -i gitlab-ce-8.6.6-ce.0.el7.x86_64.rpm
+
+gitlab: Thank you for installing GitLab!
+感谢您安装gitlab
+gitlab: To configure and start GitLab, RUN THE FOLLOWING COMMAND:
+配置后就可以启动你的gitlab了
+
+gitlab-ctl reconfigure
+执行初始化配置
+
+gitlab: GitLab should be reachable at http://localhost
+gitlab: Otherwise configure GitLab for your system by editing /etc/gitlab/gitlab.rb file
+gitlab: And running reconfigure again.
+gitlab: 
+gitlab: For a comprehensive list of configuration options please see the Omnibus GitLab readme
+gitlab: https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md
+gitlab: 
+It looks like GitLab has not been configured yet; skipping the upgrade script.
+
+gitlab发送邮件：
+经测试，gitlab不需要做任何修改，只要postfix配置好就可以了
+
+访问http://localhost or http://主机ip地址
+首次进入时，要求设置管理员密码，然后就可以登录了
+root::11111111
+
+安装了gitlab，自带了redis
+/opt/gitlab/embedded/bin/redis-server &
+

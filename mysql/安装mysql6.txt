@@ -1,0 +1,66 @@
+安装mysql6时，可能会遇到libtool版本太低而无法安装的情况
+2、安装mysql6，当前版本为 mysql-server-6.0.11
+cd /usr/ports/databases/mysql60-server
+make install clean
+#安装完成后，安装程序自动新建了“MYSQL”的用户和组
+#Added group "mysql".
+#Added user "mysql".
+3、在rc.conf中增加mysql_enable="YES"，然后reboot重启一下
+4、为MySQL创建超级用户
+/usr/local/bin/mysqladmin -u root password "dj_3f8z97#"
+5、测试MySQL是否可以正常工作
+mysql --user=root --password="dj_3f8z97#"
+6、完成
+
+
+/usr/local/bin/mysql_client_test_embedded
+/usr/local/bin/mysqltest_embedded
+/usr/local/libexec/mysqld
+ 
+      This port has installed the following startup scripts which may cause
+      these network services to be started at boot time.
+/usr/local/etc/rc.d/mysql-server
+ 
+      If there are vulnerabilities in these programs there may be a security
+      risk to the system. FreeBSD makes no guarantee about the security of
+      ports included in the Ports Collection. Please type 'make deinstall'
+      to deinstall the port if this is a concern.
+ 
+      For more information, and contact details about the security
+      status of this software, see the following webpage: 
+http://www.mysql.com/
+===>  Cleaning for mysql-client-6.0.11
+===>  Cleaning for mysql-server-6.0.11
+
+　　freebsd# cd /usr/ports/devel/libtool22/
+
+　　freebsd# make install clean
+
+　　freebsd# cd /usr/ports/devel/libltdl22
+
+　　freebsd# make install clean
+
+
+
+　　感觉FreeBSD 6.0最方便的改进就是增加了portsnap这个很方便的升级port tree软件，以前用恼人的portupgrade做port tree升级的时候总是感觉有点缺陷，方便性不够，而且做成crontab总是担心。现在FreeBSD 6.0下有了portsnap这个方便的工具，升级port tree就十分方便。
+ 
+以下就是portsnap的几种简单用法：
+第一次使用可以：portsnap fetch extract 
+以后使用只要：portsnap fetch update 
+放在cron里运行：portsnap cron
+ 
+以下对比是portgrade的麻烦几步：
+/usr/ports/sysutils/portgrade/make install clean 
+/usr/ports/net/cvsup/cvsup-without-gui/make install clean 
+vi ports-supfile 
+cvsup -g -L 2 ports-supfile 
+portsdb -Uu 
+pkgdb -F 
+portupgrade -acCv
+
+　　portsnap的服务器列表配置文件在/etc/portsnap.conf只要修改SERVERNAME=这个选项可以用离你最近的portsnap服务器。
+
+　　portsnap真的十分方便，用FreeBSD 6.0的朋友们都用portsnap来升级port tree吧，一起丢弃麻烦的portupgrade。 
+
+
+

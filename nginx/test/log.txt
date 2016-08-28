@@ -1,0 +1,10 @@
+2015/11/23 07:00:51 [notice] 32065#0: *72063 "^.*$" matches "/admin/login", client: 10.143.34.27, server: mapi.wx.jaeapp.com, request: "GET /admin/login HTTP/1.1", host: "mapi.wx.jaeapp.com"
+2015/11/23 07:00:51 [notice] 32065#0: *72063 rewritten data: "/index.php", args: "", client: 10.143.34.27, server: mapi.wx.jaeapp.com, request: "GET /admin/login HTTP/1.1", host: "mapi.wx.jaeapp.com"
+2015/11/23 07:00:51 [notice] 32065#0: *72063 "^.*$" matches "/admin/checkcode", client: 10.143.34.27, server: mapi.wx.jaeapp.com, request: "GET /admin/checkcode HTTP/1.1", host: "mapi.wx.jaeapp.com", referrer: "http://mapi.wx.jaeapp.com/admin/login"
+2015/11/23 07:00:51 [notice] 32065#0: *72063 rewritten data: "/index.php", args: "", client: 10.143.34.27, server: mapi.wx.jaeapp.com, request: "GET /admin/checkcode HTTP/1.1", host: "mapi.wx.jaeapp.com", referrer: "http://mapi.wx.jaeapp.com/admin/login"
+
+
+FastCGI sent in stderr: "Primary script unknown" while reading response header from upstream, client: 10.143.34.27, server: mapi.wx.jaeapp.com, request: "GET /admin/checkcode HTTP/1.1", upstream: "fastcgi://127.0.0.1:9000", host: "mapi.wx.jaeapp.com"
+错误原因：
+fastcgi_param  SCRIPT_FILENAME  /ace/code/GtMallApi/public/$fastcgi_script_name;
+脚本指向错误

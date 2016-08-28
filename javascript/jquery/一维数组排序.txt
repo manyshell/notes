@@ -1,0 +1,26 @@
+<script>
+    function sortNumber(a,b) {
+        return a - b
+    }
+
+	var myArr = [5,"2",3,8,1];
+	myArr.sort(sortNumber);
+	console.log(myArr);
+</script>
+
+排序前：
+0: 5
+1: "2"
+2: 3
+3: 8
+4: 1
+
+排序后：
+0: 1
+1: "2"
+2: 3
+3: 5
+4: 8
+可以看出，javascript的排序是从小到大(ASC方式)。
+如果要实现从大到小(DESC方式)，待排序完成后，使用reverse()函数即可。
+myArr.reverse();

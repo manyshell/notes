@@ -1,0 +1,66 @@
+<div id='swap_window'></div>
+//---关闭对话框的标题---\
+<style>
+.my-dialog .ui-dialog-titlebar-close {
+	display: none;
+}
+.ui-widget-header {
+	display: none;
+}
+</style>
+//---关闭对话框的标题---/
+
+//---对话框自定义样式---\
+<style>
+.ui-widget-header {
+	color: #fff;
+	font-weight: bold;
+	background:url(...) repeat-x 0 -75px;
+}
+.ui-widget-content {
+	background: #efefef;
+}
+</style>
+//---对话框自定义样式---/
+
+
+
+
+//---最基本的对话框---\
+<script>
+$.fx.speeds._default = 800;
+var html = "...";
+$('#swap_window').dialog({
+	modal: true,
+	autoOpen: false,
+	title: 'title'
+});
+$('#swap_window').dialog('option', 'width', 100);
+$('#swap_window').dialog('option', 'height', 100);
+$('#swap_window').html(html);
+$('#swap_window').dialog('open');
+</script>
+//---最基本的对话框---/
+
+$('#swap_window').dialog({
+	dialogClass: 'my-dialog',			//自定义对话框样式
+	closeOnEscape: false,				//是否可通过ESC键关闭对话框
+	modal: true,					//模式层，对话框后面被遮盖
+	resizable: false,				//是否可改变对话框的尺寸
+	draggable: false,				//是否可拖动对话框
+	show: {effect: 'blind', duration: 2000},	//对话框特效，动画时间
+	autoOpen: false,				//不自动打开
+	title: 'title'					//标题
+});
+
+effect:特效
+blind		从上到下
+bounce		上下跳动
+clip		从下到上
+drop		
+explode		
+fade		
+fold		
+
+
+$('#swap_window').dialog('close');	//关闭对话框

@@ -1,0 +1,130 @@
+用ANDROID-X86和VIRTUALBOX打造高性能ANDROID开发环境
+http://www.android-x86.org/
+1、操作系统
+linux 2.6及以上
+
+2、网络
+选择桥接方式，bridged adapter，实现有独立ip
+
+3、声音
+如果你想有声音的话需要在声音设置面板将控制芯片设置为soundblaser 16
+
+4、创建分区
+new->Primary->默认整个硬盘全分给主分区->Bootable->write->quit
+选择第一项（已创建的分区）
+选择ext3
+选择好格式后系统会再跟你确认一遍，输入yes安装就会开始了
+安装中途会询问你是否安装Grub,这里一定要选择YES,因为我们后需要Grub来自定义启动Android
+grub2 选择的否
+安装Grub的时候会询问你是否将/system目录安装为读写模式
+
+5、鼠标
+在Android系统中使用鼠标的时候需要设置Virtual Box禁止自动鼠标独占，否则鼠标在Android中无法正常使用
+
+6、修改分辨率
+"D:\Oracle\VirtualBox\VBoxManage.exe"
+setextradata   为虚拟机设置变量
+    "D:\Oracle\VirtualBox\VBoxManage.exe" setextradata "android-x86" "CustomVideoMode1" "480x800x16"
+getextradata   获取虚拟机设置的变量
+    "D:\Oracle\VirtualBox\VBoxManage.exe" getextradata "android-x86" "CustomVideoMode1"
+
+A、为虚拟系统添加分辨率，命令行执行：
+"D:\Oracle\VirtualBox\VBoxManage.exe" setextradata "android-x86" "CustomVideoMode1" "480x800x16"
+"D:\Oracle\VirtualBox\VBoxManage.exe" setextradata "android-x86" "CustomVideoMode2" "1920x1080x16"
+B、修改android-x86的启动参数
+启动x86
+选择Debug mode，感觉启动后没反应了，按下Enter，则会进入可操作界面
+vi /mnt/grub/menu.lst
+
+title Android-x86 5.1-rc1 1480x800
+    kernel /android-5.1-rc1/kernel quiet root=/dev/ram0 androidboot.hardware=android_x86 SRC=/android-5.1-rc1 UVESA_MODE=1920x1080
+    initrd /android-5.1-rc1/initrd.img
+编辑完后，保存退出，exit，exit。本次启动后不会被启用，重启后则生效。
+注意内核kernel后面的，这两个需setextradata里有这个值才会生效。
+UVESA_MODE=480x800
+UVESA_MODE=1920x1080
+常用分辨率：
+"320x480x16"
+"640x960x16"
+"480x720x16"
+
+7、固定IP
+在虚拟机里打开终端命令窗口，
+只有要调试模式下才有权限修改
+进入调试模式
+调试模式下的文件位置
+vi /android/system/etc/init.sh
+
+正常模式下的文件位置
+vi /etc/init.sh
+原来：
+init|"")
+    do_init
+    ;;
+esac
+现在：
+init|"")
+    do_init
+    ifconfig eth0 down
+    ifconfig eth0 192.168.0.155 netmask 255.255.255.0 up
+    route add default gw 192.168.0.1 dev eth0
+    setprop net.dns1 192.168.0.1
+    ;;
+esac
+
+保存，退出，重启，就有静态ip了
+---------------------------------------------------
+查看ip
+ip a
+netcfg
+可以看到网卡eth0的状态
+
+
+网上的资料中，有两种设置ip的方法：
+A、动态分配dhcp
+su root
+dhcpcd
+ifconfig eth0 up
+setprop net.dns1 192.168.0.1
+
+B、手动设置
+su root
+ifconfig eth0 down
+ifconfig eth0 192.168.0.155 netmask 255.255.255.0 up
+route add default gw 192.168.0.1 dev eth0
+setprop net.dns1 192.168.0.1
+
+删除ip及别名ip
+ip addr del 192.168.0.104/24 dev eth0
+
+adb shell
+su
+dhcpcd -k eth0                –> Release
+dhcpcd -n eth0                –> Renew
+
+
+/proc/sys/net/ipv4/
+/data/misc/ethernet
+/data/misc/dhcp
+
+console
+service netd /system/bin/netd
+
+setprop net.eth0.dns1 192.168.0.1
+getprop |grep dns
+ifconfig eth0
+ip route show
+vi /etc/init.sh
+setprop net.dns1 8.8.8.8
+
+modprobe netconsole netconsole="@/,@$(getprop dhcp.eth0.gateway)"
+/rc.android_x86.rc
+service dhcpcd_eth0 /system/bin/dhcpcd -ABDKL
+    class main
+    disabled
+    oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot

@@ -1,0 +1,32 @@
+访问目标：http://adash.m.taobao.com/rest/sur
+
+1、写系统host
+127.0.0.1   adash.m.taobao.com
+
+2、配置xampp
+找到D:\xampp\apache\conf\extra\httpd-xampp.conf
+在原有的FilesMatch后面，增加
+#---\
+<FilesMatch "^sur$">
+    ForceType application/x-httpd-php
+</FilesMatch>
+#---/
+
+3、配置vhost
+找到D:\xampp\apache\conf\extra\httpd-vhosts.conf
+#---\
+<VirtualHost *:80>
+    ServerAdmin webmaster@dummy-host2.example.com
+    DocumentRoot "D:\xampp\htdocs\dash"
+    ServerName adash.m.taobao.com
+    ServerAlias m-adash.m.taobao.com
+</VirtualHost>
+#---/
+
+4、创建php文件
+D:\xampp\htdocs\dash\rest\sur
+<?php
+echo "hello world!";
+?>
+
+完成

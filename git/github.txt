@@ -1,0 +1,11 @@
+1、在github创建帐号
+username:           master-disguise
+email:              cyevo_b2ls@mail.com
+
+2、创建组织(Create an organization)
+Organization name:  disguiser-000
+Billing email:      cyevo_b2ls@mail.com
+
+
+
+

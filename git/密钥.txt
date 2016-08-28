@@ -1,0 +1,13 @@
+生存密钥：
+$ ssh-keygen -t rsa -C “haiyan.xu.vip@gmail.com”
+按3个回车，密码为空。
+
+Your identification has been saved in /home/tekkub/.ssh/id_rsa.
+Your public key has been saved in /home/tekkub/.ssh/id_rsa.pub.
+The key fingerprint is:
+………………
+
+最后得到了两个文件：id_rsa和id_rsa.pub
+
+3.添加密钥到ssh：ssh-add 文件名
+需要之前输入密码。

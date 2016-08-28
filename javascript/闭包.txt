@@ -1,0 +1,42 @@
+javascript closure
+example 1:
+<script>
+var add = (function() {
+    var counter = 0;
+    return function() {return counter += 1;}
+})();
+console.log(add()); //1
+console.log(add()); //2
+console.log(add()); //3
+</script>
+这是一个闭包，调用内部变量，变量被记录在内存中，所以返回的变量没有被清零。
+
+example 2:
+<script>
+function getPageNo(){
+    var counter = 0;
+    addPageNo = function() {
+        counter += 1;
+        return counter;
+    };
+    return function() {
+        return counter;
+    }
+}
+
+var result = getPageNo();
+result();       //0
+addPageNo();    //1 调用函数内部的全局变量
+result();       //1
+</script>
+
+当函数没有初始化时，闭包函数是不能执行的，意思是
+正确的执行顺序：
+var result = getPageNo();
+addPageNo();
+
+错误的执行顺序：
+addPageNo();
+var result = getPageNo();
+执行后会收到一个错误提示：
+Uncaught ReferenceError: addPageNo is not defined

@@ -1,0 +1,103 @@
+yum -y install docker-engine
+运行环境
+CentOS 7.2
+Docker 1.10.3
+GitLab 8.0.5
+安装 Docker
+Docker 要求的最低内核版本为 3.10 , 查看系统的内核版本
+# uname -r
+3.10.0-229.el7.x86_64
+创建 YUM 源配置文件
+tee /etc/yum.repos.d/docker.repo <<-EOF
+[Docker]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+EOF
+更新 YUM 缓存
+yum clean all
+yum makecache
+安装 Docker
+yum -y install docker-engine
+Docker 默认工作目录是 /var/lib/docker
+修改启动脚本, 将工作目录设置为 /data/docker
+sed -i 's#daemon#daemon -g /data/docker#g' /usr/lib/systemd/system/docker.service
+创建工作目录
+mkdir -p /data/docker
+启动 Docker 服务
+systemctl daemon-reload
+systemctl start docker
+设置 Docker 服务开机自动启动
+systemctl enable docker
+查看 Docker 版本
+# docker version
+Client:
+ Version:      1.10.3
+ API version:  1.22
+ Go version:   go1.5.3
+ Git commit:   20f81dd
+ Built:        Thu Mar 10 15:39:25 2016
+ OS/Arch:      linux/amd64
+
+Server:
+ Version:      1.10.3
+ API version:  1.22
+ Go version:   go1.5.3
+ Git commit:   20f81dd
+ Built:        Thu Mar 10 15:39:25 2016
+ OS/Arch:      linux/amd64
+Docker 官方镜像列表
+https://hub.docker.com/explore/
+部署 GitLab
+获取 GitLab 镜像
+docker pull gitlab/gitlab-ce:8.0.5-ce.0
+查看本地镜像
+# docker images 
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+gitlab/gitlab-ce    8.0.5-ce.0          bc8948b5d071        5 months ago        1.268 GB
+创建目录
+mkdir -p /data/gitlab/{config,data,logs}
+创建并运行容器
+docker run --detach \
+       --hostname git.taxkiz.com \
+       --publish 80:80 \
+       --name gitlab-8.0.5 \
+       --restart always \
+       --volume /data/gitlab/config:/etc/gitlab \
+       --volume /data/gitlab/logs:/var/log/gitlab \
+       --volume /data/gitlab/data:/var/opt/gitlab \
+       gitlab/gitlab-ce:8.0.5-ce.0
+查看运行状态
+docker ps
+netstat -ntulap | grep docker
+访问 GitLab
+http://git.taxkiz.com/
+如果没有域名，直接使用 IP 访问即可。
+初始账户
+用户: root
+密码: 5iveL!fe
+首次登陆需要修改密码，这里暂时将密码设置为: passwdok
+参考文档
+GitLab Docker images
+到此，在 CentOS 7 上使用 Docker 部署安装 GitLab 完成。
+最后由 bubble 编辑 3天之前
+安装教程5 docker1 2
+帖子  1.1k
+浏览  登录后回复
+ bubble
+ 0  
+bubble gitlab汉化小组 5天之前 
+写的很详细，这下有docker的gitlab安装教程了。~
+GitLab中文网 http://www.gitlab.cc
+
+安装教程5 docker1 2
+帖子  1.1k
+浏览  登录后回复
+ 
+
+
+ One of the configured repositories failed (gitlab_gitlab-ce-source),
+ and yum doesn't have enough cached data to continue. At this point the only
+ safe thing yum can do is fail. There are a few ways to work "fix" this:

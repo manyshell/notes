@@ -1,0 +1,23 @@
+实现一个域名或一个IP下，部署两个Laravel系统
+
+目录结构：
+ROOT(网站根目录)    http://www.cyevo.com
+├── app1
+｜    └── public
+｜          └── index.php
+├── app2
+      └── public
+            └── index.php
+
+访问方式：
+http://www.cyevo.com/app1
+    http://www.cyevo.com/app1/admin/login
+
+http://www.cyevo.com/app2
+    http://www.cyevo.com/app2/admin/login
+
+实现原理：
+根据来源地址进行判断，执行重定向操作。
+app1，app2为虚拟目录
+当访问http://www.cyevo.com/app1时，实为访问/app1/public/index.php
+本配置的重点在request_uri

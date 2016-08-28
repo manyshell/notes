@@ -1,0 +1,111 @@
+操作系统：centos7
+
+//---mysql---\
+mysql官网：http://dev.mysql.com/downloads/mysql/
+Download MySQL Community Server
+    Select Platform:        Source Code
+
+Generic Linux (Architecture Independent), Compressed TAR Archive
+Includes Boost Headers	5.7.12	57.8M	
+Download (mysql-boost-5.7.12.tar.gz)
+http://cdn.mysql.com/Downloads/MySQL-5.7/mysql-boost-5.7.12.tar.gz
+//---mysql---/
+
+//---cmake---\
+http://www.cmake.org/cmake/resources/software.html
+https://cmake.org/files/v3.5/cmake-3.5.2.tar.gz
+//---cmake---/
+
+
+
+一、准备工作
+安装mysql5.7需要gcc,gcc-c++,ncurses-devel,boost,cmake,automake autoconf libtool make, 
+yum install -y automake autoconf libtool make bison gcc gcc-c++ ncurses-devel
+
+#编译安装cmake的原因，主要是yum里的cmake版本太低[yum install cmake]
+wget https://cmake.org/files/v3.5/cmake-3.5.2.tar.gz
+tar -zxvf cmake-3.5.2.tar.gz
+cd cmake-3.5.2
+./configure
+make && make install
+
+//---安装了也没有用，还是需要下载---\
+如果要自动下载，还要安装git~~
+yum install -y boost boost-devel boost-doc
+#通过whereis boost可得到boost库的安装位置，记住这个目录，安装mysql时会用到，[/usr/include/boost]
+wget http://ncu.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz
+tar -zxvf boost_1_59_0.tar.gz
+//---安装了也没有用，还是需要下载---/
+
+二、安装mysql
+1、创建组和用户(为mysql建组和用户，这一步必不可少)
+groupadd -r mysql && useradd -r -g mysql -s /bin/false -M mysql
+2、下载安装包
+wget http://cdn.mysql.com/Downloads/MySQL-5.7/mysql-boost-5.7.12.tar.gz
+tar -zxvf mysql-boost-5.7.12.tar.gz && cd mysql-5.7.12
+
+3、预编译
+Mysql安装目录:      /usr/local/mysql
+Mysql数据目录：     /usr/local/mysql/data
+Mysql配置文件目录： /etc
+BOOST库目录：       /usr/local/boost
+//安装了git的安装方式，可自动下载boost
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR==/usr/local/mysql/data -DDOWNLOAD_BOOST=1 -DWITH_BOOST=/usr/local/boost -DSYSCONFDIR=/etc -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_EMBEDDED_SERVER=1
+//未安装git的安装方式
+cd /root
+wget http://ncu.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz
+tar -zxvf boost_1_59_0.tar.gz
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR==/usr/local/mysql/data -DWITH_BOOST=/root -DSYSCONFDIR=/etc -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_EMBEDDED_SERVER=1
+
+4、编译安装
+make && make install && make clean
+
+5、配置
+cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
+vi /etc/my.cnf
+---my.cnf---\
+[mysqld]
+datadir=/usr/local/mysql/data
+socket=/tmp/mysql.sock
+ 
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+ 
+# Recommended in standard MySQL setup
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES 
+ 
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+---my.cnf---/
+
+6、初始化系统数据表
+/usr/local/mysql/bin/mysqld --initialize-insecure --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data
+-–initialize 会生成一个随机密码(保存在~/.mysql_secret)
+--initial-insecure，则会创建空密码的 root@localhost 账号，否则会创建带密码的 root@localhost 账号，密码直接写在 log-error 日志文件中
+
+7、创建mysql管理命令
+cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+
+8、启动mysql
+/etc/init.d/mysql start
+
+------------------------------------
+出错列表：
+1、Starting MySQL. ERROR! The server quit without updating PID file (/root/mysql-5.7.12/=/usr/local/mysql/data/d1d0a7bf3b87.pid).
+该错误是由于未配置my.cnf造成的，配置好就可以成功
+
+2、Starting MySQL. ERROR! The server quit without updating PID file (/usr/local/data/mysql/d1d0a7bf3b87.pid).
+该错误是/usr/local/data/mysql/目录根本不存在造成的，修改my.cnf中的datadir=/usr/local/mysql/data就可解决
+
+3、预编译时自动下载boost可能会出现下载不正确的情况
+解决办法为手动下载，解压处理
+
+查看组权限
+ll /usr/local/mysql/
+drwxr-x---.  5 mysql mysql  4096 May  4 02:09 data
+
+chown -R mysql:mysql /usr/local/mysql/data
+chmod 755 /usr/local/mysql/data
+
+2016-05-04T05:24:05.132891Z 1 [Warning] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.

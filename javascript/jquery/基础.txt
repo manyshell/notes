@@ -1,0 +1,18 @@
+$('#obj').css('display','none');	//隐藏
+$('#obj').css('display','block');	//取消隐藏
+$('#obj').css('display','inline');
+
+if ($('#obj').attr('checked') == 'checked') { }	//目标是否被选择
+if ($('#obj').attr('checked') == undefined) { }	//目标是否被定义，这里的未定义没有加引号
+新版jquery改为：
+$("#loop_type").prop("checked")		true|false
+
+$('#obj').attr('checked', true);
+$('#obj').attr('checked', false);
+
+
+if ($("p").is(":hidden")) {
+    $("p").show();
+} else {
+    $("p").hide();
+}

@@ -1,0 +1,17 @@
+问题描述：
+1、allowOutsideClick: false
+2、正常情况下，当sweetalert，禁止在sweetalert以外的地方触发关闭事件。
+3、但以很快的速度点击触发按纽时，allowOutsideClick会短时间失效，会出现sweetalert多次打开关闭。
+希望的效果，不论多快的速度点击按纽，sweetaler显示，界外不允许点击，只能点关闭按纽才能关闭。
+
+处理办法：
+1、修改原加载sweetalert.min.js，改为新加载sweetalert-dev.js
+
+2、修改sweetalert-master\dist\sweetalert-dev.js    [第148行]
+修改前：
+  // Clicking outside the modal dismisses it (if allowed by user)
+  _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getOverlay().onclick = onButtonEvent;
+
+修改后：
+  // Clicking outside the modal dismisses it (if allowed by user)
+  _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getOverlay().onclick = false;

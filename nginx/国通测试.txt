@@ -1,0 +1,28 @@
+/usr/local/nginx/conf/vhosts/GTmall.test.conf
+/usr/local/nginx/conf/vhosts/GTcard.test.conf
+
+nginx:
+192.168.0.240:8001    GTmall.test 8001
+192.168.0.240:8000    GTcard.test 8000
+
+mysql:
+GTmalltest
+GTcardtest
+GTmallAPI_test
+GTcard_test
+
+
+
+mysql --user=root --password="vmnode0mysql"
+
+CREATE DATABASE GTmalltest
+
+CREATE DATABASE IF NOT EXISTS GTmalltest DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS GTcardtest DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+
+mysql -h 192.168.0.240 -P 3306 --database=GTmalltest -u root --password=vmnode0mysql < /root/gtmalltest.sql
+
+grant all privileges on GTMallCard.* to 'GTMallCard'@'%' identified 'GTMallCard';
+
+grant all privileges on GTmalltest.* to 'GTmalltest'@'%' identified 'GTmalltest';
+grant all privileges on GTcardtest.* to 'GTcardtest'@'%' identified 'GTcardtest';

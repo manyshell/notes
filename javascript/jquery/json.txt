@@ -1,0 +1,5 @@
+转为字符串
+JSON.stringify(arr)
+
+转为JSON
+JSON.parse(XMLHttpRequest.responseText);

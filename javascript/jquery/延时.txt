@@ -1,0 +1,6 @@
+var delayTime;
+delayTime = setTimeout(function() {
+	...
+}, 1000);
+
+1000µÈÓÚ1Ãë

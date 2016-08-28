@@ -1,0 +1,23 @@
+---重启---\
+/usr/local/nginx/sbin/nginx -s reload
+
+---重启---/
+
+停止nginx -s stop
+重启nginx -c nginx.conf
+
+//---192.168.1.146---\
+vi /usr/local/php/etc/php-fpm.conf
+php-fpm 关闭：  
+kill -SIGINT `cat /usr/local/php/var/run/php-fpm.pid`
+php-fpm 重启：  
+kill -SIGUSR2 `cat /usr/local/php/var/run/php-fpm.pid`
+启动
+php-fpm
+
+如果总是提示失败，检查防火墙是否开启，应关闭
+service iptables stop
+
+nginx -c /usr/local/nginx/conf/nginx.conf
+/home/wwwroot/default/
+//---192.168.1.146---/

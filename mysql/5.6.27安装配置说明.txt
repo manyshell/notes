@@ -1,0 +1,31 @@
+cmake \
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql  \              [MySQL安装的根目录]
+-DMYSQL_DATADIR=/mydata/mysql/data  \                   [MySQL数据库文件存放目录]
+-DSYSCONFDIR=/etc \                                     [MySQL配置文件所在目录]
+-DMYSQL_USER=mysql \                                    [MySQL用户名]      
+-DWITH_MYISAM_STORAGE_ENGINE=1 \                        [MySQL的数据库引擎]
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \                      [MySQL的数据库引擎]
+-DWITH_ARCHIVE_STORAGE_ENGINE=1 \                       [MySQL的数据库引擎]
+-DWITH_MEMORY_STORAGE_ENGINE=1 \                        [MySQL的数据库引擎]
+-DWITH_READLINE=1 \                                     [MySQL的readline library]
+-DMYSQL_UNIX_ADDR=/var/run/mysql/mysql.sock \           [MySQL的通讯目录]
+-DMYSQL_TCP_PORT=3306 \                                 [MySQL的监听端口]
+-DENABLED_LOCAL_INFILE=1 \                              [启用加载本地数据]
+-DENABLE_DOWNLOADS=1 \                                  [编译时允许自主下载相关文件]
+-DWITH_PARTITION_STORAGE_ENGINE=1  \
+-DEXTRA_CHARSETS=all \                                  [使MySQL支持所有的扩展字符]
+-DDEFAULT_CHARSET=utf8 \                                [设置默认字符集为utf8]
+-DDEFAULT_COLLATION=utf8_general_ci \                   [设置默认字符校对]
+-DWITH_DEBUG=0 \                                        [禁用调试模式]
+-DMYSQL_MAINTAINER_MODE=0 \
+-DWITH_SSL:STRING=bundled \                             [通讯时支持ssl协议]
+-DWITH_ZLIB:STRING=bundled                              [允许使用zlib library]
+
+---查看mysqld读取my.cnf的顺序---\
+mysqld --verbose --help --pid-file=/var/run/mysqld/mysqld.pid | grep -A 1 "Default options" 
+---查看mysqld读取my.cnf的顺序---/
+
+---初始化mysql数据库---\
+./scripts/mysql_install_db --user=mysql --datadir=/data/mysqldb 
+./scripts/mysql_install_db --user=mysql --datadir=/data/mysqldb 
+---初始化mysql数据库---/

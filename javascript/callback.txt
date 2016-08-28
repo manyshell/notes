@@ -1,0 +1,44 @@
+---callback 嵌套函数------\
+function test_callback(jsonObj) {
+    console.log(jsonObj.text);
+    jsonObj.fun(jsonObj.text);
+}
+
+test_callback({
+    "text": "1234567890_12345",
+    "fun": function (c) {
+        function d(e) {
+            var f = e.split("_");
+            return f[1];
+        };
+        var g = d(c);
+        console.log(g);
+    }
+});
+输出结果：
+1234567890_12345
+test:55 12345
+---callback 嵌套函数------/
+
+---callback json带函数------\
+function test_callback(jsonObj, aaa) {
+    console.log(jsonObj.text);
+    jsonObj.fun(jsonObj.text);
+}
+
+test_callback({
+    "text": "123456789012345",
+    "fun": function (c) {
+        console.log("cc:" + c);
+        if (/^[0-9]{15}$/.test(c)) {
+            console.log("通过检测");
+        } else {
+            console.log("检测失败");
+        }
+    }
+});
+输出结果：
+123456789012345
+test:50 cc:123456789012345
+test:52 通过检测
+---callback json带函数------/

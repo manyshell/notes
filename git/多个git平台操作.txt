@@ -1,0 +1,19 @@
+1、常规拉取或推送至目标1平台，至分支1
+
+2、切换目标2的分支2，拉取目标2
+
+3、将分支1合并(Merge)至分支至分支2，点击Merge，选中(branch)分支1
+
+4、将分支2推送(push)到目标2平台
+
+Ref
+Remote：    stage
+
+Destination
+Remote      wechatplt
+
+5、登录目标2服务器，到指定目录
+git pull origin "stage"
+
+
+

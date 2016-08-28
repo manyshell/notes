@@ -1,0 +1,37 @@
+server {
+    listen 80;
+    server_name xxx.xxx.xxx.xxx;
+
+    root /opt/myproject;
+
+    access_log /var/log/myproject/nginx_access.log;
+    error_log /var/log/myproject/nginx_error.log;
+
+    proxy_connect_timeout 300s;
+    proxy_read_timeout 300s;
+
+    location /newproject {
+        root /var/www;
+        index index.php index.html index.htm;
+        rewrite ^/newproject/(.*)$ /newproject/$1 break;
+        try_files $uri $uri/ /newproject/index.php?q=$uri&$args;
+
+        location ~ .*\.php$ {
+            include /etc/nginx/fastcgi_params;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        }
+    }
+
+    location / {
+        root /opt/myproject/;
+        proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        if (!-f $request_filename) {
+            proxy_pass http://xxx.xxx.xxxx.xxx:5000;
+            break;
+        }
+    }
+}

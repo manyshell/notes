@@ -1,0 +1,77 @@
+---进入Mysql---\
+192.168.0.240
+mysql --user=root --password="vmnode0mysql"
+mysql --user=root --password="gt#4329i^abc"
+
+mysql --user=root --password
+---进入Mysql---/
+
+---查看mysql用户---\
+数据库: mysql
+use mysql;
+SELECT user,host FROM `user`;
+---查看mysql用户---/
+
+---创建用户---\
+Host:   本地用户    localhost
+        任意主机    %
+CREATE USER 'hzg'@'%';
+CREATE USER 'GTmalltest'@'%';
+CREATE USER 'GtMallApi'@'%';
+---创建用户---/
+
+---修改管理员密码---\
+
+/usr/local/src/mysql/bin/mysqladmin -u root password "gt#4329i^abc"
+
+---修改管理员密码---/
+
+---修改用户密码---\
+use mysql;
+UPDATE user SET password=PASSWORD("new password") WHERE user='username';
+UPDATE user SET password=PASSWORD("GtMallApi") WHERE user='GtMallApi';
+FLUSH PRIVILEGES;
+quit;
+---修改用户密码---/
+
+---授权某个数据库，并拥有全部权限---\
+GRANT ALL PRIVILEGES ON `[数据库名]`.* TO '[用户名]'@'[Host]'WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON `forge`.* TO 'hzg'@'%'WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON `GTmalltest`.* TO 'GTmalltest'@'%'WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON `GtMallApi`.* TO 'GtMallApi'@'%'WITH GRANT OPTION;
+---授权某个数据库，并拥有全部权限---/
+
+---删除用户---\
+DROP USER '[数据库用户名]'@'[数据库Host]';
+DROP USER 'hzg'@'%';
+DROP USER 'GtCardApp'@'GtCardApp';
+---删除用户---/
+
+---查看数据库---\
+show databases;
+---查看数据库---/
+
+---选择数据库---\
+use databases;
+---选择数据库---/
+
+---查看表---\
+show tables;
+---查看表---/
+
+---查看数据库版本---\
+select version();
+---查看数据库版本---/
+
+---清空表---\
+TRUNCATE [table name]
+
+example:
+TRUNCATE gt_users;
+TRUNCATE gt_verify_code_users;
+---清空表---/
+
+
+
+
+

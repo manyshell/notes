@@ -1,0 +1,14 @@
+1、打开gitlab，选中git项目
+2、进入Commits栏目，选中子项Branches
+3、New branch，创建新分支
+Name for new branch:    新分支名称
+Create from：           新分支基于某个分支
+例如我创建了一个新分支develop_v1.3，但我想基于develop_v1.2，那么
+Name for new branch:    develop_v1.3
+Create from：           develop_v1.2
+现在，新分支就创建在v1.2的基础之上了
+
+
+
+
+

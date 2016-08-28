@@ -1,0 +1,26 @@
+前言：
+有人说要先增加一个组和用户，其实如果使用ports安装，会自动建立的。
+Added group "mysql".
+Added user "mysql".
+---------------------------------------------------------------
+1、安装mysql数据库，当前装的是mysql5.1，用ports安装只需装server，client和scripts会自动装上
+cd /usr/ports/databases/mysql51-server
+make install clean
+2、在rc.conf中增加mysql_enable="YES"，然后reboot重启一下
+3、为MySQL创建超级用户
+/usr/local/bin/mysqladmin -u root password "cj780707"
+4、测试MySQL是否可以正常工作
+mysql --user=root --password="cj780707"
+#mysql --user=root --password="cj-_-780707"
+5、完成
+-----------------------------------------------------------
+????????????
+#make WITH_CHARSET=gbk WITH_XCHARSET=all WITH_PROC_SCOPE_PTH=yes BUILD_OPTIMIZED=yes BUILD_STATIC=yes SKIP_DNS_CHECK=yes WITHOUT_INNODB=yes install clean 
+#cp /usr/local/share/mysql/my-small.cnf /etc/my.cnf 
+????????????
+
+
+select * from w_cs_gbr where gbrId='11111';
+delete from w_cs_gbr where gbrId<'829177' and gbrId>'800000';
+827283
+826160

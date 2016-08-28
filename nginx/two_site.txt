@@ -1,0 +1,88 @@
+user  www;
+worker_processes  2;
+
+
+events {
+    use epoll;
+    worker_connections  5120;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    server_names_hash_bucket_size 128;
+
+    root    /ace/code;
+
+    sendfile        on;
+
+    server_tokens off;
+
+    keepalive_timeout  65;
+
+    server {
+        listen          8080;
+        server_name     mapi.wx.jaeapp.com;
+        index           index.html index.htm index.php;
+
+        try_files $uri $uri/ =404;
+
+        location / {
+            index  index.html index.htm index.php;
+            if (!-e $request_filename) {
+                 rewrite ^.*$ /index.php last;
+            }
+        }
+
+#        location /api/ {
+#            index index.php;
+#            alias /ace/code/GtMallApi/public/;
+#            try_files $uri $uri/ /GtMallApi/public/index.php?$query_string;
+#        }
+
+
+#        location ~ ^/api/.*\.php$ {
+#            root /ace/code/GtMallApi/public;
+#            rewrite /api/(.*\.php) /$1 break;
+#            fastcgi_pass   127.0.0.1:9000;
+#            fastcgi_index  index.php;
+#            fastcgi_param  SCRIPT_FILENAME  /ace/code/GtMallApi/public/$fastcgi_script_name;
+#            include        fastcgi_params;
+#        }
+
+        location /card {
+                index index.php index.html;
+                alias /ace/code/GtMallCard/public;
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ ^/card/index\.php$ {
+            root /ace/code/GtMallCard/public;
+            rewrite /card/(.*\.php) /$1 break;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  /ace/code/GtMallCard/public/$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+
+
+
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        location ~ .*\.(php|php5)?$ {
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+
+
+    }
+}
+

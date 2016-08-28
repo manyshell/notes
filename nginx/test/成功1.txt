@@ -1,0 +1,67 @@
+user  www;
+worker_processes  2;
+
+
+events {
+    use epoll;
+    worker_connections  5120;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    server_names_hash_bucket_size 128;
+
+    sendfile        on;
+
+    server_tokens off;
+
+    keepalive_timeout  65;
+
+    server {
+        listen          8080;
+        server_name     mapi.wx.jaeapp.com;
+        root            /ace/code/GtMall1/public;
+
+        access_log /ace/log/access.log;
+        error_log  /ace/log/error.log error;
+
+        location / {
+            index       index.php;
+            try_files   $uri $uri/ /index.php?$query_string;
+        }
+
+        location /app1 {
+            root        /ace/code/GtMall1/public;
+            rewrite     ^/app1/(.*)$ /$1 break;
+            index       index.php;
+            try_files   $uri $uri/ /index.php?$query_string;
+        }
+        location ~ /app1/.+\.php$ {
+            root            /ace/code/GtMall1/public;
+            rewrite         ^/app1/(.*)$ /$1 break;
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index   index.php;
+            fastcgi_param   SCRIPT_FILENAME /ace/code/GtMall1/public/index.php;
+            include         fastcgi_params;
+            break;
+        }
+
+        location ~ .*\.(php|php5)?$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            include fastcgi_params;
+            set $laravel_uri $request_uri;
+            if ($laravel_uri ~ app(\d*)(/?.*)$) {
+                set $laravel_uri $2;
+            }
+            fastcgi_param REQUEST_URI $laravel_uri;
+            fastcgi_param LARA_ENV local; # Environment variable for Laravel
+            fastcgi_param  SCRIPT_FILENAME /ace/code/GtMall1/public/$fastcgi_script_name;
+        }
+    }
+}
+

@@ -1,0 +1,10 @@
+项目目录下的
+.gif\config
+文件尾部增加：
+
+[credential]
+	helper = store
+[user]
+	name = hzg@qq.com
+[user]
+	email = hzg@qq.com

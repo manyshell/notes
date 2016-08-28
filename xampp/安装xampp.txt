@@ -1,0 +1,17 @@
+xampp官网
+https://www.apachefriends.org/
+
+xampp v3.2.2 for php5.6.19
+https://www.apachefriends.org/xampp-files/5.6.19/xampp-win32-5.6.19-0-VC11-installer.exe
+
+如果是WIN7，要关闭UAC(User Account Control)是帐户控制才可以继续安装xampp。
+
+关闭UAC的方法：
+1、运行->gpedit.msc
+2、“计算机配置”-“Windows 配置”-“安全设置”-“本地策略”-“安全选项”。
+3、找到"用户帐户控制: 管理审批模式下管理员的提升提示行为"->修改为“不提示，直接提升”后确定
+
+下载composer
+https://getcomposer.org/Composer-Setup.exe
+
+

@@ -1,0 +1,7 @@
+        var playType = '';
+        $("li[id^='p']").each(function(){
+            if ($(this).hasClass('click')) {
+                playType = $(this).attr('id');
+            }
+        });
+

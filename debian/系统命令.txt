@@ -1,0 +1,28 @@
+debian系统
+
+---查看操作系统---\
+cat /etc/issue
+---查看操作系统---/
+
+---更新---\
+apt-get update
+apt-get upgrade
+如果更新失败，可以考虑更换源
+---更新---/
+
+apt-cache search all                            //显示程序源所有可以安装的程序
+apt-cache search freetype                       //搜索程序源中有没有指定的程序
+dpkg --get-selections|grep install|grep jpeg    //显示已安装的程序，并根据条件筛选
+
+vim         debian里的vim就是常用的vi
+wget        下载
+net-tools   ifconfig, netstat
+有时候用了-y会提示出错
+apt-get install vim                     //编辑器
+apt-get install wget                    //下载命令
+apt-get install net-tools               //网络命令，含ifconfig、netstat等
+apt-get install git                     //代码仓库
+
+apt-get install libfreetype6-dev        //如果要安装GD，需要在系统中先安装freetype库
+apt-get install libjpeg-dev             //如果要安装GD，需要在系统中先安装jpeg库
+apt-get install libpng-dev              //如果要安装GD，需要在系统中先安装png库

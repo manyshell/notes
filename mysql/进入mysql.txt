@@ -1,0 +1,9 @@
+
+---进入Mysql---\
+mysql --user=root --password="vmnode0mysql"
+---进入Mysql---/
+
+
+ALTER TABLE `tm_gas_station` ADD `id_prov` INT(11) NOT NULL DEFAULT '0' AFTER `fix_prov`;ALTER TABLE `tm_gas_station` ADD `id_city` INT(11) NOT NULL DEFAULT '0' AFTER `fix_city`;ALTER TABLE `tm_gas_station` ADD `id_dist` INT(11) NOT NULL DEFAULT '0' AFTER `fix_dist`;
+
+

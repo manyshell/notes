@@ -1,0 +1,27 @@
+目标文件：
+/xampp/apache/conf/extra/httpd-ssl.conf
+
+文件位置：[找到121行]
+
+修改前：
+<VirtualHost _default_:443>
+
+#   General setup for the virtual host
+DocumentRoot "D:/xampp/htdocs"
+ServerName www.example.com:443
+ServerAdmin admin@example.com
+ErrorLog "D:/xampp/apache/logs/error.log"
+TransferLog "D:/xampp/apache/logs/access.log"
+
+修改后：
+<VirtualHost _default_:443>
+
+#   General setup for the virtual host
+DocumentRoot "D:/xampp/htdocs"
+ServerName localhost:443                            //这里可以是域名，可以是ip
+ServerAdmin admin@example.com
+ErrorLog "D:/xampp/apache/logs/error.log"
+TransferLog "D:/xampp/apache/logs/access.log"
+
+访问地址：
+https://192.168.1.32/

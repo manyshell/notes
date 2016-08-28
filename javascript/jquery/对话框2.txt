@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="grey"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="csrf-token" content=""/>
+    <title>系统后台</title>
+
+    <link rel="stylesheet" href="/components/normalize-css/normalize.css" />
+    <link rel="stylesheet" href="/components/jquery-ui-1.11.4.custom/jquery-ui.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <script type="text/javascript" src="/components/requirejs/require.js"></script>
+    <script type="text/javascript" src="/requirec.js"></script>
+
+    
+</head>
+<body>
+
+    <style>
+        body{
+            font: 62.5% "Trebuchet MS", sans-serif;
+            margin: 50px;
+        }
+        .demoHeaders {
+            margin-top: 2em;
+        }
+        #dialog-link {
+            padding: .4em 1em .4em 20px;
+            text-decoration: none;
+            position: relative;
+        }
+        #dialog-link span.ui-icon {
+            margin: 0 5px 0 0;
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            margin-top: -8px;
+        }
+        #icons {
+            margin: 0;
+            padding: 0;
+        }
+        #icons li {
+            margin: 2px;
+            position: relative;
+            padding: 4px 0;
+            cursor: pointer;
+            float: left;
+            list-style: none;
+        }
+        #icons span.ui-icon {
+            float: left;
+            margin: 0 4px;
+        }
+        .fakewindowcontain .ui-widget-overlay {
+            position: absolute;
+        }
+        select {
+            width: 200px;
+        }
+    </style>
+
+    <div id="dialog" title="Dialog Title">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+
+    <h2 class="demoHeaders">Dialog</h2>
+    <a href="#" id="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Open Dialog</a>
+
+
+
+
+<script type="text/javascript">
+require(['jquery','jquery-ui'], function ($) {
+
+    $( "#dialog" ).dialog({
+        autoOpen: false,
+        width: 400,
+        buttons: [
+            {
+                text: "Ok",
+                click: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            {
+                text: "Cancel",
+                click: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        ]
+    });
+
+    $( "#dialog-link" ).click(function( event ) {
+        $( "#dialog" ).dialog( "open" );
+        event.preventDefault();
+    });
+
+    $( "#dialog-link, #icons li" ).hover(
+            function() {
+                $( this ).addClass( "ui-state-hover" );
+            },
+            function() {
+                $( this ).removeClass( "ui-state-hover" );
+            }
+    );
+})
+</script>
+
+</body>
+</html>
+

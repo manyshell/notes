@@ -1,0 +1,163 @@
+在CentOS安装Git的最简单的方法是使用yum包管理。以下命令将帮助您安装的Git软件。
+
+yum install git
+按照以上的方法，往往会失败，因为yum里面根本没有git包。
+-------------------------------------------------------------------------------
+查看最新的git版本以及管理工具
+https://www.kernel.org/pub/software/scm/git/
+
+1、下载
+wget https://www.kernel.org/pub/software/scm/git/git-2.8.0.tar.gz
+wget https://www.kernel.org/pub/software/scm/git/git-2.8.1.tar.gz
+2、解压
+tar -xvf git-2.8.0.tar.gz
+tar -xvf git-2.8.1.tar.gz
+3、进入
+cd git-2.8.0
+cd git-2.8.1
+4、安装
+make configure
+./configure --prefix=/usr
+make all doc
+make install install-doc install-html
+
+
+出错：
+1、cache.h:40:18: fatal error: zlib.h: No such file or directory
+缺少 zlib的头文件， 开发包没装，
+yum install zlib （系统默认已经装上）
+yum install zlib-devel 
+
+2、make[1]: /usr/bin/perl: Command not found
+缺少 perl
+yum install perl
+
+3、Can't locate ExtUtils/MakeMaker.pm in @INC
+缺少 perl-ExtUtils
+yum install perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker
+
+4、/bin/sh: line 1: asciidoc: command not found
+yum install asciidoc
+
+5、/bin/sh: line 1: xmlto: command not found
+yum install xmlto
+
+6、/bin/sh: line 1: docbook2x-texi: command not found
+yum install -y openjade texinfo perl-XML-SAX
+
+7、/bin/sh: autoconf: command not found
+yum install autoconf
+
+
+
+安装GIT的web管理平台
+https://about.gitlab.com/
+https://about.gitlab.com/downloads/#centos6
+
+1、为了提高软件安装速度，将yum源设置为阿里云开源镜像
+如果做过，可以跳过
+$ cd /etc/yum.repos.d
+$ wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
+
+2、必要软件包
+$ yum -y install libicu-devel patch gcc-c++ readline-devel zlib-devel libffi-devel openssl-devel make autoconf automake libtool bison libxml2-devel libxslt-devel libyaml-devel zlib-devel openssl-devel cpio expat-devel gettext-devel curl-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker
+
+3、安装Ruby环境
+
+$ mkdir /tmp/ruby && cd /tmp/ruby
+$ curl --progress ftp://ftp.ruby-lang.org/pub/ruby/ruby-2.1.5.tar.gz | tar xz
+$ cd ruby-2.1.5
+$ ./configure --disable-install-rdoc
+$ make && make install
+
+$ ln -s /usr/local/bin/ruby /usr/bin/ruby
+$ ln -s /usr/local/bin/gem /usr/bin/gem
+$ ln -s /usr/local/bin/bundle /usr/bin/bundle
+
+// 设置ruby gem源为淘宝
+$ gem source -r https://rubygems.org/
+$ gem source -a https://ruby.taobao.org/
+gem sources -l  查看当前gem
+$ gem install bundler --no-ri --no-rdoc
+
+4、添加git帐号并允许sudo
+$ useradd --comment 'GitLab' git
+$ echo "git ALL=(ALL)       NOPASSWD: ALL" >>/etc/sudoers
+
+5、登录mysql创建gitab的帐号和数据库
+root::123456
+gitlab::gitlab
+
+mysql> CREATE USER 'gitlab'@'localhost' IDENTIFIED BY 'gitlab';
+mysql> CREATE DATABASE IF NOT EXISTS `gitlabhq_production` DEFAULT CHARACTER SET `utf8` COLLATE `utf8_unicode_ci`;
+mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON `gitlabhq_production`.* TO 'gitlab'@'localhost';
+
+//测试是否可以用git帐号登录数据库
+sudo -u git -H mysql -u gitlab -p -D gitlabhq_production
+
+6、安装GitLab
+su git
+$ /home/git
+$ sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-ce.git -b 7-8-stable gitlab
+$ cd /home/git/gitlab
+$ sudo -u git -H cp config/gitlab.yml.example config/gitlab.yml
+
+// 编辑git路径, gitlab的host:port
+$ vi config/gitlab.yml
+// bin_path: /usr/local/bin/git
+// host: localhost
+// port: 80 
+
+// 给文件夹添加相应的权限
+$ chown -R git log/
+$ chown -R git tmp/
+$ chmod -R u+rwX  log/
+$ chmod -R u+rwX  tmp/
+
+// 创建必要的文件夹，以及复制配置文件
+$ sudo -u git -H mkdir /home/git/gitlab-satellites
+$ sudo -u git -H mkdir tmp/pids/
+$ sudo -u git -H mkdir tmp/sockets/
+$ sudo chmod -R u+rwX  tmp/pids/
+$ sudo chmod -R u+rwX  tmp/sockets/
+$ sudo -u git -H mkdir public/uploads   //已存在
+$ sudo chmod -R u+rwX  public/uploads   //已存在
+$ sudo -u git -H cp config/unicorn.rb.example config/unicorn.rb
+$ sudo -u git -H cp config/initializers/rack_attack.rb.example config/initializers/rack_attack.rb
+
+// 配置数据库连接信息
+$ sudo -u git cp config/database.yml.mysql config/database.yml
+$ sudo -u git -H vim  config/database.yml
+$ vim config/database.yml
+// production:
+//     username: gitlab
+//     password: "gitlab"
+
+7、安装GitLab-Shell
+
+$ cd /home/git
+$ sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-shell.git -b v2.6.0
+$ cd gitlab-shell/
+$ sudo -u git -H cp config.yml.example config.yml
+
+// 编辑配置文件, 设置gitlab_url, redis-cli, log-level...
+$ vi config.yml
+// gitlab_url: "http://localhost/"
+// /usr/bin/redis-cli
+
+// 安装git-shell
+$ sudo -u git -H ./bin/install
+
+8、安装需要ruby的gems
+$ cd /home/git/gitlab
+$ sudo -u git -H bundle install --deployment --without development test postgres aws
+
+
+初始化数据库(创建GitLab相关表)
+bundle exec rake gitlab:env:info RAILS_ENV=production
+$ sudo -u git -H bundle exec rake gitlab:setup RAILS_ENV=production
+
+bundle config mirror.RubyGems.org https://ruby.taobao.org
+
+curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+sudo yum install gitlab-ce

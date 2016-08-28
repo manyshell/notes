@@ -1,0 +1,26 @@
+1、导出整个数据库
+mysqldump -u 用户名 -p 数据库名 > 导出的文件名
+手动输入密码
+mysqldump -u jinmayi -p kaixin > kaixin_db.mysql
+mysqldump -u jinmayi -p xcrj_test > xcrj_test.mysql
+2、
+导入一：
+mysql -u root -p		手动输密码
+mysql -uroot -pdj_3f8z97#	自动输密码
+mysql>use 数据库
+use kaixin;
+mysql>source d:\wcnc_db.sql
+source /usr/home/hzg/kaixin_db.mysql
+
+192.168.0.240
+Lotteryweb_wx
+Lotteryweb_wx
+Lotteryweb_wx
+
+mysql -h 192.168.0.240 -u Lotteryweb_wx -p Lotteryweb_wx;
+mysqldump -h 192.168.0.240 -u Lotteryweb_wx -p Lotteryweb_wx > Lotteryweb_wx
+
+导入二：
+mysql -h 192.168.0.240 -P 3306 --database=GTCP -u root --password=vmnode0mysql < ./sql.sql
+
+mysqldump -u GTmallAPI -p GTmallAPI > GTmallAPI.mysql
