@@ -1,0 +1,6 @@
+use DB;
+use \Illuminate\Support\Facades\DB;
+
+DB::connection()->enableQueryLog();
+var_dump(DB::getQueryLog());
+

@@ -1,0 +1,43 @@
+将超时设置为600秒
+composer config -g process-timeout 600
+composer config -g process-timeout 1000
+
+root@4594d8f529eb:/var/www/html/test/laravel-master# composer config --list
+Running composer as root/super user is highly discouraged as packages, plugins and scripts cannot always be trusted
+[repositories.packagist.type] composer
+[repositories.packagist.url] https?://packagist.org
+[repositories.packagist.allow_ssl_downgrade] true
+[process-timeout] 300
+[use-include-path] false
+[preferred-install] dist
+[notify-on-install] true
+[github-protocols] [https, ssh]
+[vendor-dir] vendor (/var/www/html/test/laravel-master/vendor)
+[bin-dir] {$vendor-dir}/bin (/var/www/html/test/laravel-master/vendor/bin)
+[cache-dir] /root/.composer/cache
+[data-dir] /root/.composer
+[cache-files-dir] {$cache-dir}/files (/root/.composer/cache/files)
+[cache-repo-dir] {$cache-dir}/repo (/root/.composer/cache/repo)
+[cache-vcs-dir] {$cache-dir}/vcs (/root/.composer/cache/vcs)
+[cache-ttl] 15552000
+[cache-files-ttl] 15552000
+[cache-files-maxsize] 300MiB (314572800)
+[bin-compat] auto
+[discard-changes] false
+[autoloader-suffix] 
+[sort-packages] false
+[optimize-autoloader] false
+[classmap-authoritative] false
+[prepend-autoloader] true
+[github-domains] [github.com]
+[bitbucket-expose-hostname] true
+[disable-tls] false
+[secure-http] true
+[cafile] 
+[capath] 
+[github-expose-hostname] true
+[gitlab-domains] [gitlab.com]
+[store-auths] prompt
+[archive-format] tar
+[archive-dir] .
+[home] /root/.composer

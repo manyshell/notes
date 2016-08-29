@@ -1,0 +1,129 @@
+目标：
+搭建mysql主从读写分离环境
+master:     192.168.1.150
+slave:      192.168.1.160
+
+一、创建虚拟IP
+cd /etc/sysconfig/network-scripts
+
+1、master
+cp ifcfg-enp0s3 ifcfg-enp0s3:0
+
+---编辑ifcfg-enp0s3:0---\
+vi ifcfg-enp0s3:0
+TYPE="Ethernet"
+BOOTPROTO="none"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+NAME="enp0s3:0"                                     //修改
+UUID="2c6d19ed-e0b6-47b2-a00f-ec50dda1a126"
+DEVICE="enp0s3:0"                                   //修改
+ONBOOT="yes"
+IPADDR="192.168.1.150"                              //修改
+PREFIX="24"
+GATEWAY="192.168.1.1"
+DNS1="61.128.128.68"
+IPV6_PEERDNS="yes"
+IPV6_PEERROUTES="yes"
+IPV6_PRIVACY="no"
+---编辑ifcfg-enp0s3:0---/
+
+2、slave
+cp ifcfg-enp0s3 ifcfg-enp0s3:1
+
+---编辑ifcfg-enp0s3:1---\
+vi ifcfg-enp0s3:1
+TYPE="Ethernet"
+BOOTPROTO="none"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+NAME="enp0s3:0"                                     //修改
+UUID="2c6d19ed-e0b6-47b2-a00f-ec50dda1a126"
+DEVICE="enp0s3:0"                                   //修改
+ONBOOT="yes"
+IPADDR="192.168.1.160"                              //修改
+PREFIX="24"
+GATEWAY="192.168.1.1"
+DNS1="61.128.128.68"
+IPV6_PEERDNS="yes"
+IPV6_PEERROUTES="yes"
+IPV6_PRIVACY="no"
+---编辑ifcfg-enp0s3:1---/
+
+二、创建Docker镜像
+docker load --input mariadb.tar.gz
+版本信息：  mysql  Ver 15.1 Distrib 10.1.13-MariaDB, for debian-linux-gnu (x86_64) using readline 5.2
+
+三、主服务器
+1、初始化目录
+由于docker初始化时没有设置log的权限，故需要手动执行，否则启动会失败
+mkdir /root/masterMariaDB/log -p
+chown systemd-bus-proxy:adm /root/masterMariaDB/log
+
+2、启动mariadb_master
+docker run --name mariadb_master --privileged=true -v /root/masterMariaDB/log:/var/log/mysql -v /root/mysql_master.cnf:/etc/mysql/my.cnf -v /root/masterMariaDB/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 192.168.1.150:3306:3306 -d 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+
+如果不成功，则进入容器，手动调试
+docker run -i -t --privileged=true -v /root/masterMariaDB/log:/var/log/mysql -v /root/mysql_master.cnf:/etc/mysql/my.cnf -v /root/masterMariaDB/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 192.168.1.150:3306:3306 5kmji0bo.mirror.aliyuncs.com/library/mariadb /bin/bash
+/docker-entrypoint.sh mysqld
+
+3、授权
+grant replication slave,replication client on *.* to 'masteruser'@'192.168.1.160' identified by '123456';
+grant replication slave,replication client on *.* to 'masteruser'@'%' identified by '123456';
+用户名：        masteruser
+密码：          123456
+允许接入范围:   192.168.1.160       //如果只有一台从服务器，可以指定一个ip[192.168.1.160],如果是多台从服务器，这个值不能限制，应为所有[%]
+
+授权用户复制权限
+flush privileges;       //通知数据库重读授权库
+
+5、查看主服务器状态
+show master status;
+
+四、从服务器
+1、初始化目录
+由于docker初始化时没有设置log的权限，故需要手动执行，否则启动会失败
+mkdir /root/slave101MariaDB/log -p
+chown systemd-bus-proxy:adm /root/slave101MariaDB/log
+
+2、启动mariadb_slave101
+docker run --name mariadb_slave101 --privileged=true -v /root/slave101MariaDB/log:/var/log/mysql -v /root/mysql_slave.cnf:/etc/mysql/my.cnf -v /root/slave101MariaDB/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 192.168.1.160:3306:3306 -d 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+
+3、连接主服务器
+change master to master_host='192.168.1.150',master_user='masteruser',master_password='123456';
+
+4、启动复制线程
+start slave;
+
+5、查看从服务器状态
+show slave status;
+
+错误排查：
+1、主键冲突
+Could not execute Write_rows_v1 event on table mysql.proxies_priv; 
+Duplicate entry 'localhost-root--' for key 'PRIMARY', Error_code: 1062; 
+handler error HA_ERR_FOUND_DUPP_KEY; the event's master log mariadb-bin.000001, end_log_pos 24714
+刚把主从服务器安装，首次运行就报这个错，把主从服务器重启就完事了。
+主：
+reset master;
+show master status;
+从：
+reset slave;
+如果操作失败，则stop slave;
+start slave
+再通过[show slave status]查看运行状态
+
+2、数据库不存在
+Error 'Can't drop database 'first'; database doesn't exist' on query. Default database: 'first'. Query: 'DROP DATABASE `first`'
+主服务器删除了数据库'first'，而从服务器上没有这个数据库。
+
+
+

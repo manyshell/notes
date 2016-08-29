@@ -1,0 +1,172 @@
+
+yum install ppp pptp pptp-setup
+
+2.创建VPN连接
+设置：pptpsetup --create <vpn名称> --server <vpn服务器> --username <用户名> --password <密码> [--start] <>必填,[]可选 
+pptpsetup --create vpn --server 174.139.43.45 --username 007 --password 123
+pptpsetup --create vpn --server 106.185.25.191 --username 007 --password 123 --start
+pptpsetup --create vpn --server 174.139.43.45 --username 007 --password 123 --encrypt --start
+pptpsetup --create vpn --server 172.86.224.11 --username 007 --password 123 --encrypt --start
+
+route add -net 0.0.0.0 dev ppp0
+
+Connect: ppp0 <--> /dev/pts/1
+CHAP authentication succeeded
+MPPE 128-bit stateless compression enabled
+local  IP address 192.168.3.42
+remote IP address 192.168.3.37
+
+如果老是提示出错：MS-CHAP authentication failed
+检查/etc/ppp/chap-secrets，删掉里面的内容
+cat /etc/ppp/chap-secrets
+
+加载模块
+modprobe ppp_mppe
+
+
+3.关闭：killall pppd
+killall pppd
+systemctl restart network
+
+4.启用：pppd call <vpn名称> 
+pppd call vpn
+
+pppd connect vpn
+
+# vim /etc/ppp/peers/codelife
+
+5.修改
+ll /etc/ppp/peers
+
+
+
+(3)连接和断开
+sudo pon haha
+sudo poff
+6，断开vpn连接，只需要把网络重启就行了。
+
+[root@localhost peers]# /etc/init.d/network restart
+
+注意事项：
+
+在处理路由的时候采用client to lan方式，需要增加对方lan的路由或者目标网络的路由. 
+
+
+route -n
+# route add -net 192.168.39.0 netmask 255.255.255.0 dev ppp0
+
+ppp0是pptp连接的名字， 如果不确定 可以使用ifconfig命令查看
+ifconfig |grep ppp
+
+c.vpn启动了，不代表能连上外网，还需要查看路由：
+route -n
+         Kernel IP routing table
+         Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+         0.0.0.0         192.168.0.1     0.0.0.0         UG    1024   0        0 enp0s25
+         ......
+         192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 enp0s25
+         192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 wlp3s0
+         192.168.1.1     0.0.0.0         255.255.255.255 UH    0      0        0 ppp0
+这里需要将ppp0的路由设为：将所有对外网络都通过ppp0路由：
+route add -net 0.0.0.0 dev ppp0
+再来看路由：
+route -n
+         Kernel IP routing table
+         Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+         0.0.0.0         0.0.0.0         0.0.0.0         U     0      0        0 ppp0
+         0.0.0.0         192.168.0.1     0.0.0.0         UG    1024   0        0 enp0s25
+         ........
+         192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 enp0s25
+         192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 wlp3s0
+         192.168.1.1     0.0.0.0         255.255.255.255 UH    0      0        0 ppp0
+OK。
+
+先看看你的主机是否支持pptp，返回结果为yes就表示通过。
+modprobe ppp-compress-18 && echo yes
+
+是否开启了TUN，有的虚拟机主机需要开启，返回结果为cat: /dev/net/tun: File descriptor in bad state。就表示通过。
+cat /dev/net/tun
+
+配置pptpd.conf
+vim  /etc/pptpd.conf  
+localip 192.168.9.1
+remoteip 172.168.9.101-200
+#Localip这行是给vpn服务器设置一个隧道ip
+#Remoteip是自动分配给客户端的ip地址范围。
+
+配置options.pptpd
+vim /etc/ppp/options.pptpd      #在末尾添加dns
+#先去掉debug前面的#，开启日志记录
+ms-dns  202.96.209.5  
+ms-dns  8.8.8.8
+logfile /var/log/pptpd.log
+
+配置连接VPN客户端要用到的帐号密码。
+vim /etc/ppp/chap-secrets    #格式很通俗易懂。
+
+#client为帐号，server是pptpd服务，secret是密码，*表示是分配任意的ip
+#Secrets for authentication using CHAP
+#client     server     secret          IP addresses
+ vpn        pptpd       vpn             *
+
+配置sysctl.conf
+vi /etc/sysctl.conf
+#添加一行    net.ipv4.ip_forward = 1    
+#到末尾即可，然后保存,这个很重要,系统路由模式功能。
+sysctl -p
+#运行这个命令会输出上面添加的那一行信息，意思是使内核修改生效
+
+或者动态增加
+sysctl -w net.ipv4.ip_forward=1
+
+
+如果报以下错误：
+
+Connect: ppp0 <--> /dev/pts/3  
+CHAP authentication succeeded  
+LCP terminated by peer (MPPE required but peer refused)  
+Modem hangup  
+解决办法
+
+    # vim /etc/ppp/peers/vpn  //vpn是上面创建的连接  
+    文件尾部，加上以下内容  
+    require-mppe-128  
+如果报以下错误：
+
+Refusing MPPE stateful mode offered by peer  
+MPPE required but peer negotiation failed  
+解决方法： 
+说明服务端不支持MPPE加密，pptpsetup时不需要使用–encrypt选项。或者去掉上面的，require-mppe-128
+
+107.151.131.204
+69.28.50.196
+162.221.4.12
+184.83.7.141
+173.247.231.45
+174.139.64.86
+174.139.45.92
+172.86.224.11
+173.247.233.170
+65.255.41.84
+173.247.233.253
+174.139.94.78
+174.139.79.222
+100.43.143.228
+174.139.43.45
+173.247.231.45
+
+要让流量都全部走VPN:
+# route add -net 0.0.0.0 dev ppp0
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+192.168.0.1     0.0.0.0         255.255.255.255 UH    0      0        0 ppp0
+124.248.205.115 192.168.228.153 255.255.255.255 UGH   0      0        0 eth0
+192.168.228.0   0.0.0.0         255.255.255.0   U     0      0        0 eth0
+0.0.0.0         0.0.0.0         0.0.0.0         U     0      0        0 ppp0
+0.0.0.0         192.168.228.153 0.0.0.0         UG    0      0        0 eth0
+# tracepath www.163.com
+1:  192.168.0.200 (192.168.0.200)                          0.142ms pmtu 1500
+1:  192.168.0.1 (192.168.0.1)                             55.724ms
+
+

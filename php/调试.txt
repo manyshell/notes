@@ -1,0 +1,8 @@
+打印数组：
+$a = array();
+print_r($a);
+
+由于层层嵌套，我们经常想知道某函数是出自哪个文件：
+比如一个函数，get_string()，我想知道此函数的运行过程。
+Reflection::export(new ReflectionFunction("get_string"));
+此函数自带输出，不需要echo。

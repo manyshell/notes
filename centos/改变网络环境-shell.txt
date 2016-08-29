@@ -1,0 +1,16 @@
+#!/bin/sh
+ 
+ 
+case "$1" in
+    office)
+        yes|cp -f ~/ifcfg-enp0s3-office /etc/sysconfig/network-scripts/ifcfg-enp0s3
+        systemctl restart network 
+        ;;
+    home)
+        yes|cp -f ~/ifcfg-enp0s3-home /etc/sysconfig/network-scripts/ifcfg-enp0s3
+        systemctl restart network 
+        ;;
+    *)
+        echo "Please use office or home as first argument"
+        ;;
+esac

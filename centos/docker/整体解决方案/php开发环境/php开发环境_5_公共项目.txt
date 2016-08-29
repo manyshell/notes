@@ -1,0 +1,141 @@
+本环境是基于docker的，没有安装docker就别往下看了。
+
+案例二:
+mount -t cifs -o username=administrator,password=77 //192.168.0.32/code /mnt/code
+mount -t cifs -o username=administrator,password=77,dir_mode=0777,file_mode=0777 //192.168.0.32/code /mnt/code
+
+umount /mnt/code
+
+git clone http://192.168.1.241/GT/laravelhelper.git
+git checkout -b develop_v1.3 origin/develop_v1.3
+
+cd /mnt/code/laravelhelper
+vi composer.json
+删除前:
+        "pre-update-cmd": [
+            "php artisan clear-compiled"
+        ],
+删除后:
+        "pre-update-cmd": [
+        ],
+
+删除前:
+    "config": {
+        "preferred-install": "dist"
+    },
+    "repositories": [
+      {"type": "composer", "url": "http://packagist.phpcomposer.com"},
+      {"packagist": false}
+    ]
+删除后:
+    "config": {
+        "preferred-install": "dist"
+    }
+
+composer install
+
+win8项目目录:       d:\code\laravelhelper
+centos项目目录:     /mnt/code/laravelhelper
+mysql数据库目录：   /home/mysqldata
+
+1、准备工作
+a.确认所需的docker mirror是否存在，php, nginx, mariadb
+docker load --input mariadb.tar.gz
+docker load --input hzg_php_5.6.17-fpm.tar.gz
+docker load --input daocloud_nginx_1.9.14.tar.gz
+docker load --input redis_3.0.2.tar.gz
+
+# docker images
+REPOSITORY                                     TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+hzg/php                                        5.6.17-fpm          f7cd4bb62cf3        22 hours ago        764.3 MB
+5kmji0bo.mirror.aliyuncs.com/library/mariadb   latest              1b3805319b03        3 weeks ago         382.1 MB
+daocloud.io/library/nginx                      1.9.14              9287e6da3f65        6 weeks ago         182.6 MB
+
+b.确认数据库目录[mysqldata]是否存在
+drwxr-xr-x. 5 systemd-bus-proxy ssh_keys      4096 May  6 05:02 mysqldata
+如果mysqldata目录不存在，启动mariadb时，会自动初始化。
+
+c.确认nging配置文件[nginx-php.conf]是否存在
+查看nginx-php.conf, 注意server里面的配置。
+如果是laravel框架，重点关注32行、49行。
+
+2、维护
+php:
+docker run -i -t --privileged=true -v /mnt/code/laravelhelper:/var/www/html -p 9000:9000 hzg/php:7.0.0RC8-fpm /bin/bash
+---/etc/apt/sources.list---\
+更换新的源
+deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe
+---/etc/apt/sources.list---/
+
+---出错---\
+W: GPG error: http://mirrors.163.com trusty-backports InRelease: The following signatures couldn't be verified because the laravelhelper key is not available: NO_PUBKEY 40976EAF437D05B5 NO_PUBKEY 3B4FE6ACC0B21F32
+W: There is no laravelhelper key available for the following key IDs:
+3B4FE6ACC0B21F32
+解决办法：
+gpg --keyserver pgp.mit.edu --recv-keys 3B4FE6ACC0B21F32
+gpg -a --export 3B4FE6ACC0B21F32 | apt-key add -
+据说还可以
+apt-get install debian-archive-keyring
+apt-key update
+---出错---/
+
+apt-get update
+apt-get upgrade
+apt-get install libfreetype6-dev
+apt-get install libjpeg-dev
+
+
+apt-cache search all
+apt-cache search freetype
+apt-get install libfreetype6
+
+dpkg --get-selections|grep install|grep jpeg
+
+cd /usr/src/php/ext/gd
+phpize
+php-config
+#./configure --help     //可列出所有参数
+./configure --with-jpeg-dir --with-png-dir --with-zlib-dir --enable-gd-native-ttf --with-freetype-dir
+make
+make install clean
+
+启动php-fpm, [php-fpm &]
+
+退出后，保存容器（如果做了修改，则需要执行保存操作）
+exit
+docker commit e735b54efea4 hzg/php:7.0.0RC8-fpm                             //保存修改
+docker save -o hzg_php_7.0.0RC8-fpm.tar.gz hzg/php:7.0.0RC8-fpm             //导出到文件（如果提示出错，可以先考虑版本升级）
+docker load --input hzg_php_7.0.0RC8-fpm.tar.gz                             //导入文件到images
+
+mariadb:
+docker run -i -t --privileged=true -v /home/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 5kmji0bo.mirror.aliyuncs.com/library/mariadb /bin/bash
+
+nginx:
+docker run -i -t --privileged=true -v /mnt/code/logs:/var/log/nginx -v /mnt/code/conf/nginx-laravelhelper.conf:/etc/nginx/nginx.conf -v /mnt/code/laravelhelper:/usr/share/nginx/html -p 80:80 daocloud.io/library/nginx:1.9.14 /bin/bash
+启动nginx, [nginx -c /etc/nginx/nginx.conf]
+
+
+3、启动服务
+启动php
+docker run --name p7_lar --privileged=true -v /mnt/code/laravelhelper:/var/www/html -p 9000:9000 -d hzg/php:7.0.0RC8-fpm php-fpm
+
+启动mariadb
+docker run --name db_server --privileged=true -v /home/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+
+启动nginx
+docker run --name ng_wx --privileged=true -v /mnt/code/logs/laravelhelper:/var/log/nginx -v /mnt/code/conf/nginx-laravelhelper.conf:/etc/nginx/nginx.conf -v /mnt/code/laravelhelper:/usr/share/nginx/html -p 80:80 -d daocloud.io/library/nginx:1.9.14
+
+
+c55aece9d301
+1c3746d59e3c
+7f1cb3a0e129
+

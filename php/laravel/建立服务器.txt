@@ -1,0 +1,3 @@
+2) 本地环境切换到文件夹下运行命令 php artisan serve （打开localhost:8000即可看到效果）
+
+

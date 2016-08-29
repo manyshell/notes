@@ -1,0 +1,25 @@
+一、拉取
+docker pull daocloud.io/library/php:7.0.0RC8-fpm
+
+二、维护
+1、进入
+docker run -i -t daocloud.io/library/php:7.0.0RC8-fpm /bin/bash
+
+１、安装mbstring
+cd /usr/src/php/ext/mbstring
+phpize
+php-config
+./configure
+make
+make install clean
+
+
+
+
+
+
+
+
+
+
+

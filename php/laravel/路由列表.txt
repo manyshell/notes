@@ -1,0 +1,18 @@
+php artisan route:list
++--------+--------------------------------+-------------------------------------------------------+------+------------------------------------------------------------+------------+
+| Domain | Method                         | URI                                                   | Name | Action                                                     | Middleware |
++--------+--------------------------------+-------------------------------------------------------+------+------------------------------------------------------------+------------+
+|        | GET|HEAD                       | /                                                     |      | App\Http\Controllers\WelcomeController@index               | guest      |
+|        | GET|HEAD                       | home                                                  |      | App\Http\Controllers\HomeController@index                  | auth       |
+|        | GET|HEAD                       | auth/register/{one?}/{two?}/{three?}/{four?}/{five?}  |      | App\Http\Controllers\Auth\AuthController@getRegister       | guest      |
+|        | POST                           | auth/register/{one?}/{two?}/{three?}/{four?}/{five?}  |      | App\Http\Controllers\Auth\AuthController@postRegister      | guest      |
+|        | GET|HEAD                       | auth/login/{one?}/{two?}/{three?}/{four?}/{five?}     |      | App\Http\Controllers\Auth\AuthController@getLogin          | guest      |
+|        | POST                           | auth/login/{one?}/{two?}/{three?}/{four?}/{five?}     |      | App\Http\Controllers\Auth\AuthController@postLogin         | guest      |
+|        | GET|HEAD                       | auth/logout/{one?}/{two?}/{three?}/{four?}/{five?}    |      | App\Http\Controllers\Auth\AuthController@getLogout         |            |
+|        | GET|HEAD|POST|PUT|PATCH|DELETE | auth/{_missing}                                       |      | App\Http\Controllers\Auth\AuthController@missingMethod     | guest      |
+|        | GET|HEAD                       | password/email/{one?}/{two?}/{three?}/{four?}/{five?} |      | App\Http\Controllers\Auth\PasswordController@getEmail      | guest      |
+|        | POST                           | password/email/{one?}/{two?}/{three?}/{four?}/{five?} |      | App\Http\Controllers\Auth\PasswordController@postEmail     | guest      |
+|        | GET|HEAD                       | password/reset/{one?}/{two?}/{three?}/{four?}/{five?} |      | App\Http\Controllers\Auth\PasswordController@getReset      | guest      |
+|        | POST                           | password/reset/{one?}/{two?}/{three?}/{four?}/{five?} |      | App\Http\Controllers\Auth\PasswordController@postReset     | guest      |
+|        | GET|HEAD|POST|PUT|PATCH|DELETE | password/{_missing}                                   |      | App\Http\Controllers\Auth\PasswordController@missingMethod | guest      |
++--------+--------------------------------+-------------------------------------------------------+------+------------------------------------------------------------+------------+

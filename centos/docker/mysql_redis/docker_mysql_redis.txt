@@ -1,0 +1,56 @@
+#复制文件 my.cnf 到/ace/upload 
+COPY my.cnf /ace/upload/my.cnf
+
+#复制文件 mysql-5.6.27.tar.gz 到/ace/upload 
+COPY mysql-5.6.27.tar.gz /ace/upload/mysql-5.6.27.tar.gz
+
+#复制文件 cmake-3.2.1.tar.gz 到/ace/upload 
+COPY cmake-3.2.1.tar.gz /ace/upload/cmake-3.2.1.tar.gz
+
+#复制文件 redis-stable.tar.gz 到/ace/upload 
+COPY redis-stable.tar.gz /ace/upload/redis-stable.tar.gz
+
+
+MAINTAINER Cyevo B2ls "cyevo_b2ls@mail.com"
+
+# init
+RUN groupadd -r mysql && useradd -r -g mysql -s /bin/false -M mysql
+RUN yum install -y curl tar make gcc wget
+
+# install cmake
+RUN cd /ace/upload && tar -zxf cmake-3.2.1.tar.gz && cd cmake-3.2.1 && ./configure && make && make install
+
+# install redis
+RUN cd /ace/upload && tar xf redis-stable.tar.gz && cd redis-stable && make && make install
+
+# install mysql
+RUN cd /ace/upload && tar -zxvf mysql-5.6.27.tar.gz
+
+EXPOSE 6379
+EXPOSE 3306
+
+RUN echo "/usr/local/bin/redis-server" > /ace/bin/start
+
+
+
+---以下为ssh方式，手动操作---
+cd /ace/upload/mysql-5.6.27 && cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/src/mysql -DMYSQL_DATADIR=/ace/data/mysql -DSYSCONFDIR=/usr/local/src/mysql/etc -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_EMBEDDED_SERVER=1 && make && make install
+
+# configure
+mkdir -p /usr/local/src/mysql/etc && mkdir -p /ace/data/mysql
+cp /ace/upload/my.cnf /usr/local/src/mysql/etc/my.cnf
+chown -R mysql:mysql /usr/local/src/mysql && chown -R mysql:mysql /ace/data/mysql
+
+# init database
+cd /usr/local/src/mysql && ./scripts/mysql_install_db --user=mysql --datadir=/ace/data/mysql
+
+EXPOSE 3306
+
+RUN echo "/usr/local/src/mysql/support-files/mysql.server start" >> /ace/bin/start
+
+20007:M 21 Jan 09:43:04.759 # WARNING: The TCP backlog setting of 511 cannot be                                                                              enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+20007:M 21 Jan 09:43:04.760 # Server started, Redis version 3.0.5
+20007:M 21 Jan 09:43:04.760 # WARNING overcommit_memory is set to 0! Background                                                                              save may fail under low memory condition. To fix this issue add 'vm.overcommit_m                                                                             emory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.ove                                                                             rcommit_memory=1' for this to take effect.
+20007:M 21 Jan 09:43:04.760 # WARNING you have Transparent Huge Pages (THP) supp                                                                             ort enabled in your kernel. This will create latency and memory usage issues wit                                                                             h Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transpar                                                                             ent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to reta                                                                             in the setting after a reboot. Redis must be restarted after THP is disabled.
+20007:M 21 Jan 09:43:04.775 * DB loaded from disk: 0.015 seconds
+20007:M 21 Jan 09:43:04.776 * The server is now ready to accept connections on p                                                                             ort 6379

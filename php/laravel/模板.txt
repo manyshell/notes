@@ -1,0 +1,22 @@
+//---产生网址---\
+带参数时，末尾不要加“/”，url大小写都可以。
+{{ URL::to('/profile/appendinfo') }}
+{{ URL('/profile/appendinfo', $parameters = [], $secure = null) }}
+{{ url('/profile/appendinfo', $parameters = [], $secure = null) }}
+{{ url('/order', $parameters = [$records['id']], $secure = null) }}
+//---产生网址---/
+
+//---输出一条json---\
+echo response()->json($profile);
+//---输出一条json---/
+
+//---模板标记及区别---\
+{{ }}表示字符要转义，比如："会被转换成&quot;
+{{ }}表示字符不转义，字符保持原样
+以下是json在转义和不转义情况下读数据的例子：
+{{ count(json_decode(htmlspecialchars_decode($records['lotteryval'],ENT_QUOTES), true)) }}
+{!! count(json_decode($records['lotteryval'], true)) !!}
+//---模板标记及区别---/
+
+
+

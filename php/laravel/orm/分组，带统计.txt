@@ -1,0 +1,2 @@
+分组，带统计
+            $results = GasStation::select(DB::raw('count(*) as number, id, fix_prov'))->orderBy('updated_at', 'desc')->groupBy('fix_prov')->get();

@@ -1,0 +1,43 @@
+官方文档太粗糙，关键点都不说，完全需要自己去领悟。
+经过反复测试，默认队列驱动“sync”无队列效果，至少在windows环境下无效果，一运行程序就立即执行了，不受队列调配。
+配置app/config/queue.php中的default配置项为系统中的队列系统，sync是直接执行，并不是异步队列。
+
+后改为“database”，MYSQL方式后，队列效果就有了。
+一、打开 config/queue.php，更改默认队列驱动为数据库：
+default’ => env(‘QUEUE_DRIVER’, ‘database’)
+
+二、生成队列需要的数据表
+执行以下两条命令：
+php artisan queue:table 
+php artisan migrate
+
+三、当它监听到有要执行的任务时，就会自动按照指定条件执行。
+php artisan queue:listen
+
+四、自动产生commands目录下的程序文件
+php artisan make:command SendEmail --queued
+
+到这里，生产者就写完了，找个控制器。
+将这个生产者生成的内容推进队列里边吧。
+我这里演示，
+是自己在 app\Http\Controllers\TestController.php 中进行的调用。
+还是贴以下源码吧：
+
+        Queue::push(new PushMessage);		// 立即推进队列
+        Queue::later(60, new PushMessage);	// 延时推进队列
+
+
+        $this->dispatch(new CathecticCommand);
+        Queue::later(60, new PushMessage);// 推进队列
+        Bus::dispatch(new PushMessage);
+
+
+use Carbon\Carbon;
+use Queue;
+
+$timer = Carbon::now()->addSeconds(30);	//addSeconds addMinutes
+Queue::later($timer, new CathecticCommand($this->ticket));
+
+
+
+

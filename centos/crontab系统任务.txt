@@ -1,0 +1,2 @@
+*/3	*	*	*	*	sh /opt/lampp/shell/updateindex.sh	每三分钟执行一次
+45	23	*	*	*	/usr/sbin/ntpdate -u 10.154.5.128	每天23:45执行一次

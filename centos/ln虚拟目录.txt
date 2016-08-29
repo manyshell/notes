@@ -1,0 +1,1 @@
+ln /mnt/storage/cq/ www -s

@@ -1,0 +1,13 @@
+如果没有php.ini，需要创建php.ini
+cp /usr/src/php/php.ini-development /usr/local/etc/php/php.ini
+
+安装php扩展--mbstring：
+
+cd /usr/src/php/ext/mbstring
+phpize
+php-config
+./configure
+make
+make install clean
+vi /usr/local/etc/php/php.ini
+cp php.ini /usr/local/etc/php/php.ini

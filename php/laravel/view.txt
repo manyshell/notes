@@ -1,0 +1,35 @@
+随机调用一个元素：
+return Collection::make([
+	'When there is no desire, all things are at peace. - Laozi',
+	'Simplicity is the ultimate sophistication. - Leonardo da Vinci',
+	'Simplicity is the essence of happiness. - Cedric Bledsoe',
+	'Smile, breathe, and go slowly. - Thich Nhat Hanh',
+	'Simplicity is an acquired taste. - Katharine Gerould',
+	'Well begun is half done. - Aristotle',
+])->random();
+
+-----------------------------
+
+可替代区块：
+@section('content')
+...
+@endsection
+
+-----------------------------
+
+-----------------------------
+
+使用compact传值到视图
+1、传对像
+$profile = User::find(1);
+return view('profile.editidentity', compact('profile'));
+
+调用方式：	{{ $profile->id }}
+
+2、传数组
+$profile = User::find(1)->toArray();
+return view('profile.editidentity', compact('profile'));
+
+调用方式：	{{ $profile['id'] }}
+
+-----------------------------

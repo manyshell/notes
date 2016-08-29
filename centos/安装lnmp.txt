@@ -1,0 +1,34 @@
+---LNMP管理---\
+LNMP 1.2状态管理: lnmp {start|stop|reload|restart|kill|status}
+LNMP 1.2各个程序状态管理: lnmp {nginx|mysql|mariadb|php-fpm|pureftpd} {start|stop|reload|restart|kill|status}
+LNMP 1.1状态管理： /root/lnmp {start|stop|reload|restart|kill|status}
+Nginx状态管理：/etc/init.d/nginx {start|stop|reload|restart}
+MySQL状态管理：/etc/init.d/mysql {start|stop|restart|reload|force-reload|status}
+Memcached状态管理：/etc/init.d/memcached {start|stop|restart}
+PHP-FPM状态管理：/etc/init.d/php-fpm {start|stop|quit|restart|reload|logrotate}
+PureFTPd状态管理： /etc/init.d/pureftpd {start|stop|restart|kill|status}
+ProFTPd状态管理： /etc/init.d/proftpd {start|stop|restart|reload}
+---LNMP管理---/
+
+---安装lnmp，linux + nginx + mysql + php---\
+centos5.7
+lnmp1.2-full.tar.gz
+./install.sh lnmp
+设置MySQL的root密码，最好设置密码，免得后面麻烦，如果安装时不输入直接回车，密码为root，否则为你输入的密码。
+确认是否启用MySQL InnoDB
+选择MySQL版本
+输入PHP版本的序号
+选择是否安装内存优化，1为不优化
+
+mysql安装目录为：   /usr/local/mysql
+
+如果丢失了mysql密码，可通过安装目录下，tools下的工具进行重置：
+./reset_mysql_root_password.sh
+
+phpmyadmin的用户名与密码就是mysql的用户名
+
+默认nginx的访问目录:    /home/wwwroot/
+
+如何修改安装LNMP时输入的域名？
+修改方法：编辑/usr/local/nginx/conf/nginx.conf 查找安装时输入的域名，修改为你想设置的域名，保存，执行：/usr/local/nginx/sbin/nginx -s reload 重启即可。
+---安装lnmp，linux + nginx + mysql + php---/

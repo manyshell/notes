@@ -1,0 +1,16 @@
+use Illuminate\Support\Facades\DB;
+
+
+        $result = Hot::withTrashed()->find($request["id"]);
+        if (!is_null($result)) {
+            DB::beginTransaction();
+            if ($result->delete()) {
+                echo "³É¹¦";
+                DB::commit();
+            } else {
+                echo "Ê§°Ü";
+                DB::rollback();
+            }
+        }
+
+        exit;

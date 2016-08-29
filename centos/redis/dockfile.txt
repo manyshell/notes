@@ -1,0 +1,4 @@
+FROM hzg/centos7
+EXPOSE 6379
+ENTRYPOINT ["redis-server"]  
+CMD ["/etc/redis.conf", "--bind", "0.0.0.0"]

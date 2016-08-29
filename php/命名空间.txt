@@ -1,0 +1,96 @@
+命名空间用一句话说，就是：把 类、函数、变量 等放到子文件夹中去，以避免命名冲突。
+
+引入namespace之后就可以将这个有效规避了，
+一个namespace就相当于对应一个文件路径，
+查找这个类的时候，就会去对应的文件路径查找类定义文件了。
+
+
+定义：
+	namespace Myproject;
+或
+	namespace Myproject {
+	}
+
+使用：
+	use Myproject\School;
+或
+	use Myproject\School as Schooll;	//别名
+
+
+PHP使用反斜杠作为命名空间的分隔符。
+你可以使用任意多级子命名空间。
+namespace Myproject\a\b\c\d\e\f\g;
+
+显式调用命名空间内函数
+namespace \run();
+
+当前命名空间
+__NAMESPACE__
+
+A、被隐藏的第一个 \
+<?php namespace TinyLara\TinyRoute;
+
+class TinyRoute {
+  ...
+}
+
+<?php namespace TinyLara\TinyRoute;
+
+use TinyLara\TinyView\TinyView;
+
+class TinyRoute {
+  ...
+}
+
+namespace TinyLara\TinyRoute
+use TinyLara\TinyView\TinyView
+
+这两行的真实地址是： \TinyLara\TinyRoute、\TinyLara\TinyView\TinyView，顶级命名空间标识（第一个 \ ）被省略了。
+
+
+B、被隐藏的别名
+在上一节中中，这一行代码
+use TinyLara\TinyView\TinyView
+的完整写法应该是：
+use \TinyLara\TinyView\TinyView as TinyView;
+如果不指定别名，那就默认别名为类名，注入本命名空间。
+
+
+C、使用绝对路径直接调用
+<?php namespace TinyLara\TinyRoute;
+
+class TinyRoute {
+    public function foo()
+    {
+        return \TinyLara\TinyView\TinyView::fuck();
+    }
+}
+使用绝对路径调用类时顶级命名空间标识（第一个 \ ）不能省略。（很多人都在这个地方迷惑了）
+
+D、命名空间的实际价值
+命名空间的存在是为了解决下面两个问题：
+
+用户编写的代码与PHP内部的类/函数/常量或第三方类/函数/常量之间的名字冲突。
+为很长的标识符名称（通常是为了缓解第一类问题而定义的）创建一个别名（或简短）的名称，提高源代码的可读性。
+目前非常流行的 Composer 就是一个基于命名空间的包管理器/依赖管理器，
+同样，Laravel 能达到今天的成功，很大程度上也是因为PHP5.3的普及，生恰逢时。
+你可以在 https://packagist.org/ 上下载到各种 composer 包，类似于 yum、npm或者gem。
+
+E、同一命名空间下的类可以任意相互调用
+<?php namespace A;
+
+class ClassA {
+  public static function test() {
+    echo 'Success!';
+  }
+}
+<?php namespace A;
+
+class ClassB {
+  public static function test() {
+    ClassA::test(); // 直接调用即可
+  }
+}
+直接调用即可。
+
+

@@ -1,0 +1,15 @@
+1：修改 composer 的全局配置文件（推荐方式）
+composer config -g repo.packagist composer https://packagist.phpcomposer.com
+
+2：修改当前项目的 composer.json 配置文件：
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
+
+清除缓存：
+composer clearcache
+
+composer install -vvv

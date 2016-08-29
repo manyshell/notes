@@ -1,0 +1,11 @@
+postqueue -p        查看队列
+postsuper -d ALL    清除队列
+
+postfix flush       发送邮箱
+postqueue -f        发送邮箱
+
+刪掉「三天以前」无法发送的邮件
+find /var/spool/postfix/deferred -type f -mtime +3 -exec rm -f /{/} /;
+
+查看邮件信息
+cat /var/log/maillog

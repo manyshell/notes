@@ -1,0 +1,89 @@
+本环境是基于docker的，没有安装docker就别往下看了。
+
+docker load --input php_7.0.0RC8-fpm.tar.gz
+
+
+
+一、创建项目
+cd d:\code
+composer create-project --prefer-dist laravel/laravel
+到此为止，composer已创建了完整的laravel项目，vendor目录已安装，[.env]文件已生成，密钥已生成。
+rename laravel demo
+mv laravel demo
+
+二、编辑配置文件
+创建、修改nginx-GTCardCenter.conf
+第[49行]    fastcgi_pass   192.168.0.205:9001;
+
+三、创建运行环境
+启动php
+docker run --name php7_demo --privileged=true -v /mnt/code/demo:/var/www/html -p 9001:9000 -d hzg/php:7.0.0RC8-fpm php-fpm
+
+启动nginx
+docker run --name nginx_demo --privileged=true -v /mnt/code/logs/demo:/var/log/nginx -v /mnt/code/conf/nginx-demo.conf:/etc/nginx/nginx.conf -v /mnt/code/demo:/usr/share/nginx/html -p 8081:80 -d daocloud.io/library/nginx:1.9.14
+
+启动mariadb:(数据库是共享的，只需启动一个)
+docker run --name mariadb_server --privileged=true -v /home/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+
+、维护
+1.进入容器
+docker run -i -t --privileged=true -v /mnt/code/demo:/var/www/html daocloud.io/library/php:7.0.0RC8-fpm /bin/bash
+
+docker run -i -t --privileged=true -v /mnt/code/demo:/var/www/html -p 9001:9000 daocloud.io/library/php:7.0.0RC8-fpm /bin/bash
+启动php-fpm, [php-fpm &]
+
+2、保存修改后的容器
+docker commit 0e55323e9701 hzg/php:7.0.0RC8-fpm
+docker commit e5501df2963c hzg/php:7.0.0RC8-fpm
+
+
+
+
+CONTAINER ID        IMAGE                                          STATUS                                 NAMES
+19cf4afb2dd5        daocloud.io/library/nginx:1.9.14               Exited (0) 3 days ago                  nginx_GTCardCenter
+e39372b1c9b0        hzg/php:5.6.17-fpm                             Exited (0) 3 days ago                  php_GTCardCenter
+
+docker rm 19cf4afb2dd5
+docker rm e39372b1c9b0
+
+取得php.ini文件
+cp /usr/local/etc/php/php.ini /var/www/html/php.ini
+
+可在扩展目录看到已有的扩展
+ls -la /usr/local/lib/php/extensions/no-debug-non-zts-20151012
+
+修改php.ini
+1、修改前：
+[721]; Directory in which the loadable extensions (modules) reside.
+[722]; http://php.net/extension-dir
+[723]; extension_dir = "./"
+[724]; On windows:
+[725]; extension_dir = "ext"
+
+修改后：（修改第723行）
+; Directory in which the loadable extensions (modules) reside.
+; http://php.net/extension-dir
+extension_dir = "/usr/local/lib/php/extensions/no-debug-non-zts-20151012"
+; On windows:
+; extension_dir = "ext"
+
+2、修改前
+[877];extension=php_mbstring.dll
+
+修改后：（修改第877行）
+extension=mbstring.so
+
+
+将修改后的php.ini复制回去
+cp /var/www/html/php.ini /usr/local/etc/php/php.ini
+
+启动php-fpm, [php-fpm &]
+
+03681cb3bf57
+0f28f6a1b4a3
+7e12f8e7a6b1
+
+docker start 03681cb3bf57
+docker start 0f28f6a1b4a3
+docker start 7e12f8e7a6b1
+docker ps -a

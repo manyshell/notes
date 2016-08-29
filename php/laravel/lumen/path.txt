@@ -1,0 +1,3 @@
+echo base_path('public/');
+Exp:	d:/xampp/htdocs/public/
+

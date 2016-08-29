@@ -1,0 +1,23 @@
+
+cd /usr/src/php/ext/pdo_mysql
+phpize
+php-config
+./configure
+make
+make install clean
+
+ls -la /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+
+修改php.ini
+可添加此行，或修改相应的值
+修改前[883行]
+;extension=php_pdo_mysql.dll
+
+修改后[883行]
+extension=pdo_mysql.so
+
+
+将修改后的php.ini复制回去
+cp /var/www/html/php.ini /usr/local/etc/php/php.ini
+
+启动php-fpm, [php-fpm &]

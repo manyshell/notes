@@ -1,0 +1,35 @@
+tar -zxvf *.tar.gz	解压至当前目录
+tar -cvf *.tar.gz file	压缩至当前目录
+tar -czvf *.tar.gz file	压缩至当前目录
+
+/usr/local/www/apache22/jinmayi
+/usr/local/www/apache22/jinmayi/xcrjtestsite
+
+
+tar -cvf xctest.tar.gz /usr/local/www/apache22/xcrjtestsite
+tar -cvf ports.tar.gz /usr/ports
+
+xcrjtestsite
+xcrj.tar.gz
+tar -cvf *.tar.gz file
+tar -cvf xcrj.tar.gz /usr/local/www/apache22/jinmayi/xcrjtestsite
+
+tar -cvf 23iweb /usr/local/www/apache22/website/23iweb.com
+
+/usr/local/www/apache22/
+/usr/local/www/apache22/data
+/usr/home/hzg
+
+
+tar zxvf /usr/local/www/apache22/data /usr/home/hzg/xcrj.tar.gz
+tar zxvf /usr/local/www/apache22/data /usr/home/hzg/xcrj.tar.gz
+tar -zxvf xcrj.tar.gz
+
+find / -name "main.lang.php*" -print
+
+mv xcrjtestsite /usr/local/www/apache22/xcrjtestsite
+
+test.cq7d.cn
+
+/usr/local/www/apache22/xcrjtestsite
+/usr/local/www/phpMyAdmin

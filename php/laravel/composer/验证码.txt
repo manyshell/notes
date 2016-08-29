@@ -1,0 +1,36 @@
+1、在项目根目录composer.json中增加依赖
+"require": {
+	"gregwar/captcha": "dev-master"
+},
+
+2、然后在项目根目录执行更新，可能需要VPN，等待时间较长
+composer update
+
+3、编辑app/config/app.php，增加配置项：
+'cookie_key' => '你的key，作为加密用',
+
+4、在app/controllers目录中建立ExtController.php
+use Gregwar\Captcha\CaptchaBuilder;
+use Illuminate\Encryption;
+use Illuminate\Cookie;
+ 
+class CaptchaController extends BaseController {
+ 
+	/**
+	* 输出验证码
+	*/
+	public function captcha()
+	{
+		$builder = new CaptchaBuilder;
+		$builder->build();
+		$phrase = $builder->getPhrase();
+		Crypt::setKey(Config::get('app.cookie_key'));
+		$phrase_new = Crypt::encrypt($phrase);
+		Session::flash('__captcha', $phrase_new);
+		header("Cache-Control: no-cache, must-revalidate");
+		header('Content-Type: image/jpeg');
+		$builder->output();
+		exit;
+	}
+}
+

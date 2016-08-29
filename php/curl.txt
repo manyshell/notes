@@ -1,0 +1,104 @@
+function url_is_accessable_via_ssl($url)
+{
+	if ( in_array( 'curl', get_loaded_extensions() ) ) {
+		$ssl = set_url_scheme( $url, 'https' );
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $ssl);
+		curl_setopt($ch, CURLOPT_FAILONERROR, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+
+		curl_exec($ch);
+
+		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close ($ch);
+
+		if ($status == 200 || $status == 401) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
+	function submitXml($inputXml){
+
+		$ch = curl_init(); 
+		curl_setopt($ch, CURLOPT_URL, $this->PxPay_Url);
+
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,$inputXml);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+		#set up proxy, this may change depending on ISP, please contact your ISP to get the correct cURL settings
+		#curl_setopt($ch,CURLOPT_PROXY , "proxy:8080");
+		#curl_setopt($ch,CURLOPT_PROXYUSERPWD,"username:password");
+
+		$outputXml = curl_exec ($ch); 		
+
+		curl_close ($ch);
+  
+		return $outputXml;
+	}
+
+
+//通过curl模拟post的请求；
+function SendDataByCurl($url,$data=array()){
+    //对空格进行转义
+    $url = str_replace(' ','+',$url);
+    $ch = curl_init();
+    //设置选项，包括URL
+    curl_setopt($ch, CURLOPT_URL, "$url");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch,CURLOPT_TIMEOUT,3);  //定义超时3秒钟 
+     // POST数据
+    curl_setopt($ch, CURLOPT_POST, 1);
+    // 把post的变量加上
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));    //所需传的数组用http_bulid_query()函数处理一下，就ok了
+     
+    //执行并获取url地址的内容
+    $output = curl_exec($ch);
+    $errorCode = curl_errno($ch);
+    //释放curl句柄
+    curl_close($ch);
+    if(0 !== $errorCode) {
+        return false;
+    }
+    return $output;
+ 
+}
+ 
+function curl_post($url='', $postdata='', $options=array()){
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    if (!empty($options)){
+        curl_setopt_array($ch, $options);
+    }
+    $data = curl_exec($ch);
+    curl_close($ch);
+    return $data;
+}
+
+
+        $url = "http://mclick.simba.taobao.com/cc_im?p=%C2%CC%C2%DC&s=497381907&k=365&e=YIONM7MZqExLKgsLvOLFFzBkuH6FfUS29GoHhAa02gC5aZc0kqsVoouv%2BMN0ySaSNFkrX3Ihcmah%2FyOYtWXFFFuVx6xEsEKLimR3Erke4wfUHEtRSJHKQT0aafZDfxeMbGQDbMjxmBYxkiAvwTrY3GWw0mqUSkUZj8JTAm6uVZHxeFA07zo9DsPX8IPDCa8%2FTC2qCfjzQO2GnIUbTaqQhjylNn4x52eCoq4VyprJLW9h1rmAG07JoY%2BP6PviOlqbv2u%2BbwlvWsRZI4EmTulCiBZi2xtU4gnkH23%2B6BDAMSka%2FOMmXoqO%2Fv0fxPH50xpFLVK6T2ofLNAbe8JgDn164W61vt2ihQRt9WUdhxOd7yw%3D";
+        //初始化
+        $curl = curl_init();
+        //设置抓取的url
+        curl_setopt($curl, CURLOPT_URL, $url);
+        //设置头文件的信息作为数据流输出
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        //设置获取的信息以文件流的形式返回，而不是直接输出。
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        //执行命令
+        $data = curl_exec($curl);
+        //关闭URL请求
+        curl_close($curl);
+        //显示获得的数据
+        print_r($data);

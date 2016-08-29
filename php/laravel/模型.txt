@@ -1,0 +1,5 @@
+//---新增---\
+手动填充数据
+if (Userprofile::create(['real_name' => 'Hello!!!', 'chinaid_no' => 'Laravel~~~', 'mobile' => '12232123'])) {
+//---新增---/
+

@@ -1,0 +1,50 @@
+访问laravel时，如何去掉index.php
+
+http://192.168.0.125/blog/public/index.php
+http://192.168.0.125/blog/public/index.php/auth/register
+
+/app/http/routes.php
+增加：
+Route::get('/test', function() {
+	return 'test it';
+});
+
+http://192.168.0.125/blog/public/index.php/test
+http://192.168.0.125/blog/public/index.php/test/
+结果：
+test it
+
+修改：
+httpd-vhosts.conf
+<VirtualHost *:80>
+   ServerName z.la
+   DocumentRoot "d:/wamp/www/blog/public"
+</VirtualHost>
+http://z.la/index.php/test
+test it
+
+laravel的public目录下，官方的.htaccess已经写好了配置
+.htaccess
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+
+    # Redirect Trailing Slashes...
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+只需启用apache的mod_rewrite模块
+
+http://z.la/test
+test it
+
+成功
+

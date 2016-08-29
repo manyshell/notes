@@ -1,0 +1,107 @@
+//---给php增加快捷方式---\
+ln -s /usr/local/php/bin/php /usr/local/bin/php
+//---给php增加快捷方式---/
+
+//---安装依赖---\
+一、php相关函数
+vi /usr/local/php/etc/php.ini
+1、找到此行
+disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server
+２、去掉proc_open,proc_get_status
+disable_functions = passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server
+
+二、安装git
+//---安装依赖---/
+
+//---下载composer安装包---\
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+composer init
+//---下载composer安装包---/
+
+//---在线安装---\
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '92102166af5abdb03f49ce52a40591073a7b859a86e8ff13338cf7db58a19f7844fbc0bb79b2773bf30791e935dbd938') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+mv composer.phar /usr/local/bin/composer
+//---在线安装---/
+
+//---下载composer二进制包---\
+wget https://getcomposer.org/composer.phar
+或者，手动下载后，复制到目录中去
+mv composer.phar /usr/local/bin/composer
+
+//---下载composer二进制包---/
+
+//---composer执行方法---\
+php composer.phar
+php composer.phar install
+mv composer.phar /usr/local/bin/composer
+composer install
+//---composer执行方法---/
+
+安装 Composer
+RUN wget -qO- http://install.phpcomposer.com/installer | sudo php – –install-dir=/usr/local/bin –filename=composer
+
+安装 Composer 中文镜像
+RUN composer config -g repo.packagist composer http://packagist.phpcomposer.com
+
+
+[root@bogon ~]# echo $PATH
+/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+[root@bogon ~]# curl -sS https://getcomposer.org/installer | php
+Downloading 1.1.0...
+ 
+Composer successfully installed to: /root/composer.phar
+Use it: php composer.phar
+Some settings on your machine may cause stability issues with Composer.
+If you encounter issues, try to change the following:
+ 
+The OpenSSL library (0.9.8e-fips-rhel5) used by PHP does not support TLSv1.2 or TLSv1.1.
+If possible you should upgrade OpenSSL to version 1.0.1 or above.
+ 
+[root@bogon ~]# echo $PATH
+/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+[root@bogon default]# composer global require "laravel/installer"
+Changed current directory to /root/.composer
+Using version ^1.3 for laravel/installer
+./composer.json has been created
+Loading composer repositories with package information
+Updating dependencies (including require-dev)
+  - Installing symfony/process (v3.0.6)
+    Downloading: 100%         
+ 
+  - Installing symfony/polyfill-mbstring (v1.1.1)
+    Downloading: 100%         
+ 
+  - Installing symfony/console (v3.0.6)
+    Downloading: 100%         
+ 
+  - Installing guzzlehttp/promises (1.1.0)
+    Downloading: Failed       
+    Downloading: 100%         
+ 
+  - Installing psr/http-message (1.0)
+    Downloading: 100%         
+ 
+  - Installing guzzlehttp/psr7 (1.3.0)
+    Downloading: 100%         
+ 
+  - Installing guzzlehttp/guzzle (6.2.0)
+    Downloading: 100%         
+ 
+  - Installing laravel/installer (v1.3.3)
+    Downloading: 100%         
+ 
+symfony/console suggests installing symfony/event-dispatcher ()
+symfony/console suggests installing psr/log (For using the console logger)
+Writing lock file
+Generating autoload files
+
+[root@bogon default]# echo $PATH
+/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+

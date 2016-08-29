@@ -1,0 +1,19 @@
+查看版本
+# docker -v
+Docker version 1.7.1, build 786b29d/1.7.1
+
+停止运行
+# systemctl stop docker.service
+
+
+升级
+# yum -y update docker-io
+yum -y update docker
+No packages marked for update
+
+启动
+systemctl start docker.service
+
+
+
+

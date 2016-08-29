@@ -1,0 +1,9 @@
+vi /etc/postfix/main.cf
+
+myhostname = localhost                                                  //75行，将等号后面的部分改写为本机主机名  
+mydomain = test.com                                                     //83行，设置域名  
+myorigin = $mydomain                                                    //99行，把$myhostname改为$mydomain  
+inet_interfaces = all                                             //116行，把后面的localhost改成all  
+mydestination = $myhostname, localhost.$mydomain, localhost             //164行，参数指定postfix接收邮件时收件人的域名，并加一下$mydomain  
+mynetworks = 192.168.1.0/24, 127.0.0.0/8                                //264行，设置内网和本地IP  
+smtpd_banner = $myhostname ESMTP "Mail Server"                          //572行，把前面的注释拿掉，自定服务器信息,然后把$mail_name ($mail_version)改成unknow  

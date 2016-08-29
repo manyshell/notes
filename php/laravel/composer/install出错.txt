@@ -1,0 +1,33 @@
+Failed to initialize global composer: Composer could not find the config file: /root/.composer/composer.json
+To initialize a project, please create a composer.json file as described in the https://getcomposer.org/ "Getting Started" section
+
+-----------------------------------------
+手工创建一个composer.json
+echo "{}" > ~/.composer/composer.json
+
+以上并操作没有实际解决问题，只是让composer.json存在了。
+
+问题关键在于, composer install, 却出现php artisan clear-compiled, 然后就提示找不到 vendor/...的文件
+vendor目录都不存在，肯定不会有下面的文件，自然就是找不到，这样就陷入了一个死循环中。
+
+找到一个解决办法，但不一定是最佳的方法：
+修改composer.json
+    "scripts": {
+#//        "post-root-package-install": [
+#//            "php -r \"copy('.env.example', '.env');\""
+#//        ],
+#//        "post-create-project-cmd": [
+#//            "php artisan key:generate"
+#//        ],
+#//        "post-install-cmd": [
+#//            "php artisan clear-compiled",
+#//            "php artisan optimize"
+#//        ],
+#//        "pre-update-cmd": [
+#//            "php artisan clear-compiled"
+#//        ],
+#//        "post-update-cmd": [
+#//            "php artisan optimize"
+#//        ]
+    },
+问题应该就出在这样，删掉就好了，但为什么这里会出问题，还需要进一步的测试思考。

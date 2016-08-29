@@ -1,0 +1,63 @@
+属性修改和目录文件删除程序
+
+加入时间：2004-12-18 17:53:28 大小:2 KB 阅读次数:698 
+属性修改和目录文件删除程序!
+
+太冷清了所以写点小东西
+
+文件\目录属性修改程序
+
+说明修改目录里说有文件及目录的属性(包括子目录里的文件)
+
+
+  Code: [Copy to clipboard]   
+<?
+$tdir="./forumdir"; //所修改的目录
+chdirmod($tdir);
+function chdirmod($ddir){
+chmod($ddir,0777);
+$handle=opendir($ddir);
+echo "目录 handle: $handle\n";
+while ($file = readdir($handle)) {
+    echo "$ddir"."/"."$file\n"."</br>";
+    $bdir=$ddir."/".$file;
+    if ($file<>'.' && $file<>'..' && filetype($bdir)=='dir'){
+    chmod($bdir,0777);
+    chdirmod($ddir."/".$file);
+    }elseif ($file<>'.' && $file<>'..' ){
+    chmod($ddir."/".$file,0777);
+        }
+}
+closedir($handle);
+//rmdir($ddir);
+ 
+}
+?> 
+
+
+
+目录文件删除程序(包括子目录的文件)
+
+
+  Code: [Copy to clipboard]   
+<?
+$tdir="./forumdir"; /欲删除的目录
+chdirmod($tdir);
+function chdirmod($ddir){
+ 
+$handle=opendir($ddir);
+echo "目录 handle: $handle\n";
+while ($file = readdir($handle)) {
+    echo "$ddir"."/"."$file\n"."</br>";
+    $bdir=$ddir."/".$file;
+    if ($file<>'.' && $file<>'..' && filetype($bdir)=='dir'){
+    chdirmod($ddir."/".$file);
+    }elseif ($file<>'.' && $file<>'..' ){
+    unlink($ddir."/".$file);
+        }
+}
+closedir($handle);
+rmdir($ddir);
+ 
+}
+?> 

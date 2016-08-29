@@ -1,0 +1,3 @@
+[2016-05-18 08:50:42] production.ERROR: exception 'RuntimeException' with message 'No supported encrypter found. The cipher and / or key length are invalid.' in /var/www/html/bootstrap/cache/compiled.php:7715
+问题关键在于：  No supported encrypter found
+laravel5.1开始APP_KEY必须是长度32且有cipher。去.env设置或者是config/app.php设置吧

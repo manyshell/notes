@@ -1,0 +1,79 @@
+//        if (preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9-.\s]+$/u",$str)) {
+//
+//            echo ("符合");
+//
+//        } else {
+//
+//            echo ("出错");
+//
+//        }
+        print_r($request->all());
+        $myInput = $request->all();
+        $myInput['real_name'] = trim($myInput['real_name']);
+        $myInput['chinaid_no'] = trim($myInput['chinaid_no']);
+        exit;
+        Userprofile::create($request->all());
+        return 'yes';
+        exit;
+
+
+        var_dump($request);
+        if ($request->fails()) {
+            echo 'no';
+        } else {
+            echo 'ok';
+        }
+
+        exit;
+
+        $messages = [
+            'real_name.required' => '姓名不能为空',
+            'real_name.between' => '姓名长度控制在2～36个字符以内',
+            'real_name.alpha_dash' => '姓名长度控制在2～36个字符以内',
+        ];
+        $validator = Validator::make(\Input::all(), [
+            'real_name' => 'required|between:2,36|alpha_dash',
+        ], $messages);
+        if ($validator->fails()) {
+            echo 'no';
+            print_r($validator->errors()->all());
+        } else {
+            echo 'ok';
+        }
+        exit;
+        if (Userprofile::create(\Input::all())) {
+//        if (Userprofile::create(['real_name' => 'Hello!!!', 'chinaid_no' => 'Laravel~~~', 'mobile' => '12232123'])) {
+            echo 'succ';
+        } else {
+            echo 'fail';
+        }
+
+//---正则验证---\
+中文，英文大小写，数字，-(横线)，.(点)
+'real_name' => 'required|between:2,36|regex:/^[\x{4e00}-\x{9fa5}a-zA-Z0-9-.\s]+$/u',
+//---正则验证---/
+
+salt				随机8位
+sha1(用户输入)		
+sha1(salt+sha1)		
+
+
+        $request = request();
+        $this->getValidationFactory()->extend('different_phone', function($attribute, $value, $parameters)
+        {
+            return $value != session("account.strPhone");
+        });
+        $this->validate(
+            $request,
+            [
+                'strPhone' => ['required', 'regex:/^1[34578]\d{9}$/', 'different_phone'],
+                'verifyCode' => ['required', 'regex:/^\d{6}$/'],
+            ],
+            [
+                'strPhone.required' => '手机号码不能为空',
+                'strPhone.regex' => '输入的手机号码有误,请重新输入',
+                'verifyCode.required' => '验证码不能为空',
+                'verifyCode.regex' => '验证码必须是6位数字',
+                'strPhone.different_phone' => '输入的手机号码与原来相同，无需修改',
+            ]
+        );

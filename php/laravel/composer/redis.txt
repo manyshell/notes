@@ -1,0 +1,9 @@
+使用redis需要安装插件
+
+1、在项目根目录composer.json中增加依赖
+"require": {
+	"predis/predis": "~1.0"
+},
+
+2、然后在项目根目录执行更新，可能需要VPN，等待时间较长
+composer update

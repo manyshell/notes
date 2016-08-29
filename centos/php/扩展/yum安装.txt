@@ -1,0 +1,45 @@
+yum install php56w-mysql
+yum install php56w-devel
+yum install php56w-fpm -y
+
+可安装的php包
+
+php55w mod_php, php55w-zts
+php55w-bcmath
+php55w-cliphp-cgi, php-pcntl, php-readline
+php56w-common php-api, php-bz2, php-calendar, php-ctype, php-curl, php-date, php-ereg, php-exif, php-fileinfo, php-filter, php-ftp, php-gettext, php-gmp, php-hash, php-iconv, php-json, php-libxml, php-openssl, php-pcre, php-pecl-Fileinfo, php-pecl-phar, php-pecl-zip, php-reflection, php-session, php-shmop, php-simplexml, php-sockets, php-spl, php-tokenizer, php-zend-abi, php-zip, php-zlib
+php56w-dba
+php56w-devel
+php56w-embedded php-embedded-devel
+php56w-enchant
+php56w-fpm
+php56w-gd
+php56w-imap
+php56w-interbase php_database, php-firebird
+php56w-intl
+php56w-ldap
+php56w-mbstring
+php56w-mcrypt
+php56w-mssql
+php56w-mysql php-mysqli, php_database
+php56w-mysqlnd php-mysqli, php_database
+php56w-odbc php-pdo_odbc, php_database
+php56w-opcache php55w-pecl-zendopcache
+php56w-pdo
+php56w-pear
+php56w-pecl-apcu
+php56w-pecl-gearman
+php56w-pecl-geoip
+php56w-pecl-imagick
+php56w-pecl-memcache
+php56w-pecl-xdebug
+php56w-pgsql php-pdo_pgsql, php_database
+php56w-phpdbg
+php56w-process php-posix, php-sysvmsg, php-sysvsem, php-sysvshm
+php56w-pspell
+php56w-recode
+php56w-snmp
+php56w-soap
+php56w-tidy
+php56w-xmlphp-dom, php-domxml, php-wddx, php-xsl
+php56w-xmlrpc

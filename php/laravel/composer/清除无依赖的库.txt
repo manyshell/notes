@@ -1,0 +1,4 @@
+composer remove some/package
+
+composer remove phpexcel/phpexcel
+composer remove vlucas/phpdotenv

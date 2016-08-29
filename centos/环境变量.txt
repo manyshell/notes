@@ -1,0 +1,19 @@
+将redis的启动路径加入环境变量
+vi /etc/profile
+export PATH=$PATH:/etc/init.d:/usr/local/redis/bin
+
+使环境立即生效
+source /etc/profile
+
+切换用户，不填则为当前账号重新登录
+su -l
+
+修改语言为英文
+echo 'LANG=en_US.UTF-8' >>/etc/profile
+source /etc/profile
+su -l
+
+修改语言为中文
+echo 'LANG=zh_CN.utf8' >>/etc/profile
+source /etc/profile
+su -l

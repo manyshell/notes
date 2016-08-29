@@ -1,0 +1,105 @@
+98.126.184.149
+//---安装功能包---\
+如果不安装，会出现很多命令无法执行
+出错提示：
+	Command "php artisan migrate" is not defined.
+
+
+
+在 项目根目录 composer.json 中添加
+"require-dev": {
+    "way/generators": "~3.0"
+},
+To use it with Laravel 5, you'll need to require "way/generators": "~3.0"
+
+
+然后在项目根目录执行：
+composer update
+升级时需要访问到被墙掉的网址，命令执行时间较长，大概五分钟
+
+
+//---安装功能包---/
+
+php artisan clear-compiled	清除聚合编译文件 vendor/compiled.php
+php artisan optimize		优化应用程序性能，生成自动加载文件，且产生聚合编译文件 vendor/compiled.php
+
+如果compiled.php已被删除，且处于调试模式时，使用命令php artisan optimize，compiled.php不会生成。
+如果compiled.php已被删除，且处于工厂模式时，使用命令php artisan optimize，compiled.php会生成。
+
+//---执行数据库迁移---\
+php artisan migrate
+//---执行数据库迁移---/
+
+//---创建一张表---\
+php artisan migrate:make create_authors_table
+据说laravel5改成了这样：
+php artisan make:migration create_my_table --create="my_table"
+1、php artisan make:migration create_authors --create="authors"
+经测试，create_authors是文件名，最后跟后面的表名一致，方便阅读
+
+php artisan migrate:make create_authors_table --table authors --create
+在上面的例子中，我们使用—table选项指定表名。另外，我添加了—create选项去告知artisan这个表需要被创建。
+如果我们打开迁移文件，你会发现artisan为我们生成了额外的样板文件代码：
+2、找到对应文件\database\migrations后修改
+$table->string('name');
+$table ->string('email', 64);
+3、执行
+php artisan migrate
+
+//---创建一张表---/
+
+
+//---表增加一列---\
+php artisan migrate:make add_email_to_authors_table
+实现表[authors]增加email字段
+
+public function up()
+{
+        Schema::table('authors', function($table) {
+                $table ->string('email', 64);
+        });
+}
+public function down()
+{
+        Schema::table('authors', function($table) {
+                $table ->dropColumn('email');
+        });
+}
+//---表增加一列---/
+
+//---创建控制器---\
+资源控制器可让你无痛建立和资源相关的 RESTful 控制器。
+例如，你可能希望创建一个控制器，它可用来处理针对你的应用程序所保存相片的 HTTP 请求。
+我们可以使用 make:controller Artisan 命令，快速创建这样的控制器：
+php artisan make:controller PhotoController
+php artisan make:controller ProfileController
+
+//---创建控制器---/
+
+//---创建模型---\
+你也可以通过 make:model 命令自动生成 Eloquent 模型：
+php artisan make:model Photo
+执行后，会在database\migrations产生2015_05_04_020847_create_photos_table.php文件，看来此功能是为创建新表设计的
+创建模型后，需要使用php artisan migrate生成
+第一句是 Creating Migrations
+第二句是 Running Migrations
+
+您也可以在类中定义 table 属性自定义要对应的数据库表。
+class User extends Model {
+    protected $table = 'my_users';
+}
+//---创建模型---/
+
+//---路由缓存---\
+若您的应用只使用了控制器路由，你可利用 Laravel 的路由缓存。
+使用路由缓存，将大幅降低注册应用程序所有路由所需要的时间。
+某些情况下，路由注册甚至可以快上 100 倍。要产生路由缓存，只要执行 route:cache Artisan 命令：
+php artisan route:cache
+
+要移除路由缓存文件，但不希望产生新的缓存，可使用 route:clear 命令：
+php artisan route:clear
+
+php artisan route:list
+//---路由缓存---/
+
+

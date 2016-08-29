@@ -1,0 +1,16 @@
+访问https://nodejs.org/
+会自动转到https://nodejs.org/en/
+
+默认为首页，在很显眼的地方可直接下载Download for Windows (x86)的安装程序。
+列出了两个版本：v4.5.0 LTS 和 v6.4.0 Current
+我下载的最新版：v6.4.0  https://nodejs.org/dist/v6.4.0/node-v6.4.0-x86.msi
+
+下载安装后，执行node-v6.4.0-x86.msi，一步一步直到安装完成。
+
+C:\Users\Administrator>node -v
+v6.4.0
+
+C:\Users\Administrator>npm -v
+3.10.3
+
+nodejs安装成功，

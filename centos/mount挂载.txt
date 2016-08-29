@@ -1,0 +1,24 @@
+饜离
+cat /etc/exports
+/mnt/storage 10.154.12.*(rw,sync,no_root_squash,acl)
+
+---------------------------------------------------------
+境2008Server
+mount -o username=administrator,passwd='Sx123456_202' //10.154.12.202/e$ /mnt/storage
+
+境2003Server
+mount //10.154.3.16/E$ -O iocharset=utf8,username=administrator,password=10.154.3.16,dmask=777,fmask=777,codepage=cp936
+
+境centos
+mount -t nfs 10.154.5.127:/opt/mnt/storage /mnt/storage127
+
+境Win8
+mount -t cifs //192.168.1.32/code /mnt/code -o username=administrator,password=77
+mount -t cifs -o username=php,password=php,dir_mode=0777,file_mode=0777 //192.168.1.32/phpclound /mnt/hzg
+
+---------------------------------------------------------
+�＋�境
+umount /mnt/storage
+umount /mnt/dev32
+
+

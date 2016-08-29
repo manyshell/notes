@@ -1,0 +1,4 @@
+find /opt/lampp/htdocs/session -size +300c | wc -l > /opt/lampp/online.txt	找出大于300字节的文件
+find / -name mysql*
+find / -name redis*
+find / -name mysql.sock

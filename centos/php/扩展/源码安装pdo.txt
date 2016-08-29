@@ -1,0 +1,47 @@
+如果没有php.ini，需要创建php.ini
+cp /usr/src/php/php.ini-development /usr/local/etc/php/php.ini
+
+------
+本次安装没有安装pdo，经查已经存在了，所有只需要安装pdo-mysql
+PDO
+ 
+PDO support => enabled
+PDO drivers => sqlite
+ 
+pdo_sqlite
+------
+
+安装php扩展--pdo,pdo-mysql：
+
+cd /usr/src/php/ext/pdo
+phpize
+php-config
+./configure
+make
+make install clean
+
+cd /usr/src/php/ext/pdo_mysql
+phpize
+php-config              //不带参数不会执行，但不执行也可以成功，应该就是用的默认值
+./configure
+make
+make install clean
+
+安装完后会产生三个so模块：
+
+Libraries have been installed in:
+   /usr/src/php/ext/pdo_mysql/modules
+
+/usr/local/lib/php/extensions/no-debug-non-zts-20131226/pdo.so
+/usr/local/lib/php/extensions/no-debug-non-zts-20131226/pdo_mysql.so    *本次就增加了这一个
+/usr/local/lib/php/extensions/no-debug-non-zts-20131226/mysqli.so
+
+vi /usr/local/etc/php/php.ini
+cp /usr/local/etc/php/php.ini /var/www/html/public/php.ini          //cp出来修改
+cp /var/www/html/public/php.ini /usr/local/etc/php/php.ini          //修改完后cp回去
+
+extension=pdo.so
+extension=pdo_mysql.so
+extension=mysqli.so
+
+

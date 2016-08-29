@@ -1,0 +1,42 @@
+通过 make:model 命令自动生成 Eloquent 模型：
+php artisan make:model User
+注意我们并没有告诉 Eloquent User 模型会使用哪个数据库表。
+若没有特别指定，系统会默认自动对应名称为「类名称的小写复数形态」的数据库表。
+所以，在上面的例子中， Eloquent 会假设 User 模型将把数据存在 users 数据库表。您也可以在类中定义 table 属性自定义要对应的数据库表。
+
+如果删除了表，执行
+php artisan migrate
+表会被重建
+
+
+One To One				一对一			return $this->hasOne('App\Phone');
+One To Many				一对多			return $this->hasMany('App\Comment');
+Many To Many				多对多			return $this->belongsToMany('App\Role');
+Has Many Through			远层一对多关联		return $this->hasManyThrough('App\Post', 'App\User');
+Polymorphic Relations			多态关联			return $this->morphMany('App\Photo', 'imageable');
+Many To Many Polymorphic Relations	多态的多对多关联		return $this->morphToMany('App\Tag', 'taggable');
+
+
+$cathectics = \App\Models\Cathectic::where('uid', '=', $uid)->get();
+$cathectics = \App\Models\Cathectic::find($uid);
+$cathectics = \App\Models\Cathectic::find($uid)->hasOneAccount()->get();
+
+//---多条件查询用法及提取数量限制---\
+$cathectic = \App\Models\Order::where(array('uid'=>$uid, 'status'=>'1'))->take(2)->get()->toArray();
+//---多条件查询用法及提取数量限制---/
+
+
+//---排序方法---\
+orderBy('created_at')	默认为asc
+orderBy('created_at', 'desc')	默认为asc
+
+$cathectic = \App\Models\Order::where(array('uid'=>$uid, 'status'=>'1'))->take(2)->orderBy('created_at')->get()->toArray();
+$cathectic = \App\Models\Order::where(array('uid'=>$uid, 'status'=>'1'))->take(2)->orderBy('created_at', 'desc')->get()->toArray();
+//---排序方法---/
+
+//---Select指定字段---\
+$cathectic = \App\Models\Order::where(array('uid'=>$uid, 'status'=>'1'))->take(2)->orderBy('created_at', 'desc')->select('type', 'lotteryval')->get()->toArray();
+//---Select指定字段---/
+
+$results = Hot::where('sort', '>=', $trySort)->increment('sort');	列增1
+$results = Hot::where('sort', '>=', $trySort)->decrement('sort');	列减1

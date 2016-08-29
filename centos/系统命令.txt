@@ -1,0 +1,55 @@
+查看系统多少位
+getconf LONG_BIT
+
+显示增量内容，不带参数，显示最后10行
+tail
+-n 数字	表示：显示多少行
+-f 表示实时跟踪
+
+tail -n 20 abc.txt
+
+tail -f abc.txt
+
+查看rpm安装包
+rpm -qa
+
+查看yum安装包
+yum list installed | grep mysql
+
+注：cmake和编译安装的时间都比较长，在编译过程如果提示错误，可以根据提示完善相关安装条件，然后执行下面的命令后，再重新编译安装：
+# make clean 
+
+//---查看端口---\
+netstat -tulnp | grep 3306
+//---查看端口---/
+
+---yum更换源---\
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum makecache
+---yum更换源---/
+
+---查看进程---\
+ps -ef
+ps -aux
+pgrep nginx
+pgrep nginx   相当于  ps -ef | grep nginx
+---查看进程---/
+
+---杀进程---\
+某进程为1827，-s 9即强制、尽快终止进程
+kill 1827
+kill -s 9 1827
+---杀进程---/
+
+---用户&组---\
+增加组
+groupadd developers
+增加用户指定组
+useradd -G developers -d /home/hzg -m -s /bin/bash hzg
+删除用户
+userdel git
+删除组
+groupdel developers
+---用户&组---/
+
+/usr/local/nginx/sbin/nginx

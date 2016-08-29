@@ -1,0 +1,2 @@
+开启一个无密码Redis服务
+docker run --name redis_3.0.2 -p 6379:6379 -d docker.io/redis:latest

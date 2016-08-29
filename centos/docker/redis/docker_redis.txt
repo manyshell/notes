@@ -1,0 +1,25 @@
+MAINTAINER Cyevo B2ls "cyevo_b2ls@mail.com"
+
+# install redis
+RUN yum install -y curl tar make gcc wget
+RUN cd /usr/local/src && \
+wget http://download.redis.io/redis-stable.tar.gz && \
+tar xf redis-stable.tar.gz && \
+cd redis-stable && \
+make && \
+make install
+
+EXPOSE 6379
+
+RUN echo "/usr/local/bin/redis-server /ace/upload/redis-stable/redis.conf" > /ace/bin/start
+
+
+
+
+-----------------
+²âÊÔ£º
+redis-cli
+127.0.0.1:6379> set mykey "Hello"
+OK
+127.0.0.1:6379> get mykey
+"Hello"

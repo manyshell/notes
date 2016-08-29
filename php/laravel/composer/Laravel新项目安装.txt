@@ -1,0 +1,34 @@
+创建新项目--新建一个纯laravel项目
+composer create-project --prefer-dist laravel/laravel
+如果失败后重新安装，需要删除掉已下载的内容，不然会出现安装通不过。
+
+创建一个博客项目
+composer create-project --prefer-dist laravel/laravel blog
+
+手动安装laravel
+1、访问地址下载：
+https://github.com/laravel/laravel
+
+2、解压上传至web目录
+
+3、进入laravel目录
+composer install
+
+出错提示：
+laravel/framework v5.2.9 requires ext-mbstring * -> the requested PHP extension mbstring is missing from your system.
+安装mbstring扩展
+centos: yum -y install php-mbstring
+debian: apt-get install php-mbstring    //看样子这样安装不会成功
+
+  [RuntimeException]                                                                                       
+  Failed to clone https://github.com/symfony/process.git via https, ssh protocols, aborting.               
+  - https://github.com/symfony/process.git                                                                 
+    Cloning into '/var/www/html/test/laravel-master/vendor/symfony/process'...                             
+    fatal: unable to access 'https://github.com/symfony/process.git/': Could not resolve host: github.com  
+  - git@github.com:symfony/process.git                                                                     
+    Cloning into '/var/www/html/test/laravel-master/vendor/symfony/process'...                             
+    ssh: Could not resolve hostname github.com: Name or service not known                                  
+    fatal: Could not read from remote repository.                                                          
+                                                                                                           
+    Please make sure you have the correct access rights                                                    
+    and the repository exists.                                    

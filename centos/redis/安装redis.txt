@@ -1,0 +1,71 @@
+---Yum安装方式---\
+yum update
+yum install epel-release
+yum install redis
+vi /etc/redis.conf
+daemonize yes
+保存并退出:wq
+
+---Yum安装方式---/
+
+---编译安装方式---\
+# install redis
+yum install -y curl tar make gcc wget
+cd /root
+wget http://download.redis.io/redis-stable.tar.gz
+tar xf redis-stable.tar.gz
+cd redis-stable
+make PREFIX=/usr/local/redis MALLOC=libc install
+cp redis.conf /usr/local/redis/
+
+修改redis.conf，打开后台运行选项：
+vi /usr/local/redis/redis.conf
+daemonize yes
+保存并退出:wq
+
+redis安装完成，首次测试
+/usr/local/redis/bin/redis-server /usr/local/redis/redis.conf &
+
+复制REDIS启动脚本
+cp /root/redis-stable/utils/redis_init_script /etc/init.d/redis
+
+编辑，在redis中加入开机启动的代码
+vi /etc/init.d/redis
+#!/bin/sh
+# chkconfig:   2345 90 10
+# description:  Redis is a persistent key-value database
+
+
+EXEC=/usr/local/redis/bin/redis-server
+CLIEXEC=/usr/local/redis/bin/redis-cli
+
+CONF="/usr/local/redis/redis.conf" 
+
+保存并退出:wq
+
+---修改为执行权限，默认就是可以执行的，除非不能执行是运行此命令---\
+修改执行权限：
+chmod +x /etc/init.d/redis
+---修改为执行权限，默认就是可以执行的，除非不能执行是运行此命令---/
+
+将redis的启动路径加入环境变量
+export PATH=$PATH:/etc/init.d:/usr/local/redis/bin
+source /etc/profile
+
+开机自启动：
+# 尝试启动或停止redis
+service redis start
+service redis stop
+ 
+开启服务自启动
+chkconfig redis on
+
+设置 redis 服务开机自动启动
+systemctl enable redis
+-----------------
+测试：
+redis-cli
+127.0.0.1:6379> set mykey "Hello"
+OK
+127.0.0.1:6379> get mykey
+"Hello"

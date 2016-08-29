@@ -1,0 +1,30 @@
+<?php
+/**
+ * �������ȴ�
+ * Created by Hzg
+ * Date: 2015-09-06
+ * Time: ����4:16
+ */
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Hot extends Model {
+    protected $table = 'hot';
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
+
+    public function hasManyProtocol()
+    {
+        return $this->hasMany('App\Models\ReimburseProtocol', 'hotid', 'id');
+    }
+
+    public static function assocDelete($assocId) {
+        $res = Hot::find($assocId)->hasManyProtocol()->delete();
+        $result = Hot::find($assocId)->delete();
+//        $res = $result->delete();
+        return $result;
+    }
+}

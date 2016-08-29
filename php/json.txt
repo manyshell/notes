@@ -1,0 +1,31 @@
+[]	数组
+{}	Json对象
+
+$arr = array ('a'=>1,'b'=>2,'c'=>3,'d'=>4,'e'=>5);
+echo json_encode($arr);
+输出：
+{"a":1,"b":2,"c":3,"d":4,"e":5}
+
+$arr = Array('one', 'two', 'three');
+echo json_encode($arr);
+输出：
+["one","two","three"]
+
+$arr = Array('one', 'two', 'three');
+echo json_encode($arr, JSON_FORCE_OBJECT);
+输出：
+{"0":"one","1":"two","2":"three"}
+
+$arr1 = Array('name'=>'test1', 'src', '...');
+$arr2 = Array('name'=>'test2', 'src', '...');
+$arr = array();
+$arr[0] = $arr1;
+$arr[1] = $arr2;
+$respone = array("id"=>1,"data"=>$arr);
+echo json_encode($respone);
+输出：
+{"id":1,"data":[{"name":"test1","0":"src","1":"..."},{"name":"test2","0":"src","1":"..."}]}
+
+
+$lotteryval = json_decode($arr, true);
+

@@ -1,0 +1,6 @@
+scp	本地文件或目录	远程文件或目录	[-r:复制子目录|-a:带文件属性复制|-f:选删除旧的再复制]
+
+把远程目录复制到本地，执行后，有提示输入密码
+scp -r test	root@10.154.12.185:/opt/lampp/htdocs/chong/www
+scp -r test/	root@10.154.12.185:/opt/lampp/htdocs/chong/www/
+

@@ -1,0 +1,78 @@
+public function school()
+{
+    return $this->hasMany('App\Models\HeadmasterSchool', 'uid',                 'uid');
+    //                     指定的外部模型                 外部模型对应的字段     本类对应的字段
+}
+---------------------------------------------------------------------------------------------------
+$userObj = Users::with('school')->where(["uid"=>$uid])->get()->toArray();
+使用with方法，可以获取到本模型的数据
+Array
+(
+    [0] => Array
+        (
+            [uid] => 5702191cc063b50e8c083e50
+            [name] => hzg
+            [pass] => 202cb962ac59075b964b07152d234b70
+            [tel] => 123
+            [nick] => 
+            [telcode] => 123456
+            [telcode_update] => 2016-04-07 05:01:37
+            [telcode_times] => 0
+            [type] => 1
+            [salt] => 
+            [secret] => 77024bdcfa3cdbf2618022f3ae00c9b90512b288
+            [avatar_path] => 
+            [avatar_filename] => 
+            [created_at] => 2016-04-04 15:34:52
+            [updated_at] => 2016-04-07 05:04:04
+            [school] => Array
+                (
+                    [0] => Array
+                        (
+                            [id] => 1
+                            [uid] => 5702191cc063b50e8c083e50
+                            [school_id] => 1
+                            [created_at] => -0001-11-30 00:00:00
+                            [updated_at] => -0001-11-30 00:00:00
+                        )
+
+                    [1] => Array
+                        (
+                            [id] => 2
+                            [uid] => 5702191cc063b50e8c083e50
+                            [school_id] => 2
+                            [created_at] => -0001-11-30 00:00:00
+                            [updated_at] => -0001-11-30 00:00:00
+                        )
+
+                )
+
+        )
+
+)
+
+---------------------------------------------------------------------------------------------------
+$userObj = Users::find($uid)->school()->get()->toArray();
+使用本方法，不获取到本模型的数据，只能获得关联表的数据。
+
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [uid] => 5702191cc063b50e8c083e50
+            [school_id] => 1
+            [created_at] => -0001-11-30 00:00:00
+            [updated_at] => -0001-11-30 00:00:00
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [uid] => 5702191cc063b50e8c083e50
+            [school_id] => 2
+            [created_at] => -0001-11-30 00:00:00
+            [updated_at] => -0001-11-30 00:00:00
+        )
+
+)

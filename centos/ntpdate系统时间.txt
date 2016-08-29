@@ -1,0 +1,11 @@
+校时：将本机与某IP主机的时间同步
+/usr/sbin/ntpdate -u ip地址
+/usr/sbin/ntpdate ip地址
+如果提示找不到，则需要安装
+yum install -y ntp
+
+查看时区
+date -R
+
+修改时间
+date -s "2014-10-26 21:52:01"

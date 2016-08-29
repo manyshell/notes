@@ -1,0 +1,23 @@
+1、增加composer配置
+composer.json
+    "require": {
+        "vlucas/phpdotenv": "~2.2",
+    },
+
+composer update
+
+2、启用防冲突
+---app.php---\
+vi \bootstrap\app.php
+    Dotenv::makeMutable();  //多项目重载.env
+
+    Dotenv::load(__DIR__.'/../');
+
+---vi app.php---/
+
+启用会降低效率，只有当必须时才启用
+
+启用条件：
+项目A、项目B，位于同一台服务器
+A实时调用B的资源，会引起B的环境变量发生混乱，只有当这种情况时，必须启用。
+

@@ -1,0 +1,58 @@
+
+如何实现软删除功能：
+1、数据库，表增加该列
+deleted_at
+
+2、模型设置
+头部引用
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+类里启用
+use SoftDeletes;
+protected $dates = ['deleted_at'];
+
+3、使用场景
+
+withTrashed()
+
+$trashCount = Admin::withTrashed()->where(array('username'=>$request['admin_uname']))->count();
+
+Admin::withTrashed()->where(array('username'=>$request['admin_uname']))->restore();
+
+要加入 deleted_at 字段到数据库表，可以在迁移文件里使用 softDeletes 方法：
+
+$table->softDeletes();
+现在当您使用模型调用 delete 方法时， deleted_at字段会被更新成现在的时间戳。在查询使用软删除功能的模型时，被「删除」的模型数据不会出现在查询结果里。
+
+强制查询软删除数据
+
+要强制让已被软删除的模型数据出现在查询结果里，在查询时使用 withTrashed 方法：
+
+$users = User::withTrashed()->where('account_id', 1)->get();
+withTrashed 也可以用在关联查询：
+
+$user->posts()->withTrashed()->get();
+如果您只想查询被软删除的模型数据，可以使用 onlyTrashed 方法：
+
+$users = User::onlyTrashed()->where('account_id', 1)->get();
+要把被软删除的模型数据恢复，使用 restore 方法：
+
+$user->restore();
+您也可以结合查询语句使用 restore ：
+
+User::withTrashed()->where('account_id', 1)->restore();
+如同 withTrashed ， restore 方法也可以用在关联对象：
+
+$user->posts()->restore();
+如果想要真的从模型数据库删除，使用 forceDelete 方法：
+
+$user->forceDelete();
+forceDelete 方法也可以用在关联对象：
+
+$user->posts()->forceDelete();
+要确认模型是否被软删除了，可以使用 trashed 方法：
+
+if ($user->trashed())
+{
+    //
+}

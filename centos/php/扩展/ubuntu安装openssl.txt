@@ -1,0 +1,143 @@
+
+cd /usr/src/php/ext/openssl
+phpize
+php-config
+./configure
+make
+make install clean
+
+ls -la /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+
+修改php.ini
+
+修改后[883行]
+extension=openssl.so
+
+
+将修改后的php.ini复制回去
+cp /var/www/html/php.ini /usr/local/etc/php/php.ini
+
+启动php-fpm, [php-fpm &]
+
+
+/home/tmp/sh/php-5.2.17/ext/openssl
+/alidata/server/php-5.2.17/bin/phpize
+
+extension
+openssl.so
+
+
+/root/php-5.2.17/ext/openssl/modules/openssl.so
+/alidata/server/php-5.2.17/lib/php/extensions/no-debug-zts-20060613/openssl.so
+
+/var/www/game/push/uuu.php
+
+42.96.136.155
+root::545454cjy
+
+/alidata/server/php/etc/php.ini
+/alidata/server/php-5.2.17/etc/php.ini
+extension=openssl.so
+extension_dir = "/alidata/server/php-5.2.17/lib/php/extensions/no-debug-zts-20060613"
+
+extension_dir = "/usr/local/lib/php/extensions/no-debug-zts-20131226"                       //openssl.so
+
+/usr/local/lib/php/extensions/no-debug-zts-20131226
+
+cp /alidata/server/php/etc/php.ini /usr/local/lib/
+
+cp /home/csh/php-5.6.10/php.ini-development /usr/local/lib/php.ini
+/home/csh/php-5.6.10/ext/openssl
+phpize
+php-config
+./configure
+make
+make install clean
+
+Libraries have been installed in:
+   /home/csh/php-5.6.10/ext/openssl/modules
+
+
+/etc/apache2/httpd.conf
+/home/csh/httpd-2.4.12/docs/conf/httpd.conf
+/home/csh/httpd/conf/original/httpd.conf
+/home/csh/httpd/conf/httpd.conf
+/home/tmp/sh/httpd-2.2.22/docs/conf/httpd.conf
+/home/tmp/sh/config-httpd-2.4.2/httpd.conf
+/home/tmp/sh/config-httpd-2.2.19/httpd.conf
+
+/alidata/server/httpd/bin/apachectl stop
+/alidata/server/httpd/bin/apachectl start
+
+
+
+mv /alidata/modules/libphp5.so /alidata/modules/libphp5.2.so
+cp /home/csh/php-5.6.10/libs/libphp5.so /alidata/modules/libphp5.so
+cp /home/csh/php-5.6.10/libs/libphp5.so /alidata/server/httpd/modules
+
+lrwxrwxrwx  1 root   root    26 Feb  4  2013 php -> /alidata/server/php-5.2.17/
+/usr/local/include/php
+
+ln -s /usr/local/include/php
+
+/home/csh/php-5.6.10
+./configure --prefix=/alidata/server/php --with-config-file-path=/alidata/server/php/etc --with-mysql=/alidata/server/mysql --with-mysqli=/alidata/server/mysql/bin/mysql_config --with-pdo-mysql=/alidata/server/mysql/bin/mysql_config --with-apxs2=/alidata/server/httpd/bin/apxs --enable-static --enable-maintainer-zts --enable-zend-multibyte --enable-sockets --enable-wddx --enable-zip --enable-calendar --enable-bcmath --enable-soap --with-zlib --with-iconv --with-gd --with-xmlrpc --enable-mbstring --without-sqlite --with-curl --enable-ftp --with-mcrypt --with-freetype-dir=/usr/local/freetype.2.1.10 --with-jpeg-dir=/usr/local/jpeg.6 --with-png-dir=/usr/local/libpng.1.2.8 --disable-ipv6 --disable-debug --with-iconv=/usr/local/
+
+vi /alidata/server/httpd/conf/httpd.conf
+
+killall -9 apache2
+
+service apache2 start
+service apache2 stop
+
+/var/www
+
+
+/etc/nginx
+启动
+nginx -c /etc/nginx/nginx.conf
+重启
+nginx -s reload
+
+/var/www/game/push/uuu.php
+/alidata/www
+
+/etc/php5/fpm/php.ini
+vi /etc/nginx/sites-available/default
+
+/etc/init.d/php5-fpm start
+
+apt-get install docker
+apt-get remove docker
+
+apt-get remove docker-engine
+apt-get remove docker-engine=1.12.0-0~trusty
+
+
+wget -qO- https://get.docker.com/ | sh
+
+apt-get install docker-engine
+
+apt-get install -y docker-engine=1.8.1-0~precise
+apt-get install -y docker-engine=1.12.0-0~trusty
+
+https://apt.dockerproject.org/repo/pool/main/d/docker-engine/
+
+
+
+service docker status
+service docker start
+
+An error occurred trying to connect: Get http:///var/run/docker.sock/v1.24/images/json: read unix @->/var/run/docker.sock: read: connection reset by peer
+
+查看docker-engine的版本
+apt-cache policy docker-engine
+
+根据docker-engine，选择需要安装的版本
+apt-get install -y docker-engine=1.9.1-0~trusty
+
+apt-get安装包的下载目录
+/var/cache/apt/archives/
+
+ubuntu查看系统信息
+cat /etc/*release*

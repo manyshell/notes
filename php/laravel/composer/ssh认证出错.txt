@@ -1,0 +1,50 @@
+1、生成rsa文件
+ssh-keygen
+一直回车
+-rw-------. 1 root root 1679 May 18 02:32 id_rsa
+-rw-r--r--. 1 root root  399 May 18 02:32 id_rsa.pub
+
+2、生成publickey(公钥)
+访问github.com，登录
+Personal settings--->SSH and GPG keys--->SSH keys--->New SSH key
+Title处填写:    id_rsa.pub
+Key复制id_rsa.pub里的内容
+
+3、测试
+ssh -T -v git@github.com
+
+-----------------------------------------------
+
+关于ssh连接主机，git连接github失败的问题  
+问题：$ ssh -T git@github.com
+ssh -T git@github.com
+
+Permission denied (publickey)
+
+解析：  
+    1、可以看出问题出在publickey(公钥)  
+    2、接着ssh -T -v git@github.com 看下具体信息  
+ssh -T -v git@github.com
+
+debug1: Next authentication method: publickey
+debug1: Trying private key: /root/.ssh/id_rsa
+debug1: Trying private key: /root/.ssh/id_dsa
+debug1: Trying private key: /root/.ssh/id_ecdsa
+debug1: Trying private key: /root/.ssh/id_ed25519
+debug1: No more authentication methods to try.
+Permission denied (publickey).
+
+4、发现它一直在查找id_rsa、id_dsa、id_ecdsa、id_ed25519这几个文件，然后就不尝试其他了;  
+
+ls -la /root/.ssh
+-rw-r--r--. 1 root root 3978 May 16 08:29 known_hosts
+
+cp known_hosts id_rsa
+chmod 0644 id_rsa
+
+ssh-add ~/.ssh/id_rsa
+
+ssh-keygen -t rsa -C "hzg@github.com"  
+ssh -T -v git@github.com
+
+

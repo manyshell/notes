@@ -1,0 +1,8 @@
+composer.json
+
+"require": {
+        "maatwebsite/excel": "~2.0.0"
+}
+
+composer update
+

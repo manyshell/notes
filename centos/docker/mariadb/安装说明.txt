@@ -1,0 +1,27 @@
+一、获取mariadb镜像
+1、从网上下载
+docker search mariadb
+使用官网：
+docker pull docker.io/mariadb
+使用加速地址：
+docker pull 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+2、导入镜像
+
+
+
+二、安装常用命令
+基础镜像是debian系统，缺少很多命令，需要自己手动安装
+apt-get update
+apt-get install -y vim
+
+三、进入并执行
+该镜像已经生成了(mysql)用户组[/etc/group]和用户[/etc/passwd]
+
+
+docker run -i -t --privileged=true -v /root/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 5kmji0bo.mirror.aliyuncs.com/library/mariadb /bin/bash
+关于 -e MYSQL_ROOT_PASSWORD=123456 的说明：
+如果/root/mysqldata目录不存在，则会自动初始化数据库，并且root的密码为123456。
+如果/root/mysqldata目录已存在，则会调用已有数据库，root的密码以最后一次修改的密码为准，未修改则还是123456。
+
+如需修改root的密码，可远程修改
+UPDATE user SET Password = PASSWORD('newpass') WHERE user = 'root';

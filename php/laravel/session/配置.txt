@@ -1,0 +1,2 @@
+expire_on_close     配置项用于设置是否在浏览器关闭时立即让Session失效。
+

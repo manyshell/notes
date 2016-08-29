@@ -1,0 +1,22 @@
+rpm -ivh https://mirror.webtatic.com/yum/el7/epel-release.rpm               //发现只装了第一个, yum找不到php5.6
+rpm -ivh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+
+yum install php56w php56w-mbstring
+
+/etc/php.ini
+/etc/php.d/mbstring.ini
+
+
+
+apt-get install php5-cli
+3，安装 PHP5和Apache PHP5 module
+# apt-get install php5 
+# apt-get install libapache2-mod-php5
+# apt-get install php5-gd
+# apt-get install php5-mysql
+
+# apt-get install php5-common
+# apt-get install php5-cli
+# apt-get install php5-cgi
+# apt-get install php5-ffmpeg
+# apt-get install php5-imagick

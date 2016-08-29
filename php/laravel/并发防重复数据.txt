@@ -1,0 +1,65 @@
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Text;
+use Illuminate\Support\Facades\DB;
+
+class ApiActivityController extends APIController
+{
+    public function index() {
+        set_time_limit(0);
+        ob_end_flush();
+        for ($i=0;$i<300;$i++) {
+            try {
+                DB::beginTransaction();
+                $maxId = Text::lockForUpdate()->max('mm');			//使用排他锁，自增值连续，防止了同一个索引被其它session获取。
+//                $maxId = Text::sharedLock()->max('mm');			//如果使用共享锁，自增会空缺，说明获取锁时，索引有重复，执行了回滚。
+                if (is_null($maxId)) {
+                    $maxId = 2015000;
+                }
+                $newRecord = new Text;
+                $newRecord->mm = $maxId + 1;
+                if ($newRecord->save()) {
+                    DB::commit();
+                    echo "({$i})success-{$newRecord->mm}<br/>\n";
+                } else {
+                    DB::rollback();			//回滚
+                    echo "<p style='font-size:40px;color:red;'>({$i})failure-{$newRecord->mm}</p>";
+                }
+            } catch (\PDOException $e) {
+                DB::rollback();				//回滚，这里不能少
+                sleep(1);					//延时
+                echo "<p style='font-size:140px;color:red;'>({$i})Locked</p>";
+                $i--;						//重新执行当前事务
+            }
+            flush();
+        }
+
+
+        for ($i=0;$i<300;$i++) {
+            try {
+                DB::beginTransaction();
+                $maxId = Text::lockForUpdate()->max('mm');
+                if (is_null($maxId)) {
+                    $maxId = 2015000;
+                }
+                $newRecord = new Text;
+                $newRecord->mm = $maxId + 1;
+                if ($newRecord->save()) {
+                    DB::commit();
+                    echo "({$i})success-{$newRecord->mm}<br/>\n";
+                } else {
+	                DB::rollback();			//回滚必须在这里，否则会造成数据不正确
+                    echo "<p style='font-size:40px;color:red;'>({$i})failure-{$newRecord->mm}</p>";
+                }
+            } catch (\PDOException $e) {
+				//如果同时取到同一个索引值为最大值，另一个线程会被行锁阻隔，错死锁(deadlock)错误。
+                DB::rollback();			//回滚必须在这里，否则会造成数据不正确
+                sleep(1);	//延时
+                echo "<p style='font-size:140px;color:red;'>({$i})Locked</p>";
+                $i--;		//重新执行当前事务
+            }
+            flush();
+        }
+    }
+}

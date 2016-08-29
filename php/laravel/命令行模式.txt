@@ -1,0 +1,4 @@
+ÐÞ¸Äkernel.php
+
+console\commands
+	Php artisan command:goal ssq

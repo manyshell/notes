@@ -1,0 +1,38 @@
+Dockfile:
+FROM docker.io/centos
+
+RUN yum -y install redis
+
+EXPOSE 6379
+ENTRYPOINT ["redis-server"]  
+CMD ["/etc/redis.conf", "--bind", "0.0.0.0"]
+
+启动命令:
+docker run -d -p 6379:6379 hzg/centos7:redis
+-----------------------
+测试一(成功)：
+不修改/etc/redis.conf [daemonize no]
+采用下列Dockfile
+--
+FROM docker.io/centos
+
+EXPOSE 6379
+ENTRYPOINT ["redis-server"]  
+CMD ["/etc/redis.conf", "--bind", "0.0.0.0"]
+--
+此方案可以成功运行redis
+docker run -d -p 6379:6379 centos7:redis
+docker run -d -P centos7:redis
+
+测试二(失败)：
+修改/etc/redis.conf [daemonize yes]
+采用下列Dockfile
+--
+FROM docker.io/centos
+
+EXPOSE 6379
+ENTRYPOINT ["redis-server"]  
+CMD ["/etc/redis.conf", "--bind", "0.0.0.0"]
+--
+此方案运行redis失败
+docker run -d -p 6379:6379 centos7:redis

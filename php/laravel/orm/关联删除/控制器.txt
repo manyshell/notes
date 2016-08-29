@@ -1,0 +1,4 @@
+    public function del(Request $request) {
+        $result = Hot::assocDelete($request["id"]);
+        var_dump($result);
+    }

@@ -1,0 +1,19 @@
+1、在profile文件中设置相关环境变量
+
+# vi /etc/profile
+
+http_proxy=http://181.40.112.194:3128 # 分别指定http、https、ftp协议使用的代理服务器地址
+export http_proxy
+
+---
+http_proxy=http://177.92.53.108:3128
+export http_proxy
+
+2、 source /etc/profile 生效。
+source /etc/profile
+-------------------------------------
+
+对于 yum 的代理,还要另外设置 /etc/yum.conf 文件,添加以下代码:
+proxy=http://username:password@yourproxy:8080/
+#若无密码限制,则为以下方式
+#proxy=http://yourproxy:8080/

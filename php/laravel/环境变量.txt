@@ -1,0 +1,13 @@
+首先，Laravel会通过读取$_SERVER的方式调用环境变量。
+默认情况下，当$_SERVER不存在时，Laravel会设置这个值，以备需要时调用。
+然而，同时运行两个或多个Laravel项目时，
+第一个项目调用第二个项目，环境变量被第一个项目设置，
+第二个项目因为环境变量读取规则，会调用到前一个项目的$_SERVER值，然而这肯定是错的。
+
+解决方案：
+/bootstrap/app.php
+
+找到这行Dotenv::load(__DIR__.'/../');，在该行之前加入重载env设置
+
+Dotenv::makeMutable();
+Dotenv::load(__DIR__.'/../');

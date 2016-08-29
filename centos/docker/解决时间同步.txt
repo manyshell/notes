@@ -1,0 +1,1 @@
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && ntpdate cn.pool.ntp.org

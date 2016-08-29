@@ -1,0 +1,4 @@
+//        return response()->json(['name' => 'Abigail', 'state' => 'CA'])->header('Content-Type', 'application/json;charset=utf-8');
+//        return Response::json($json,200);
+        return Response::json($json);
+//        return Response::json(array('name' => 'Steve', 'state' => 'CA'));

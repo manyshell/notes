@@ -1,0 +1,9 @@
+只能是中文
+'name' => 'sometimes|between:2,6|regex:/^[\x{4e00}-\x{9fa5}]*[\x{4e00}-\x{9fa5}]$/u',
+------
+首尾只能是中文a-z0-9，中间可以有[-]横线、[.]小数点、[ ]空格
+'real_name' => 'required|between:2,36|regex:/^[\x{4e00}-\x{9fa5}a-zA-Z0-9][\x{4e00}-\x{9fa5}a-zA-Z0-9-.\s]*[\x{4e00}-\x{9fa5}a-zA-Z0-9]$/u',
+
+
+
+
