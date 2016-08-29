@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="googlebot" content="noindex, nofollow" />
+
+<script type="text/javascript" src="./jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../jquery.qtip.js"></script>
+<link rel="stylesheet" type="text/css" href="../jquery.qtip.css" />
+
+<style type="text/css">
+.tooltiptext{
+    display: none;
+}
+</style>
+
+<title>qTip2 - Stay visible when mousing onto tooltip by qTip2</title>
+
+<script type='text/javascript'>
+	$(document).ready(function () {
+		$('a').each(function () {
+			$(this).qtip({
+				content: $(this).next('.tooltiptext'),
+				hide: {
+					fixed: true,
+					delay: 300
+				}
+			});
+		});
+
+		$("#qtip1").qtip({
+			content: "text",
+			position: {
+				my: 'bottom center',  // Position my top left...
+				at: 'top center', // at the bottom right of...
+				target: $("#qtip1") // my target
+			},
+			hide: {
+				fixed: true,
+				delay: 300
+			}
+		});
+
+		$("[id^='menu_']").each(function () {
+			$(this).qtip({
+				content: $(this).next('.tooltiptext'),
+				position: {
+					adjust: {
+						x: -10
+					},
+					my: 'center left',  // Position my top left...
+					at: 'center right', // at the bottom right of...
+					target: $(this) // my target
+				},
+				style: {
+					classes: 'qtip-light qtip-shadow'
+				},
+				hide: {
+					fixed: true,
+					delay: 100
+				}
+			});
+		});
+
+
+
+	});
+
+</script>
+</head>
+
+<body>
+<div style="font-size:18px;margin:20px;">
+	1、鼠标移动到目标后，弹出提示框，鼠标再移动到提示框后，提示框不会消失。<br/>
+	2、鼠标离开目标和鼠标离开提示框后，提示框消失。<br/>
+	类似于菜单操作，目前仅适用一级菜单。<br/>
+</div>
+
+<div style="margin-top:20px;border-bottom:1px solid #ddd;padding:5px;">
+	一、默认位置
+	<a href="#test">Hover over me</a>
+	<div class="tooltiptext">
+		A clickable <a href="http://google.com">link</a>
+	</div>
+</div>
+
+<div style="margin-top:20px;border-bottom:1px solid #ddd;padding:5px;">
+	二、默认位置，带html的很多文字
+	<a href="#test">Hover over me</a>
+	<div class="tooltiptext">
+		<span style='font-size:20px;line-height:22px;'>很多文字很多文字很多文<span style="color:red;">字很多文</span>字很多文字很多文字很多文字很多文字</span>
+	</div>
+</div>
+
+<div style="margin-top:20px;border-bottom:1px solid #ddd;padding:5px;">
+	三、提示框位于目标上方，箭头居中向下，默认文字
+	<span style="padding-left:200px;"><span id="qtip1" style="background:#ddd;">Hover over me</span></span>
+</div>
+
+<div style="margin-top:20px;border-bottom:1px solid #ddd;padding:5px;">
+	四、提示框位于目标右方，箭头居中向左，HTML文字，自定义提示框
+	<div id="menu_1" style="background:#ddd;width:300px;padding:10px 0px 10px 20px;">Hover over me</div>
+	<div class="tooltiptext">
+		<span style='font-size:20px;line-height:22px;'>很多文字很多文字很多文字很多文字很多文字很多文字很多文字很多文字</span>
+	</div>
+	<div id="menu_2" style="background:#ddd;width:300px;padding:10px 0px 10px 20px;">Hover over me</div>
+	<div class="tooltiptext">
+		<span style='font-size:20px;line-height:22px;'>
+			<a href="#">很多文</a> <a href="#">很文字多文</a> <a href="#">多文</a> <a href="#">很文</a>
+			<a href="#">很多文</a> <a href="#">很文字多文</a> <a href="#">多文</a> <a href="#">很文</a>
+		</span>
+	</div>
+	<div id="menu_2" style="background:#ddd;width:300px;padding:10px 0px 10px 20px;">Hover over me</div>
+	<div class="tooltiptext">
+		<span style='font-size:20px;line-height:22px;'>
+			<a href="#">芜杂</a> <a href="#">安全帽</a> <a href="#">安全帽</a> <a href="#">安全帽</a>
+			<a href="#">安全帽</a> <a href="#">安全帽</a> <a href="#">灭火器</a> <a href="#">五个字的哦</a>
+			<a href="#">安全帽</a> <a href="#">安全帽</a> <a href="#">灭火器</a> <a href="#">五个字的哦</a>
+			<a href="#">安全帽</a> <a href="#">安全帽</a> <a href="#">灭火器</a> <a href="#">五个字的哦</a>
+		</span>
+	</div>
+</div>
+
+
+
+</body>
+</html>
