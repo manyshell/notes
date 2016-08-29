@@ -31,3 +31,10 @@ vendor目录都不存在，肯定不会有下面的文件，自然就是找不到，这样就陷入了一个死循环
 #//        ]
     },
 问题应该就出在这样，删掉就好了，但为什么这里会出问题，还需要进一步的测试思考。
+
+出错原因：增加了一个laravel插件，然后composer update -vvv，可在最后总是报错。
+解决办法：
+composer clear-cache
+rm -rf vendor/*             //未做这一步
+composer update -vvv
+
