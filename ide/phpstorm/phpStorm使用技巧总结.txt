@@ -56,3 +56,4 @@ alt + F1                                    定位编辑文件所在位置:
 alt + F12                                   打开命令行栏
 command + shift + f                         全局搜索
 ctrl + w                                    根据按下的次数，选中当前层级内的内容，按1次当前词，按多次引号内的所有内容
+ctrl + shift + w                            与ctrl+w相反
