@@ -1,0 +1,31 @@
+从服务器获取镜像
+docker pull gitlab/gitlab-ce
+
+
+mkdir /var/local/gitlab
+mkdir /var/local/gitlab/config
+mkdir /var/local/gitlab/logs
+mkdir /var/local/gitlab/data
+
+chmod 777 -R gitlab
+
+启动gitlab
+docker run --detach \
+    --hostname gitlab.example.com \
+    --publish 843:443 --publish 880:80 --publish 822:22 \
+    --name gitlab \
+    --restart always \
+    --volume /var/local/gitlab/config:/etc/gitlab \
+    --volume /var/local/gitlab/logs:/var/log/gitlab \
+    --volume /var/local/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:latest
+
+
+docker run --detach \
+    --publish 843:443 --publish 880:80 --publish 822:22 \
+    --name gitlab \
+    --restart always \
+    --volume /var/local/gitlab/config:/etc/gitlab \
+    --volume /var/local/gitlab/logs:/var/log/gitlab \
+    --volume /var/local/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:latest
