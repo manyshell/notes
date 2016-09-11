@@ -1,13 +1,10 @@
 从服务器获取镜像
 docker pull gitlab/gitlab-ce
 
-
 mkdir /var/local/gitlab
-mkdir /var/local/gitlab/config
-mkdir /var/local/gitlab/logs
-mkdir /var/local/gitlab/data
-
-chmod 777 -R gitlab
+cd /var/local/gitlab
+mkdir config logs data
+chmod 777 -R /var/local/gitlab
 
 启动gitlab
 docker run --detach \

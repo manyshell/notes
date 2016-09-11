@@ -1,0 +1,77 @@
+1、常规安装
+
+系统升级
+$ apt-get update
+
+安装docker
+$ apt-get install docker-engine
+
+启动docker
+$ service docker start
+
+如果安装失败，说明没有安装源，应采取第2种方法
+
+
+2、高级安装
+https://docs.docker.com/engine/installation/linux/ubuntulinux/
+
+系统升级
+$ apt-get update
+
+安装认证
+$ apt-get install apt-transport-https ca-certificates
+
+
+$ apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+
+编辑 vi /etc/apt/sources.list
+deb https://apt.dockerproject.org/repo ubuntu-trusty main
+
+系统升级
+$ apt-get update
+
+查看docker安装版本
+$ apt-cache policy docker-engine
+root@dsba438cfd:/var/www# apt-cache policy docker-engine
+docker-engine:
+  Installed: (none)
+  Candidate: 1.12.1-0~xenial
+  Version table:
+     1.12.1-0~xenial 500
+        500 https://apt.dockerproject.org/repo ubuntu-xenial/main amd64 Packages
+     1.12.0-0~xenial 500
+        500 https://apt.dockerproject.org/repo ubuntu-xenial/main amd64 Packages
+     1.11.2-0~xenial 500
+        500 https://apt.dockerproject.org/repo ubuntu-xenial/main amd64 Packages
+     1.11.1-0~xenial 500
+        500 https://apt.dockerproject.org/repo ubuntu-xenial/main amd64 Packages
+     1.11.0-0~xenial 500
+        500 https://apt.dockerproject.org/repo ubuntu-xenial/main amd64 Packages
+
+
+指定版本安装
+apt-get install -y docker-engine=1.12.1-0~trusty
+安装完成，则docker已启动
+
+-----------
+root@dsba438cfd:/var/www# cat /etc/*release*
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=16.04
+DISTRIB_CODENAME=xenial
+DISTRIB_DESCRIPTION="Ubuntu 16.04.1 LTS"
+NAME="Ubuntu"
+VERSION="16.04.1 LTS (Xenial Xerus)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 16.04.1 LTS"
+VERSION_ID="16.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+UBUNTU_CODENAME=xenial
+
+
+root@dsba438cfd:/var/www# uname -r
+4.4.0-28-generic
+
+
