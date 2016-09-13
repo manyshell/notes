@@ -1,0 +1,34 @@
+jquery inArray()函数详解
+
+
+jquery inarray(value,array) 确定第一个参数在数组中的位置(如果没有找到则返回 -1 )。
+
+jquery.inarray(value,array)
+确定第一个参数在数组中的位置(如果没有找到则返回 -1 )。
+
+返回值 Int
+
+参数
+value (any) : 用于在数组中查找是否存在
+
+array (array) : 待处理数组。
+
+----------------------------------------
+
+//---检测str扩展名是否在允许范围内---\
+//str是文件名或带路径的文件名
+function checkImgType(str) {
+    if (str) {
+        var imgType = ["gif", "jpeg", "jpg", "bmp", "png"];
+        var extName = str.substring(str.lastIndexOf(".")+1).toLowerCase();
+        if ($.inArray( extName, imgType ) >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+//---检测str扩展名是否在允许范围内---/
+

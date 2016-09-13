@@ -1,0 +1,72 @@
+//---file upload---\
+                    $absPath = S_ROOT."/userfiles/report";
+                    $relPath = "./userfiles/report";
+                    if (!is_dir($absPath)) {
+                        createFolder($absPath);     //创建目录
+                    }
+                    $absPath .= "/".date("Ym");
+                    $relPath .= "/".date("Ym");
+                    if (!is_dir($absPath)) {
+                        createFolder($absPath);
+                    }
+                    $isUpload = 0;
+                    $relFiles = "";
+                    $picPrefix = "origin_";
+                    $relFile = [];
+                    $pics = [];
+                    $picType = ["jpg", "jpeg", "png", "gif"];
+
+                    if (isset($_FILES["reportPic"])) {
+                        if (count($_FILES["reportPic"]["name"]) > 0) {
+                            for ($i=0;$i<count($_FILES["reportPic"]["name"]);$i++) {
+                                if ($_FILES["reportPic"]["size"][$i] > 0) {
+                                    $fileCount = $i;
+                                    $dimension = getimagesize($_FILES["reportPic"]["tmp_name"][$i]);
+                                    if ($dimension[0] * $dimension[1] > 0) {
+                                        $mainName = $picPrefix.date("Ymd_His_").mt_rand(100,200).$fileCount;					        //文件名，未转换前
+                                        $extendName = strtolower(substr(strrchr($_FILES["reportPic"]["name"][$i], "."), 1));	//扩展名并转换为小写(无[.])
+                                        $fullName = $mainName.".".$extendName;
+                                        $absFile = $absPath."/".$fullName;
+                                        if (in_array($extendName,$picType)) {
+                                            if (move_uploaded_file($_FILES["reportPic"]["tmp_name"][$i], $absFile)) {
+                                                $n = count($relFile);
+                                                $relFile[$i]["width"] = $dimension[0];
+                                                $relFile[$i]["height"] = $dimension[1];
+                                                $relFile[$i]["absPath"] = $absPath;
+                                                $relFile[$i]["relPath"] = $relPath;
+                                                $relFile[$i]["mainName"] = $mainName;
+                                                $relFile[$i]["extendName"] = $extendName;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (count($relFile) > 0) {
+                            foreach ($relFile as $arr) {
+                                $mainName = explode("_", $arr["mainName"], 2);
+                                $originFile = $arr["absPath"]."/".$arr["mainName"].".".$arr["extendName"];
+                                $outputFile = $arr["absPath"]."/".$mainName[1].".".$arr["extendName"];
+                                $dst_im = imagecreatetruecolor($arr["width"], $arr["height"]);
+                                if (($arr["extendName"] == "jpg") || ($arr["extendName"] == "jpeg")) {
+                                    $src_im = imagecreatefromjpeg($originFile);
+                                    imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $arr["width"], $arr["height"], $arr["width"], $arr["height"]);
+                                    imagejpeg($dst_im, $outputFile);
+                                    imagedestroy($src_im);
+                                } elseif ($arr["extendName"] == "png") {
+                                    $src_im = imagecreatefrompng($originFile);
+                                    imagecopyresized($dst_im, $src_im, 0, 0, 0, 0, $arr["width"], $arr["height"], $arr["width"], $arr["height"]);
+                                    imagepng($dst_im, $outputFile);
+                                    imagedestroy($src_im);
+                                } elseif ($arr["extendName"] == "gif") {
+                                    copy($originFile, $outputFile);             //gif无法转换，直接复制原图
+                                }
+
+                                imagedestroy($dst_im);
+                                @unlink($originFile);
+                                $pics[] = $arr["relPath"]."/".$mainName[1].".".$arr["extendName"];
+                            }
+                        }
+                    }
+                    $relFiles = json_encode($pics);                         //获得上传文件的json
+                    //---file upload---/

@@ -1,0 +1,11 @@
+<input type=file id=reportPic name=reportPic[] accept="image/*" multiple>
+
+if ($("#reportPic").val()) {
+        var files = $("#reportPic")[0].files;                           //取得上传文件的对象
+        for (var i=0;i<files.length;i++) {                              //取得上传文件的数组
+            if (!checkImgType(files[i].name)) {
+                bb_alert("文件类型出错<br/>'"+files[i].name+"'");
+                return false;
+            }
+        }
+    }

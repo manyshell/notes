@@ -1,0 +1,19 @@
+$.ajax({
+        url: activeApiUrl + "/report.php",
+        type: 'POST',
+        cache: false,
+        data: new FormData($('#message_form')[0]),
+        dataType: 'JSON',
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            console.log(data);
+        }
+    });
+
+说明：
+        cache: false,                                   //关闭缓存
+        data: new FormData($('#message_form')[0]),      //#message_form为<form id="message_form" enctype="multipart/form-data">
+        processData: false,                             //不将参数转换为字符串
+        contentType: false,                             //默认值: "application/x-www-form-urlencoded"。发送信息至服务器时内容编码类型。false为禁止修改内容编码
+
