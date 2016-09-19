@@ -1,33 +1,44 @@
-docker pull docker.io/pamtrak06/ubuntu14.04-apache2
+# docker pull docker.io/pamtrak06/ubuntu14.04-apache2
 
-# docker run --name test -i -t -p 80:80 docker.io/pamtrak06/ubuntu14.04-apache2:latest /bin/bash
+# docker run --name test -i -t -p 8080:80 docker.io/pamtrak06/ubuntu14.04-apache2:latest /bin/bash
+
+# apachectl -v
+Server version: Apache/2.4.7 (Ubuntu)
+Server built:   Jul 15 2016 15:34:04
+
+# apt-get install wget
 
 限制ip并发访问
 http://dominia.org/djao/limitipconn2.html
 wget http://dominia.org/djao/limit/mod_limitipconn-0.24.tar.bz2
 tar jxvf mod_limitipconn-0.24.tar.bz2
 cd mod_limitipconn-0.24
-/usr/local/apache2/bin/apxs -c -i mod_limitipconn.c #指定apxs的正确路径
-/usr/bin/apxs2 -c -i mod_limitipconn.c
+# /usr/bin/apxs2 -c -i mod_limitipconn.c
 
-# ll /usr/lib/apache2/modules/
+# ll /usr/lib/apache2/modules/mod_limitipconn.so
 -rw-r--r--. 1 root root  44090 Sep 18 23:40 mod_limitipconn.so
+-rw-r--r--. 1 root root  22536 Jul 15 15:36 mod_status.so
 
 # vi /etc/apache2/apache2.conf
-增加新行：  ServerName localhost:80
 
-找到    ExtendedStatus，没有则手动添加
+
+# cd /etc/apache2/mods-available
+
+开启limitipconn，首先要开启server-status
+# vi status.conf
 ExtendedStatus On
+<location /server-status>
+    SetHandler server-status
+    Order Allow,Deny
+    Allow from all
+</location>
 
-cd /etc/apache2/mods-available
 # vi limitipconn.load
 LoadModule limitipconn_module /usr/lib/apache2/modules/mod_limitipconn.so
 
 # vi limitipconn.conf
 <IfModule mod_limitipconn.c>
-    <Location />
-        MaxConnPerIP 2
-    </Location>
+    MaxConnPerIP 2
 </IfModule>
 说明：
 <IfModule mod_limitipconn.c>
@@ -35,12 +46,15 @@ LoadModule limitipconn_module /usr/lib/apache2/modules/mod_limitipconn.so
 MaxConnPerIP 3 #要限制每个IP的并发连接数，此处为3 
 NoIPLimit image/* #对图片文件夹不做IP限制 
 </Location>
-<Location /mp3>#要限制的目录，此处表示/mp3目录 
+<Location /mp3>#要限制的目录，此处表示/mp3目录
 MaxConnPerIP 1 #限制每个IP的并发连接数为1个 
 OnlyIPLimit audio/mpeg video #该限制只对视频和音频格式的文件 
 </Location>
 </IfModule>
 -----------------------------------------------------------------------
+
+with the URL of http://servername/server-status
+
 
 # cat /etc/*release*
 PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
@@ -65,9 +79,7 @@ apt-get upgrade
 # apt-get install net-tools           //不是必须，安装netstat等网络命令(未安装成功)
 # apt-get install wget           //不是必须，安装netstat等网络命令(未安装成功)
 
-# apachectl -v
-Server version: Apache/2.4.10 (Debian)
-Server built:   Jul 20 2016 06:48:18
+
 
 
 apacche启动和重启
@@ -97,3 +109,18 @@ apt-get remove libapr1-dev
                Depends: libaprutil1-dev but it is not going to be installed
                Depends: debhelper (>= 9) but it is not going to be installed
                Depends: perl but it is not going to be installed
+
+
+
+修改前：
+<Directory />
+        Options FollowSymLinks
+        AllowOverride None
+        Require all denied
+</Directory>
+
+修改后：
+<Directory />
+    Options Indexes FollowSymLinks
+    AllowOverride None
+</Directory>
