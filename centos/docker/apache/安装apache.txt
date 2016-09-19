@@ -1,0 +1,99 @@
+docker pull docker.io/pamtrak06/ubuntu14.04-apache2
+
+# docker run --name test -i -t -p 80:80 docker.io/pamtrak06/ubuntu14.04-apache2:latest /bin/bash
+
+限制ip并发访问
+http://dominia.org/djao/limitipconn2.html
+wget http://dominia.org/djao/limit/mod_limitipconn-0.24.tar.bz2
+tar jxvf mod_limitipconn-0.24.tar.bz2
+cd mod_limitipconn-0.24
+/usr/local/apache2/bin/apxs -c -i mod_limitipconn.c #指定apxs的正确路径
+/usr/bin/apxs2 -c -i mod_limitipconn.c
+
+# ll /usr/lib/apache2/modules/
+-rw-r--r--. 1 root root  44090 Sep 18 23:40 mod_limitipconn.so
+
+# vi /etc/apache2/apache2.conf
+增加新行：  ServerName localhost:80
+
+找到    ExtendedStatus，没有则手动添加
+ExtendedStatus On
+
+cd /etc/apache2/mods-available
+# vi limitipconn.load
+LoadModule limitipconn_module /usr/lib/apache2/modules/mod_limitipconn.so
+
+# vi limitipconn.conf
+<IfModule mod_limitipconn.c>
+    <Location />
+        MaxConnPerIP 2
+    </Location>
+</IfModule>
+说明：
+<IfModule mod_limitipconn.c>
+<Location />#要限制的目录，此处表示的根目录 
+MaxConnPerIP 3 #要限制每个IP的并发连接数，此处为3 
+NoIPLimit image/* #对图片文件夹不做IP限制 
+</Location>
+<Location /mp3>#要限制的目录，此处表示/mp3目录 
+MaxConnPerIP 1 #限制每个IP的并发连接数为1个 
+OnlyIPLimit audio/mpeg video #该限制只对视频和音频格式的文件 
+</Location>
+</IfModule>
+-----------------------------------------------------------------------
+
+# cat /etc/*release*
+PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="8"
+VERSION="8 (jessie)"
+ID=debian
+HOME_URL="http://www.debian.org/"
+SUPPORT_URL="http://www.debian.org/support/"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+# apt-get install apache2               //安装这个没有apxs命令，意味着不能安装新模块
+# apt-get install apache2-dev
+
+
+# apt-get update                      //安装失败则需要更新系统
+apt-get upgrade
+# gpg --keyserver pgp.mit.edu --recv-keys 3B4FE6ACC0B21F32              //如果更新失败，提示 NO_PUBKEY 3B4FE6ACC0B21F32
+# gpg -a --export 3B4FE6ACC0B21F32 | apt-key add -                      //执行完成后，再执行 update
+
+# apt-get install vim                 //不是必须，安装vi编辑器
+# apt-get install net-tools           //不是必须，安装netstat等网络命令(未安装成功)
+# apt-get install wget           //不是必须，安装netstat等网络命令(未安装成功)
+
+# apachectl -v
+Server version: Apache/2.4.10 (Debian)
+Server built:   Jul 20 2016 06:48:18
+
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+web路径
+/var/www/html
+
+
+
+gpg --keyserver pgp.mit.edu --recv-keys 40976EAF437D05B5
+gpg -a --export 40976EAF437D05B5 | apt-key add -
+
+apt-get install libapr1-dev
+
+apt-get install libpq5=8.4.1-1
+aptitude install libqt4-dbus=4.4.3-1  
+
+apt-get install libuuid1=2.20.1-5.1ubuntu20.7
+
+apt-get remove libapr1-dev
+
+
+ apache2-dev : Depends: libapr1-dev but it is not going to be installed
+               Depends: libaprutil1-dev but it is not going to be installed
+               Depends: debhelper (>= 9) but it is not going to be installed
+               Depends: perl but it is not going to be installed

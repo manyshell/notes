@@ -26,3 +26,5 @@ apt-get install git                     //代码仓库
 apt-get install libfreetype6-dev        //如果要安装GD，需要在系统中先安装freetype库
 apt-get install libjpeg-dev             //如果要安装GD，需要在系统中先安装jpeg库
 apt-get install libpng-dev              //如果要安装GD，需要在系统中先安装png库
+
+apt-get remove 				//卸载
