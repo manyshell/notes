@@ -1,0 +1,66 @@
+limitipconn的作用：限制ip并发访问
+limitipconn不是apache的标准模块，需要手工下载安装。
+
+limitipconn的网站
+http://dominia.org/djao/limitipconn2.html
+
+如果没有wget命令，则需要安装
+# apt-get install wget
+
+# wget http://dominia.org/djao/limit/mod_limitipconn-0.24.tar.bz2
+# tar jxvf mod_limitipconn-0.24.tar.bz2
+# cd mod_limitipconn-0.24
+安装模块到apache2
+# /usr/bin/apxs2 -c -i mod_limitipconn.c
+实际上apxs2只是apxs的链接
+
+# ll /usr/lib/apache2/modules/mod_limitipconn.so
+-rw-r--r--. 1 root root  44090 Sep 18 23:40 mod_limitipconn.so
+表示模块安装成功
+
+加载limitipconn
+# vi /etc/apache2/mods-available/limitipconn.load
+LoadModule limitipconn_module /usr/lib/apache2/modules/mod_limitipconn.so
+
+配置limitipconn
+# vi /etc/apache2/mods-available/limitipconn.conf
+<IfModule mod_limitipconn.c>
+    MaxConnPerIP 2
+</IfModule>
+
+ln -s /etc/apache2/mods-available/limitipconn.load /etc/apache2/mods-enabled/limitipconn.load
+ln -s /etc/apache2/mods-available/limitipconn.conf /etc/apache2/mods-enabled/limitipconn.conf
+
+重启apache让配置生效
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+-----------------------------------------------------
+1. 如果并发限制生效，返回503错误
+
+2. 如果没有apxs2，需要安装:
+apt-get install apache2-dev
+
+3. 根据安装提示，可能需要对系统资源进行升级。
+# apt-get update
+# apt-get upgrade
+
+4. 如果更新失败，提示 NO_PUBKEY ...，需要执行以下指令:
+# gpg --keyserver pgp.mit.edu --recv-keys 3B4FE6ACC0B21F32
+# gpg -a --export 3B4FE6ACC0B21F32 | apt-key add -
+
+5. limitipconn官方配置：
+<IfModule mod_limitipconn.c>
+    <Location />#要限制的目录，此处表示的根目录 
+        MaxConnPerIP 3 #要限制每个IP的并发连接数，此处为3 
+        NoIPLimit image/* #对图片文件夹不做IP限制 
+    </Location>
+    <Location /mp3>#要限制的目录，此处表示/mp3目录
+        MaxConnPerIP 1 #限制每个IP的并发连接数为1个 
+        OnlyIPLimit audio/mpeg video #该限制只对视频和音频格式的文件 
+    </Location>
+</IfModule>
+

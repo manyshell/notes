@@ -1,0 +1,17 @@
+# docker pull docker.io/pamtrak06/ubuntu14.04-apache2
+
+# docker run --name test -i -t -p 8080:80 docker.io/pamtrak06/ubuntu14.04-apache2:latest /bin/bash
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+# apachectl -v
+Server version: Apache/2.4.7 (Ubuntu)
+Server built:   Jul 15 2016 15:34:04
+
+如果提示ServerName出错，要在最后一行增加:
+# vi /etc/apache2/apache2.conf
+ServerName localhost:80
+

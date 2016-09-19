@@ -1,0 +1,34 @@
+mod_bw的作用：限制ip带宽
+mod_bw不是apache的标准模块，需要手工下载安装。
+
+mod_bw的网站
+http://ivn.cl/category/apache/
+Downloads for Bandwidth Mod
+Posted by Bruce in Apache on January 6, 2010
+
+Current Version : v0.92
+
+# mkdir mod_bw
+# cd mod_bw
+# wget http://ivn.cl/files/source/mod_bw-0.92.tgz
+# tar xvf mod_bw-0.92.tgz
+安装模块到apache2
+# /usr/bin/apxs2 -c -i mod_bw.c
+
+root@DQ5650-107:~/mod_bw# /usr/bin/apxs2 -c -i mod_bw.c
+/usr/share/apr-1.0/build/libtool --silent --mode=compile --tag=disable-static x86_64-linux-gnu-gcc -std=gnu99 -prefer-pic -pipe -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security  -D_FORTIFY_SOURCE=2   -DLINUX -D_REENTRANT -D_GNU_SOURCE  -pthread  -I/usr/include/apache2  -I/usr/include/apr-1.0   -I/usr/include/apr-1.0 -I/usr/include  -c -o mod_bw.lo mod_bw.c && touch mod_bw.slo
+mod_bw.c: In function 'get_bw_rate':
+mod_bw.c:567:59: error: 'conn_rec' has no member named 'remote_addr'
+             if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
+                                                           ^
+mod_bw.c: In function 'get_maxconn':
+mod_bw.c:658:59: error: 'conn_rec' has no member named 'remote_addr'
+             if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
+                                                           ^
+mod_bw.c: In function 'get_sid':
+mod_bw.c:709:59: error: 'conn_rec' has no member named 'remote_addr'
+             if (apr_ipsubnet_test(e[i].x.ip, r->connection->remote_addr)) {
+                                                           ^
+apxs:Error: Command failed with rc=65536
+.
+

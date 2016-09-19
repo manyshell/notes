@@ -1,0 +1,34 @@
+默认情况下，apache2自带了status模块
+
+# ll /etc/apache2/mods-available/status.*
+-rw-r--r-- 1 root root 749 Jan  3  2014 /etc/apache2/mods-available/status.conf
+-rw-r--r-- 1 root root  64 Jan  3  2014 /etc/apache2/mods-available/status.load
+
+# ll /etc/apache2/mods-enabled/status.*
+lrwxrwxrwx 1 root root 29 Sep  9 19:51 /etc/apache2/mods-enabled/status.conf -> ../mods-available/status.conf
+lrwxrwxrwx 1 root root 29 Sep  9 19:51 /etc/apache2/mods-enabled/status.load -> ../mods-available/status.load
+
+默认情况下 http://servername/server-status 是不能访问的，修改一下设置就可以正常访问了
+# vi /etc/apache2/mods-available/status.conf
+修改前：
+<Directory />
+        Options FollowSymLinks
+        AllowOverride None
+        Require all denied
+</Directory>
+
+修改后：
+<Directory />
+    Options Indexes FollowSymLinks
+    AllowOverride None
+</Directory>
+
+保存，退出，重启apache就可以访问了
+http://servername/server-status
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+
