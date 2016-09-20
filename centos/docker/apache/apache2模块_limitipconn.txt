@@ -28,6 +28,7 @@ LoadModule limitipconn_module /usr/lib/apache2/modules/mod_limitipconn.so
     MaxConnPerIP 2
 </IfModule>
 
+启用limitipconn
 ln -s /etc/apache2/mods-available/limitipconn.load /etc/apache2/mods-enabled/limitipconn.load
 ln -s /etc/apache2/mods-available/limitipconn.conf /etc/apache2/mods-enabled/limitipconn.conf
 
@@ -42,7 +43,7 @@ apacche启动和重启
 1. 如果并发限制生效，返回503错误
 
 2. 如果没有apxs2，需要安装:
-apt-get install apache2-dev
+# apt-get install apache2-dev
 
 3. 根据安装提示，可能需要对系统资源进行升级。
 # apt-get update
