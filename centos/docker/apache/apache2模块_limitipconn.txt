@@ -65,3 +65,9 @@ apacche启动和重启
     </Location>
 </IfModule>
 
+<IfModule mod_limitipconn.c>
+    <Location />
+        MaxConnPerIP 3
+        NoIPLimit image/*
+    </Location>
+</IfModule>

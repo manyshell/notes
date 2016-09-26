@@ -1,0 +1,5 @@
+
+httpd线程数:    ps -aux | grep httpd
+httpd线程数:    ps -aux | grep httpd | wc -l
+连接数:         netstat -ant | grep $ip:80 | wc -l
+当前的连接数:   netstat -ant | grep $ip:80 | grep EST | wc -l
