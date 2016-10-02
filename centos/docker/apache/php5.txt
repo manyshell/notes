@@ -1,0 +1,64 @@
+查看已安装的php
+dpkg --get-selections|grep install|grep php
+
+查看可以安装的apache2的模块
+apt-cache search all libapache2-mod-php*
+libapache2-mod-php5 - server-side, HTML-embedded scripting language (Apache 2 module)
+libapache2-mod-php5filter - server-side, HTML-embedded scripting language (apache 2 filter module)
+php5-fpm - server-side, HTML-embedded scripting language (FPM-CGI binary)
+php5-cgi - server-side, HTML-embedded scripting language (CGI binary)
+
+安装了apache2，又安装了php5.6.17，却没有mod_php5，原来是需要安装这个
+apt-get install libapache2-mod-php5
+
+又报冲突了，卸载
+apt-get purge php5-common
+
+apt-get install libapache2-mod-php5
+
+ll /usr/lib/apache2/modules/libphp5*
+-rw-r--r-- 1 root root 9801032 Jul 28 13:01 libphp5.so
+现在，php5的apache2模块有了
+
+cd /etc/apache2/
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+---------------------------------------
+如果要安装php5的扩展，但又没有phpize，需要安装php5-dev
+apt-get install php5-dev
+
+ln -s /etc/apache2/sites-available/shenmulin.com.conf /etc/apache2/sites-enabled/shenmulin.com.conf
+
+-rw-r--r-- 1 root root  3404 Jan  7  2014 ssl.conf
+-rw-r--r-- 1 root root    97 Jan  3  2014 ssl.load
+
+ln -s /etc/apache2/mods-available/ssl.load /etc/apache2/mods-enabled/ssl.load
+ln -s /etc/apache2/mods-available/ssl.conf /etc/apache2/mods-enabled/ssl.conf
+
+ll /usr/lib/apache2/modules/libphp5*
+mod_ssl
+
+root@localhost:/etc/apache2/mods-available# service apache2 restart
+ * Restarting web server apache2                                                                                                                                     [fail] 
+ * The apache2 configtest failed.
+Output of config test was:
+AH00526: Syntax error on line 43 of /etc/apache2/mods-enabled/ssl.conf:
+SSLSessionCache: 'shmcb' session cache not supported (known names: ). Maybe you need to load the appropriate socache module (mod_socache_shmcb?).
+Action 'configtest' failed.
+The Apache error log may have more information.
+
+root@localhost:/etc/apache2/mods-available# ll /usr/lib/apache2/modules/mod_so*
+-rw-r--r-- 1 root root 14352 Jul 28 13:52 /usr/lib/apache2/modules/mod_socache_dbm.so
+-rw-r--r-- 1 root root 10256 Jul 28 13:52 /usr/lib/apache2/modules/mod_socache_memcache.so
+-rw-r--r-- 1 root root 22544 Jul 28 13:52 /usr/lib/apache2/modules/mod_socache_shmcb.so
+
+root@localhost:/etc/apache2# ll /etc/apache2/mods-available/so*
+-rw-r--r-- 1 root root 74 Jan  3  2014 mods-available/socache_dbm.load
+-rw-r--r-- 1 root root 84 Jan  3  2014 mods-available/socache_memcache.load
+-rw-r--r-- 1 root root 78 Jan  3  2014 mods-available/socache_shmcb.load
+
+ln -s /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/socache_shmcb.load
