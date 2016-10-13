@@ -1,0 +1,146 @@
+# cat /etc/issue
+Ubuntu 14.04.4 LTS
+
+*更新
+# apt-get update
+# apt-get upgrade
+
+搜索程序安装源中有没有指定的程序
+# apt-cache search nginx
+
+安装nginx
+# apt-get install nginx
+
+# nginx -v
+nginx version: nginx/1.4.6 (Ubuntu)
+表示nginx安装成功
+
+# netstat -tulnp | grep 80
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      9883/nginx      
+tcp6       0      0 :::80                   :::*                    LISTEN      9883/nginx      
+80端口已被监听，说明nginx正在运行
+
+---
+访问：  http://120.76.244.164/  收到信息则表过可正常使用了
+Welcome to nginx!
+
+If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+
+For online documentation and support please refer to nginx.org.
+Commercial support is available at nginx.com.
+
+Thank you for using nginx.
+至止，http已安装完成
+---
+现在安装https
+
+一、创建密钥
+mkdir /var/local/ssl
+cd /var/local/ssl
+
+生成一个RSA密钥
+# openssl genrsa -des3 -out server.rsa 1024
+会提示你输入key，尽可能长些复杂些，后面好几处要用，我都是复制粘贴的 
+Enter pass phrase for server.rsa:                   输入保护密码，  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwND1VMVJ3BC
+Verifying - Enter pass phrase for server.rsa:       重输保护密码，  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwND1VMVJ3BC
+
+ll
+-rw-r--r-- 1 root staff  963 Sep 28 22:41 server.rsa
+
+生成一个证书请求
+openssl req -new -key server.rsa -out server.csr
+提示输入刚才的key
+Enter pass phrase for server.rsa:                   MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwND1VMVJ3BC
+后面会提示输入一些信息，很多可以直接回车，使用默认值
+Locality Name (eg, city) []:                        城市名，BeiJing
+Organizational Unit Name (eg, section) []:          组织单位名称，HaiDian
+A challenge password []:                            私钥保护密码，直接按了 回车
+
+ll
+-rw-r--r-- 1 root staff  603 Sep 28 22:46 server.csr
+-rw-r--r-- 1 root staff  963 Sep 28 22:41 server.rsa
+
+
+# 拷贝一个不需要输入密码的密钥文件
+# openssl rsa -in server.rsa -out server.key
+Enter pass phrase for server.rsa:                   MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwND1VMVJ3BC
+
+ll
+-rw-r--r-- 1 root staff  603 Sep 28 22:46 server.csr
+-rw-r--r-- 1 root staff  887 Sep 28 22:49 server.key
+-rw-r--r-- 1 root staff  963 Sep 28 22:41 server.rsa
+
+自己签发证书
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+Signature ok
+subject=/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd
+Getting Private key
+
+ll
+-rw-r--r-- 1 root staff  757 Sep 28 22:49 server.crt    要用到的
+-rw-r--r-- 1 root staff  603 Sep 28 22:46 server.csr
+-rw-r--r-- 1 root staff  887 Sep 28 22:49 server.key    要用到的
+-rw-r--r-- 1 root staff  963 Sep 28 22:41 server.rsa
+
+二、修改nginx的配置
+
+cd /etc/nginx
+
+vi /etc/nginx/sites-available/ssl
+---https\---
+server {  
+listen 443;  
+server_name localhost;  
+
+access_log /var/log/nginx/vagrant.com-access.log;
+error_log  /var/log/nginx/vagrant.com-error.log error;
+
+ssl on;  
+ssl_certificate /var/local/ssl/server.crt;  
+ssl_certificate_key /var/local/ssl/server.key;  
+  
+ssl_session_timeout 5m;  
+  
+ssl_protocols SSLv2 SSLv3 TLSv1;  
+ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;  
+ssl_prefer_server_ciphers on;  
+  
+location / {
+        root /var/local/testsite;
+        index index.html index.htm;
+    }
+}
+---https/---
+
+---代理转发\---
+server{
+    	listen 		8080;#监听端口，根据你的需要进行修改(建议改为80)
+    	resolver	114.114.114.114;#dns服务器,你这个不加应该也行，因为只用IP的
+        access_log  logs/proxy.access.log  proxy buffer=1024k;#日志路径，可以不写
+
+        location / {
+            proxy_pass https://localhost$request_uri;
+        }
+}
+---代理转发/---
+
+---跳转\---
+server {
+    listen     80;
+    server_name  bbs.xxx.com;
+    rewrite  "^/(.*)$"  https://120.76.244.164/$1 break;
+}
+---跳转/---
+
+启用ssl
+ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/ssl
+
+重启nginx
+/usr/sbin/nginx -s reload
+
+停止nginx -s stop
+
+
+/var/log/nginx/access.log
+
+
