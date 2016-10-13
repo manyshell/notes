@@ -1,0 +1,91 @@
+﻿
+# ll /etc/apache2/mods-available/proxy.*
+-rw-r--r-- 1 root root 857 Oct  4 17:36 /etc/apache2/mods-available/proxy.conf
+-rw-r--r-- 1 root root  62 Jan  3  2014 /etc/apache2/mods-available/proxy.load
+
+返向代理设置
+# cat /etc/apache2/mods-available/proxy.conf
+<IfModule mod_proxy.c>
+ 
+        # If you want to use apache2 as a forward proxy, uncomment the
+        # 'ProxyRequests On' line and the <Proxy *> block below.
+        # WARNING: Be careful to restrict access inside the <Proxy *> block.
+        # Open proxy servers are dangerous both to your network and to the
+        # Internet at large.
+        #
+        # If you only want to use apache2 as a reverse proxy/gateway in
+        # front of some web application server, you DON'T need
+        # 'ProxyRequests On'.
+ 
+        #ProxyRequests On
+        <Proxy *>
+           AddDefaultCharset off
+        #   Require all denied
+        #   #Require local
+        allow from all
+        </Proxy>
+ 
+        # Enable/disable the handling of HTTP/1.1 "Via:" headers.
+        # ("Full" adds the server version; "Block" removes all outgoing Via: headers)
+        # Set to one of: Off | On | Full | Block
+        #ProxyVia Off
+ 
+</IfModule>
+
+启用proxy
+ln -s /etc/apache2/mods-available/proxy.load /etc/apache2/mods-enabled/proxy.load
+ln -s /etc/apache2/mods-available/proxy.conf /etc/apache2/mods-enabled/proxy.conf
+ln -s /etc/apache2/mods-available/proxy_http.load /etc/apache2/mods-enabled/proxy_http.load
+
+# ll /etc/apache2/mods-enabled/proxy*
+lrwxrwxrwx 1 root root 38 Oct  4 17:37 /etc/apache2/mods-enabled/proxy.conf -> /etc/apache2/mods-available/proxy.conf
+lrwxrwxrwx 1 root root 43 Oct  4 19:11 /etc/apache2/mods-enabled/proxy_http.load -> /etc/apache2/mods-available/proxy_http.load
+lrwxrwxrwx 1 root root 38 Oct  4 17:37 /etc/apache2/mods-enabled/proxy.load -> /etc/apache2/mods-available/proxy.load
+
+
+测试反向代理
+# vi /etc/apache2/sites-available/abc.com.conf
+<VirtualHost *:80>
+        ServerName abc.com
+        ServerAlias www.abc.com
+        ProxyPass / http://139.196.122.20
+        ProxyPassReverse / http://139.196.122.20
+        ErrorLog ${APACHE_LOG_DIR}/smzsy.error.log
+        CustomLog ${APACHE_LOG_DIR}/smzsy.access.log combined
+</VirtualHost>
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+        ServerName abc.com 
+        ServerAlias www.abc.com
+
+        ProxyPass / http://139.196.122.20
+        ProxyPassReverse / http://139.196.122.20
+ 
+        ErrorLog ${APACHE_LOG_DIR}/ssl-abc.error.log
+        CustomLog ${APACHE_LOG_DIR}/ssl-abc.access.log combined
+ 
+        #   SSL Engine Switch:
+        #   Enable/Disable SSL for this virtual host.
+        SSLEngine on
+ 
+        #   A self-signed (snakeoil) certificate can be created by installing
+        #   the ssl-cert package. See
+        #   /usr/share/doc/apache2.2-common/README.Debian.gz for more info.
+        #   If both key and certificate are stored in the same file, only the
+        #   SSLCertificateFile directive is needed.
+        SSLCertificateFile /etc/sslmate/www.abc.com.crt
+        SSLCertificateKeyFile /etc/sslmate/www.abc.com.key
+        SSLCertificateChainFile /etc/sslmate/www.abc.com.chain.crt
+</VirtualHost>
+</IfModule>
+
+启用站点配置
+ln -s /etc/apache2/sites-available/abc.com.conf /etc/apache2/sites-enabled/abc.com.conf
+
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+

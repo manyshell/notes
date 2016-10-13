@@ -1,0 +1,60 @@
+
+# vi /etc/apache2/sites-available/abc.com.conf
+<VirtualHost *:80>
+    ServerName abc.com
+    ServerAlias www.abc.com
+    RedirectMatch ^/(.*)$ https://www.ziln.com/$1
+ 
+</VirtualHost>
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    ServerName abc.com 
+    ServerAlias www.abc.com
+
+    RedirectMatch ^/(.*)$ https://www.ziln.com/$1
+
+    ErrorLog ${APACHE_LOG_DIR}/ssl-abc.error.log
+    CustomLog ${APACHE_LOG_DIR}/ssl-abc.access.log combined
+
+    #   SSL Engine Switch:
+    #   Enable/Disable SSL for this virtual host.
+    SSLEngine on
+
+    #   A self-signed (snakeoil) certificate can be created by installing
+    #   the ssl-cert package. See
+    #   /usr/share/doc/apache2.2-common/README.Debian.gz for more info.
+    #   If both key and certificate are stored in the same file, only the
+    #   SSLCertificateFile directive is needed.
+    SSLCertificateFile /etc/sslmate/www.abc.tv.crt
+    SSLCertificateKeyFile /etc/sslmate/www.abc.tv.key
+    SSLCertificateChainFile /etc/sslmate/www.abc.tv.chain.crt
+</VirtualHost>
+</IfModule>
+
+启用站点配置
+ln -s /etc/apache2/sites-available/abc.com.conf /etc/apache2/sites-enabled/abc.com.conf
+
+效果演示
+访问：
+http://abc.com/page.php?id=98
+跳转：
+https://www.ziln.com/page.php?id=98
+
+访问：
+http://www.abc.com/page.php?id=98
+跳转：
+https://www.ziln.com/page.php?id=98
+
+访问：
+https://abc.com
+由于key是自签名，会出现不安全提示，最终还是会跳转到
+https://www.ziln.com
+
+------------------------
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+

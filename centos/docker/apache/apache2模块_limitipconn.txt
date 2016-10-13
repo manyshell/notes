@@ -71,3 +71,23 @@ apacche启动和重启
         NoIPLimit image/*
     </Location>
 </IfModule>
+
+6、检测并发过大，常用到的命令
+httpd线程数:            ps -aux | grep httpd
+httpd线程数统计:        ps -aux | grep httpd | wc -l
+连接数:                 netstat -ant | grep $ip:80 | wc -l
+正在通信的连接数:       netstat -ant | grep $ip:80 | grep EST | wc -l
+
+netstat -ant | grep $ip:80 | wc -l && netstat -ant | grep $ip:80 | grep EST | wc -l && free
+159     89
+             total       used       free     shared    buffers     cached
+Mem:      32912164   32723028     189136       7948      31380   31831720
+
+127     73
+             total       used       free     shared    buffers     cached
+Mem:      32912164   32692308     219856       7944      31316   31832364
+
+108     59
+             total       used       free     shared    buffers     cached
+Mem:      32912164   32709892     202272       7944      31428   31873072
+
