@@ -1,0 +1,27 @@
+浏览器提供了表单自动填充功能，通常登录后，浏览器询问是否要保存密码，如果选择同意，下次登录时，表单会自动填充了用户名和密码，此功能有时候很方便。
+但有时候我们不想用到这个功能，此功能可能会影响到我们的前端界面设计、颜色或布局。
+
+处理方案：
+1.把input type="password" 改成 input type="text" 并在后面加上 onfocus="this.type='password'"，
+
+2.在文档加载完成后将密码输入框设置为空：
+window.load = function(){
+    document.getElementById('密码域ID').value='';
+};
+
+3.在用户名和密码之间加上一个隐藏的文本框：
+<input type="text" name="name">
+<input type="hidden">
+<input type="password" name="pass">
+
+4.使用html5的属性：
+<pre name="code" class="html"><input type="text" name="name" autocomplete="off">
+<input type="password" name="pass" autocomplete="off">
+
+5.让自动填充出现在九霄云外
+<input type="text" name="clear" style="position:fixed;bottom:-9999px;">
+<input type="password" name="clear" style="position:fixed;bottom:-9999px;">
+<input type="text" name="username" id="username" />
+<input type="password" name="pass">
+
+我用chrome, 最终选择了办法5，成功解决。
