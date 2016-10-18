@@ -8,8 +8,7 @@ http://dominia.org/djao/limitipconn2.html
 # apt-get install wget
 
 # wget http://dominia.org/djao/limit/mod_limitipconn-0.24.tar.bz2
-# tar jxvf mod_limitipconn-0.24.tar.bz2
-# cd mod_limitipconn-0.24
+# tar jxvf mod_limitipconn-0.24.tar.bz2 && cd mod_limitipconn-0.24
 安装模块到apache2
 # /usr/bin/apxs2 -c -i mod_limitipconn.c
 实际上apxs2只是apxs的链接
