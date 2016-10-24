@@ -1,3 +1,4 @@
+---安装前\---
 # cat /etc/issue
 Ubuntu 14.04.4 LTS
 
@@ -7,6 +8,12 @@ Ubuntu 14.04.4 LTS
 
 搜索程序安装源中有没有指定的程序
 # apt-cache search nginx
+
+如果系统安装过apache2，需要先卸载
+apt-get purge apache2
+apt-get purge apache2-dev
+
+---安装前/---
 
 安装nginx
 # apt-get install nginx
@@ -32,8 +39,18 @@ Commercial support is available at nginx.com.
 Thank you for using nginx.
 至止，http已安装完成
 ---
-现在安装https
 
+默认配置文件
+/etc/nginx/nginx.conf
+
+默认网页目录
+/usr/share/nginx/html
+
+默认站点配置文件
+/etc/nginx/sites-enabled/default
+
+
+---安装https\---
 一、创建密钥
 mkdir /var/local/ssl
 cd /var/local/ssl
@@ -87,7 +104,7 @@ ll
 cd /etc/nginx
 
 vi /etc/nginx/sites-available/ssl
----https\---
+###
 server {  
 listen 443;  
 server_name localhost;  
@@ -110,8 +127,14 @@ location / {
         index index.html index.htm;
     }
 }
----https/---
+###
 
+启用ssl
+ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/ssl
+
+---安装https/---
+
+配置规则：
 ---代理转发\---
 server{
     	listen 		8080;#监听端口，根据你的需要进行修改(建议改为80)
@@ -132,9 +155,45 @@ server {
 }
 ---跳转/---
 
-启用ssl
-ln -s /etc/nginx/sites-available/ssl /etc/nginx/sites-enabled/ssl
+---限速\---
+server {
+    location / {
+        limit_rate 50k;                                 //每个连接限速50k
+    }
+}
+---限速/---
 
+---默认主文件\---
+server {
+    location / {
+        index  index.php index.html index.htm;          //默认index文件
+    }
+}
+---默认主文件/---
+
+---php脚本，端口调用方式\---
+server {
+    location ~ \.php$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+}
+---php脚本，端口调用方式/---
+
+---php脚本，sock调用方式\---
+server {
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+}
+---php脚本，sock调用方式/---
+
+操作命令：
 重启nginx
 /usr/sbin/nginx -s reload
 
