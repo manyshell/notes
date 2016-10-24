@@ -1,0 +1,41 @@
+查看php的安装情况
+rpm -qa | grep php
+
+安装php5.6.x
+yum install php56w-devel
+yum install php56w-fpm
+
+[root@localhost php-fpm.d]# whereis php-fpm
+php-fpm: /usr/sbin/php-fpm /etc/php-fpm.conf /etc/php-fpm.d /usr/share/man/man8/php-fpm.8.gz
+说明php-fpm已经安装成功
+
+基础配置文件
+/etc/php-fpm.conf
+
+默认扩展配置文件
+/etc/php-fpm.d/www.conf
+listen = 127.0.0.1:9000                         默认值
+slowlog = /var/log/php-fpm/www-slow.log         默认值
+
+
+[root@localhost html]# netstat -tulnp | grep 9000
+
+启动php-fpm
+# php-fpm
+
+[root@localhost php-fpm.d]# netstat -tulnp | grep 9000
+tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      5837/php-fpm: maste 
+
+#关闭php-fpm
+ps -ef | grep 'php-fpm' | grep -v grep | cut -c 9-15 | xargs kill -9
+
+
+
+---------------
+卸载所有的php安装程序(未测试)
+yum remove php*
+
+安装php及php扩展(未测试)
+yum –enablerepo=remi install php php-fpm
+yum –enablerepo=remi install php-gd php-mysql php-mbstring php-xml php-mcrypt
+

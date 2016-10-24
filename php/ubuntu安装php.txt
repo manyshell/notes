@@ -1,0 +1,30 @@
+安装
+apt-get install php5-fpm
+
+[root@localhost php-fpm.d]# whereis php-fpm
+php5-fpm: /usr/sbin/php5-fpm /usr/share/man/man8/php5-fpm.8.gz
+说明php-fpm已经安装成功
+
+启动php-fpm
+# php5-fpm
+[23-Oct-2016 11:20:16] ERROR: An another FPM instance seems to already listen on /var/run/php5-fpm.sock
+[23-Oct-2016 11:20:16] ERROR: FPM initialization failed
+说明php-fpm是以文件sock方式启动的
+
+#关闭php-fpm
+kill -INT `cat /var/run/php5-fpm.pid`
+
+基础配置文件
+/etc/php5/fpm/php-fpm.conf
+
+默认扩展配置文件，ubuntu版的php-fpm默认是sock
+/etc/php5/fpm/pool.d/www.conf
+---内容\---
+listen = /var/run/php5-fpm.sock                 默认值
+listen = 127.0.0.1:9000                         修改后
+---内容/---
+
+[root@localhost php-fpm.d]# netstat -tulnp | grep 9000
+tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      32095/php-fpm.conf)
+
+php-fpm安装完成

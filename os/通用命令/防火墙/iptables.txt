@@ -1,0 +1,85 @@
+查看iptables的安装情况
+rpm -qa | grep iptables
+
+[root@localhost ~]# rpm -qa | grep iptables
+iptables-1.4.21-16.el7.x86_64
+表示iptables的服务没有安装
+
+安装iptables服务
+yum install iptables-services
+
+[root@localhost ~]# rpm -qa | grep iptables
+iptables-services-1.4.21-16.el7.x86_64
+iptables-1.4.21-16.el7.x86_64
+表示iptables服务安装成功
+
+Centos7，设置为开机启动
+systemctl enable iptables
+
+---------------------------
+
+查看版本号
+iptables -V
+iptables v1.4.21
+
+启动或停止iptables
+systemctl [stop|start|restart] iptables
+systemctl start iptables
+systemctl restart iptables
+systemctl stop iptables
+
+修改后需要保存才可持续化，否则只限于当前，重启后失效
+[root@localhost ~]# service iptables save
+iptables: Saving firewall rules to /etc/sysconfig/iptables:[  OK  ]
+
+查看定义规则的详细信息
+iptables -L                                             查看
+iptables -L -n -v                                       查看详情
+iptables -L -n --line-number                            查看规则位于第几行
+
+删除已有iptables规则
+iptables -D chain rulenum [options]                     删除，明确指定删除第几条规则
+iptables -D INPUT 1                                     删除INPUT的1号规则
+iptables -D OUTPUT 1                                    删除OUTPUT的1号规则
+iptables -D FORWARD 1                                   删除FORWARD的1号规则
+
+例如：
+iptables -I INPUT -p tcp --dport 8080 -j ACCEPT         //开启8080端口
+iptables -I INPUT -p tcp --dport 3306 -j ACCEPT         //开启3306端口
+
+#开放80端口
+iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+#开放ftp的21端口
+iptables -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 21 -j ACCEPT
+
+当前需要开启1036端口：
+iptables -I INPUT -p tcp --dport 1036 -j ACCEPT
+
+
+---防Ping\---
+假如我们允许自己ping别人，但是别人ping自己ping不通如何实现呢？
+分析：对于ping这个协议，进来的为8（ping），出去的为0(响应).我们为了达到目的，需要8出去,允许0进来
+
+在出去的端口上：iptables -A OUTPUT -p icmp --icmp-type 8 -j ACCEPT
+在进来的端口上：iptables -A INPUT -p icmp --icmp-type 0 -j ACCEPT
+
+这样就可以了   还有一种方法
+# echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+取消的方法是
+# echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+
+---防Ping/---
+
+利用iptables屏蔽指定的IP：
+#屏蔽单个IP[123.45.6.7]的命令是
+iptables -I INPUT -s 123.45.6.7 -j DROP
+#封整个段即从123.0.0.1到123.255.255.254的命令
+iptables -I INPUT -s 123.0.0.0/8 -j DROP
+#封IP段即从123.45.0.1到123.45.255.254的命令
+iptables -I INPUT -s 124.45.0.0/16 -j DROP
+#封IP段即从123.45.6.1到123.45.6.254的命令是
+iptables -I INPUT -s 123.45.6.0/24 -j DROP
+
+
+1）查询系统中已经安装的软件
+rpm -qa

@@ -1,0 +1,14 @@
+方法一：
+禁止被ping
+# echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+
+允许被ping
+# echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+
+方法二：
+禁止被ping
+iptables -A INPUT -p icmp --icmp-type 8 -s 0/0 -j DROP
+
+允许被ping：实际上就是删除规则
+iptables -L -n --line-number
+iptables -D INPUT ...

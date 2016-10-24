@@ -1,0 +1,42 @@
+iftop可查看带宽使用情况
+
+如果没有，则需要安装
+centos:
+yum install iftop
+
+TX：发送流量
+RX：接收流量
+TOTAL：总流量
+Cumm：运行iftop到目前时间的总流量
+peak：流量峰值
+rates：分别表示过去 2s 10s 40s 的平均流量
+
+-i设定监测的网卡，如：# iftop -i eth1
+
+-B 以bytes为单位显示流量(默认是bits)，如：# iftop -B
+
+-n使host信息默认直接都显示IP，如：# iftop -n
+
+-N使端口信息默认直接都显示端口号，如: # iftop -N
+
+-F显示特定网段的进出流量，如# iftop -F 10.10.1.0/24或# iftop -F 10.10.1.0/255.255.255.0
+
+-h（display this message），帮助，显示参数信息
+
+-p使用这个参数后，中间的列表显示的本地主机信息，出现了本机以外的IP信息;
+
+-b使流量图形条默认就显示;
+
+-f这个暂时还不太会用，过滤计算包用的;
+
+-P使host信息及端口信息默认就都显示;
+
+-m设置界面最上边的刻度的最大值，刻度分五个大段显示，例：# iftop -m 100M
+
+
+~~~Tc是linux下的流量控制工具，与iptables结合，可以控制带宽，但 TC 复杂的让人发疯
+
+下面给大家演示一个限制upload速率的实例（未验证）
+# Limit Platinum
+iptables -A FORWARD -s 10.39.1.1 -m limit --limit 20/s -j ACCEPT
+iptables -A FORWARD -s 10.39.1.1 -j DROP

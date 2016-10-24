@@ -1,0 +1,61 @@
+查看nginx的安装情况
+rpm -qa | grep nginx
+
+安装nginx
+yum install nginx
+
+[root@localhost html]# nginx -V
+nginx version: nginx/1.10.1
+built by gcc 4.8.5 20150623 (Red Hat 4.8.5-4) (GCC) 
+
+# netstat -tulnp | grep 80
+无反应，说明nginx未启动
+
+# nginx
+无参数就是启动nginx，也可以带参数，指定配置文件
+
+[root@localhost html]# netstat -tulnp | grep 80
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      5560/nginx: master  
+tcp6       0      0 :::80                   :::*                    LISTEN      5560/nginx: master  
+启动成功了
+
+默认配置文件
+/etc/nginx/nginx.conf
+
+默认网页目录
+/usr/share/nginx/html
+
+# 限制档案类型只能单线下载，再加上限速500k
+location ~ .*\.(zip|rar|gz|tar|exe|mp3|flv|swf|jpg|jpeg)$
+{
+    limit_conn crawler 1;
+    limit_rate 500k;
+}
+
+用户下载达到 500k 后，便控制其速度在 50k 以内。
+location /download/ {
+    limit_rate_after 500k;
+    limit_rate 50k;
+}
+
+重启nginx
+/usr/sbin/nginx -s reload
+
+---v1_nginx.conf\---
+listen       80;                                    //监听80端口
+location / {
+    index  index.php index.html index.htm;          //默认index文件
+    limit_rate 50k;                                 //每个连接限速50k
+}
+---v1_nginx.conf/---
+
+---v2_nginx.conf\---
+增加php脚本执行
+location ~ \.php$ {
+    fastcgi_pass   127.0.0.1:9000;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+}
+---v2_nginx.conf\---
+

@@ -1,0 +1,38 @@
+指定IP，允许最多有3个连接到本机80端口
+iptables -I INPUT -p tcp --dport 80 -s 192.168.1.33 -m connlimit --connlimit-above 3 -j REJECT
+
+允许每个IP最多有3个连接到本机的80端口
+iptables -I INPUT -p tcp --dport 80 -m connlimit --connlimit-above 3 -j REJECT
+
+
+-I INPUT                                                表示要插入一条 INPUT 链的规则
+-p tcp --dport 80 -s 192.168.1.33                       是针对来自 192.168.1.33 这个IP对于本机80端口的tcp请求
+-m connlimit --connlimit-above 10                       表示匹配条件，并发数大于10时成立
+-j REJECT                                               满足条件后要执行的动作：拒绝
+
+备注：目前掌握的技术不能限制docker，应用场景为常规方式
+
+测试：
+---docker方式\---
+挂载
+mount -t cifs -o username=administrator,password=77,dir_mode=0777,file_mode=0777 //192.168.1.33/code /mnt/code
+启动
+docker run --name test --privileged=true -v /mnt/code/p:/var/www/html -p 80:80 -d docker.io/pamtrak06/ubuntu14.04-apache2:latest
+结论：docker更适用于开发环境
+---docker方式/---
+
+---常规方式---\
+yum install apache2
+yum install httpd24-httpd
+
+如果并发数大于3，则拒绝连接
+iptables -I INPUT -p tcp --dport 80 -s 192.168.1.33 -m connlimit --connlimit-above 3 -j REJECT
+
+查看iptables规则
+iptables -L -n --line-number
+iptables -D INPUT 
+
+
+查看并发数
+netstat -na | awk '{print $5}' | sed -n '/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\:.*/p' | cut -d':' -f1 | sort | uniq -c | sort -nr | head -10
+

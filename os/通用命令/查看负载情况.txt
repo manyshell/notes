@@ -1,0 +1,7 @@
+命令w
+#w
+
+[root@localhost ~]# w
+ 01:51:37 up  1:35,  1 user,  load average: 0.00, 0.01, 0.01
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+root     pts/0    192.168.1.33     00:22    1.00s  0.05s  0.01s w
