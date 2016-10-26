@@ -10,9 +10,13 @@ Ubuntu 14.04.4 LTS
 # apt-cache search nginx
 
 如果系统安装过apache2，需要先卸载
+rpm -qa | grep apache2
+
 apt-get purge apache2
 apt-get purge apache2-dev
 
+apt-get purge apache*
+apt-get purge mysql* mariadb*
 ---安装前/---
 
 安装nginx
@@ -162,6 +166,32 @@ server {
     }
 }
 ---限速/---
+
+location /download/ {
+    limit_conn addr 1;
+    limit_rate 50k;
+}
+
+limit_rate_after 500k;
+limit_rate 20k;
+
+http {
+    limit_conn_zone $binary_remote_address zone=addr:10m
+
+    server {
+        root /www/data;
+        limit_conn addr 5;
+
+        location / {
+        }
+
+        location /download/ {
+            limit_conn addr 1;
+            limit_rate 1m;
+            limit_rate 50k;
+        }
+    }
+}
 
 ---默认主文件\---
 server {

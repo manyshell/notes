@@ -1,0 +1,108 @@
+如果系统安装过apache2，需要先卸载
+rpm -qa | grep mysql*
+
+apt-get purge mysql* mariadb*
+---
+The following packages were automatically installed and are no longer required:
+  comerr-dev iproute krb5-multidev libaio1 libapr1 libapr1-dev libaprutil1
+  libaprutil1-dbd-sqlite3 libaprutil1-ldap libboost-program-options1.54.0
+  libdbi-perl libev4 libgssrpc4 libkadm5clnt-mit9 libkadm5srv-mit9 libkdb5-7
+  libldap2-dev libpq-dev libpq5 libsctp-dev libsctp1 libsqlite3-dev libssl-dev
+  percona-xtradb-cluster-common-5.6 percona-xtradb-cluster-galera-3
+  percona-xtradb-cluster-galera-3.x percona-xtradb-cluster-galera-3.x-dbg
+  percona-xtradb-cluster-galera3-dbg percona-xtradb-cluster-garbd-3
+  percona-xtradb-cluster-garbd-3.x percona-xtradb-cluster-garbd-3.x-dbg socat
+  uuid-dev
+Use 'apt-get autoremove' to remove them.
+
+执行apt-get autoremove，自动移动这些安装包
+apt-get autoremove
+---
+
+# cat /etc/issue
+Ubuntu 14.04.4 LTS
+
+设置 MariaDB 仓库
+
+    apt-get install software-properties-common
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+software-properties-common is already the newest version.
+本次是已经装过了
+
+    apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+Executing: gpg --ignore-time-conflict --no-options --no-default-keyring --homedir /tmp/tmp.Ob8cBdRijR --no-auto-check-trustdb --trust-model always --keyring /etc/apt/trusted.gpg --primary-keyring /etc/apt/trusted.gpg --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+gpg: requesting key 1BB943DB from hkp server keyserver.ubuntu.com
+gpg: key 1BB943DB: public key "MariaDB Package Signing Key <package-signing-key@mariadb.org>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+key添加成功
+
+    添加源
+    add-apt-repository 'deb http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu trusty main'
+
+安装 MariaDB :
+
+    apt-get update
+W: An error occurred during the signature verification. The repository is not updated and the previous index files will be used. GPG error: http://repo.percona.com trusty InRelease: 
+The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 9334A25F8507EFA5
+更新失败，看来是key的原因
+# gpg --keyserver pgp.mit.edu --recv-keys 9334A25F8507EFA5
+# gpg -a --export 9334A25F8507EFA5 | apt-key add -
+
+继续报错
+W: Failed to fetch http://repo.percona.com/apt/dists/trusty/main/source/Sources  404  Not Found    
+再次apt-get update，居然成功了
+    
+    apt-get install mariadb-server
+安装过程中，提示要求设置Mariadb root的密码: 123456  试验就用最简单的密码
+然后会要求再输一次(repeat password for the MariaDB "root" user):    123456
+
+Configuration file '/etc/mysql/my.cnf'
+ ==> Modified (by you or by a script) since installation.
+ ==> Package distributor has shipped an updated version.
+   What would you like to do about it ?  Your options are:
+    Y or I  : install the package maintainer's version
+    N or O  : keep your currently-installed version
+      D     : show the differences between the versions
+      Z     : start a shell to examine the situation
+ The default action is to keep your current version.
+*** my.cnf (Y/I/N/O/D/Z) [default=N] ? 
+有一堆命令要调整配置，本次就用默认(default)吧，回车
+
+dpkg: error processing package mariadb-server (--configure):
+ dependency problems - leaving unconfigured
+Processing triggers for libc-bin (2.19-0ubuntu6.9) ...
+Processing triggers for ureadahead (0.100.0-16) ...
+Errors were encountered while processing:
+ mariadb-server-10.0
+ mariadb-server
+E: Sub-process /usr/bin/dpkg returned an error code (1)
+安装结束后，最后显示的内容
+
+apt-get install -f
+dpkg: error processing package mariadb-server-10.0 (--configure):
+
+dpkg -l | grep -i 'maria\|mysql'
+
+出现这个问题的可能性，系统中有一些依赖包没有清除干净，之前安装过mysql的，根据提示，执行了apt-get autoremove就好了。
+
+默认配置文件
+/etc/mysql/my.cnf
+
+从命令行连接到MariaDB :
+
+    linuxtechi@mail:~$ mysql -uroot -p
+    Enter password:
+    Welcome to the MariaDB monitor. Commands end with ; or \g.
+    Your MariaDB connection id is 40
+    Server version: 10.0.14-MariaDB-1~trusty-log mariadb.org binary distribution
+    Copyright (c) 2000, 2014, Oracle, SkySQL Ab and others.
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+    MariaDB [(none)]>
+
+MariaDB 服务
+
+    /etc/init.d/mysql stop
+    /etc/init.d/mysql start

@@ -40,6 +40,8 @@ tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      
 
 #关闭php-fpm
 service php5-fpm stop
+or
+ps -ef | grep 'php-fpm' | grep -v grep | cut -c 9-15 | xargs kill -9
 
 vi /etc/php5/fpm/pool.d/www.conf
 ###
@@ -53,6 +55,7 @@ listen = /var/run/php5-fpm.sock                 默认值
 安装扩展
 apt-get install php5-gd
 apt-get install php5-mysql
+apt-get install php5-curl
 
 
 ---未验证\---
