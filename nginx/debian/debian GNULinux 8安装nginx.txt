@@ -1,0 +1,91 @@
+---安装前准备工作\---
+查看系统信息
+cat /etc/*release*
+PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
+
+cat /etc/issue
+Debian GNU/Linux 8
+
+*更新
+# apt-get update
+---安装前准备工作/---
+
+---apt安装方式\---
+安装nginx
+# apt-get install nginx
+
+nginx-extras集成了一些常用的第三方的插件
+apt-get install nginx-extras
+---apt安装方式/---
+
+---以下为原码安装方式---
+要安装第三方模块，只有通过原码安装方式
+
+mkdir -p /usr/local/download/
+
+限速模块，通过客户端IP或下载URL来限制总的下载速度，即使有多个连接。
+apt-get install git    //如要没有此命令
+git clone https://github.com/bigplum/Nginx-limit-traffic-rate-module.git
+mv Nginx-limit-traffic-rate-module /usr/local/download/Nginx-limit-traffic-rate-module
+
+安装nginx必须要安装PCRE library
+apt-get install libpcre3 libpcre3-dev
+
+安装nginx必须要安装OpenSSL library
+apt-get install openssl libssl-dev
+
+下载nginx源码安装包
+apt-get install wget    //如要没有此命令
+wget http://nginx.org/download/nginx-1.10.2.tar.gz
+tar -zxvf nginx-1.10.2.tar.gz
+mv nginx-1.10.2 /usr/local/download/nginx-1.10.2 && cd /usr/local/download/nginx-1.10.2/
+
+环境变量说明
+--prefix=PATH ： 指定nginx的安装目录。默认 /usr/local/nginx
+--conf-path=PATH ： 设置nginx.conf配置文件的路径。nginx允许使用不同的配置文件启动，通过命令行中的-c选项。默认为prefix/conf/nginx.conf
+--user=name： 设置nginx工作进程的用户。安装完成后，可以随时在nginx.conf配置文件更改user指令。默认的用户名是nobody。--group=name类似
+--with-pcre ： 设置PCRE库的源码路径，如果已通过yum方式安装，使用--with-pcre自动找到库文件。使用--with-pcre=PATH时，需要从PCRE网站下载pcre库的源码（版本4.4 – 8.30）并解压，剩下的就交给Nginx的./configure和make来完成。perl正则表达式使用在location指令和 ngx_http_rewrite_module模块中。
+--with-zlib=PATH ： 指定 zlib（版本1.1.3 – 1.2.5）的源码解压目录。在默认就启用的网络传输压缩模块ngx_http_gzip_module时需要使用zlib 。
+--with-http_ssl_module ： 使用https协议模块。默认情况下，该模块没有被构建。前提是openssl与openssl-devel已安装
+--with-http_stub_status_module ： 用来监控 Nginx 的当前状态
+--with-http_realip_module ： 通过这个模块允许我们改变客户端请求头中客户端IP地址值(例如X-Real-IP 或 X-Forwarded-For)，意义在于能够使得后台服务器记录原始客户端的IP地址
+--add-module=PATH ： 添加第三方外部模块，如nginx-sticky-module-ng或缓存模块。每次添加新的模块都要重新编译（Tengine可以在新加入module时无需重新编译）
+
+配置环境变量
+./configure --prefix=/usr/local/nginx --sbin-path=/usr/sbin/nginx \
+--http-log-path=/var/log/nginx/access.log \
+--error-log-path=/var/log/nginx/error.log \
+--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+--http-proxy-temp-path=/var/lib/nginx/proxy \
+--with-http_gzip_static_module \
+--with-http_stub_status_module \
+--with-http_ssl_module \
+--with-http_realip_module \
+--add-module=/usr/local/download/Nginx-limit-traffic-rate-module
+
+编译、安装
+make && make install
+
+不建立这个目录会报错
+mkdir -p /var/lib/nginx
+
+默认web目录
+/usr/local/nginx/html
+
+默认配置文件
+/usr/local/nginx/conf/nginx.conf
+
+apt-get install vim    //如要没有此命令
+vi /usr/local/nginx/conf/nginx.conf
+
+在当前目录下生成一个1G的test.rar文件
+dd if=/dev/zero of=test.rar bs=1M count=1000
+
+
+
+
+
+
+
+
+
