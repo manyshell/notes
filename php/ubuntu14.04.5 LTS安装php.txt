@@ -51,6 +51,9 @@ listen = /var/run/php5-fpm.sock                 默认值
 
 ---启用php-fpm Sock方式/---
 
+重启fpm
+service php5-fpm restart
+
 
 安装扩展
 apt-get install php5-gd
