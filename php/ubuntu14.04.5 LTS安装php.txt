@@ -14,6 +14,8 @@ php5-fpm: /usr/sbin/php5-fpm /usr/share/man/man8/php5-fpm.8.gz
 
 #关闭php-fpm
 kill -INT `cat /var/run/php5-fpm.pid`
+service php5-fpm stop
+ps -ef | grep 'php5-fpm' | grep -v grep | cut -c 9-15 | xargs kill -9
 
 基础配置文件
 /etc/php5/fpm/php-fpm.conf
