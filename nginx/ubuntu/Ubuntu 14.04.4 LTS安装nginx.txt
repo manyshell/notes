@@ -249,6 +249,7 @@ server {
 
 重启nginx
 /usr/sbin/nginx -s reload
+kill -HUP `cat /usr/local/nginx/nginx.pid `
 
 停止nginx
 nginx -s stop
@@ -338,5 +339,5 @@ configure arguments:
 --with-mail_ssl_module \
 --add-module=/root/Nginx-limit-traffic-rate-module
 
-
+docker run --name test_ng -i -t -p 80:80 -p 9000:9000 hzg/php:7.0.0RC8-fpm /bin/bash
 

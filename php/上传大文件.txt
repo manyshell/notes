@@ -1,0 +1,35 @@
+nginx的修改      
+        send_timeout    60;
+        fastcgi_connect_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_read_timeout 300;
+        client_max_body_size 30m;
+
+php的修改
+根据phpinfo()可查看到php.ini的位置
+vi /usr/local/etc/php/php.ini
+
+    upload_max_filesize = 2M        //上传文件的最大尺寸。这个选项默认值为2M，单位M
+    post_max_size = 8M              //指通过表单POST给PHP的所能接收的最大值，包括表单里的所有值。默认为8M。单位M
+    max_execution_time = 30         //每个PHP页面运行的最大时间值，单位秒，默认30秒，如果设置为0，则表示无时间限制。
+    max_input_time = 60             //每个PHP脚本解析请求数据所用的时间（单位秒），默认60秒。如果设置为0，则表示无时间限制。
+    memory_limit = 128M             //单位M，默认为 128M，单个PHP脚本所能申请到的最大内存空间
+    需要保持 memory_limit > post_max_size > upload_max_filesize
+
+php-fpm注意参数
+        request_terminate_timeout
+        request_slowlog_timeout
+        这两个参数如果设置过小的话会导致文件传输了一部分后连接关闭。
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -84,7 +84,7 @@ mkdir -p /var/lib/nginx
 apt-get install vim    //如要没有此命令
 vi /usr/local/nginx/conf/nginx.conf
 user www-data;                              //第一行，重点注意这里，不然会出现读取php没有权限
-
+client_max_body_size 100m;                  //防止Nginx出现的413 Request Entity Too Large错误
 
 在当前目录下生成一个1G的test.rar文件
 dd if=/dev/zero of=test.rar bs=1M count=1000
@@ -166,5 +166,6 @@ dd if=/dev/zero of=test.rar bs=1M count=1000
 
 设置例外目录exception，不限速
 ln -s /var/www/repo/master /var/www/repo/exception
+
 
 
