@@ -1,0 +1,82 @@
+root@localhost:/var/www/repo# cat /etc/issue
+Ubuntu 14.04.5 LTS \n \l
+
+mkdir -p /usr/local/download/
+
+限速模块，通过客户端IP或下载URL来限制总的下载速度，即使有多个连接。
+apt-get install git    //如要没有此命令
+git clone https://github.com/bigplum/Nginx-limit-traffic-rate-module.git
+mv Nginx-limit-traffic-rate-module /usr/local/download/Nginx-limit-traffic-rate-module
+
+安装nginx必须要安装PCRE library
+apt-get install libpcre3 libpcre3-dev
+
+安装nginx必须要安装OpenSSL library
+apt-get install openssl libssl-dev
+
+下载nginx源码安装包
+apt-get install wget    //如要没有此命令
+wget http://nginx.org/download/nginx-1.10.2.tar.gz
+tar -zxvf nginx-1.10.2.tar.gz
+mv nginx-1.10.2 /usr/local/download/nginx-1.10.2 && cd /usr/local/download/nginx-1.10.2/
+
+配置环境变量
+./configure --prefix=/usr/local/nginx --sbin-path=/usr/sbin/nginx \
+--http-log-path=/var/log/nginx/access.log \
+--error-log-path=/var/log/nginx/error.log \
+--http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+--http-proxy-temp-path=/var/lib/nginx/proxy \
+--with-http_gzip_static_module \
+--with-http_stub_status_module \
+--with-http_ssl_module \
+--with-http_realip_module \
+--add-module=/usr/local/download/Nginx-limit-traffic-rate-module
+
+编译、安装
+make && make install
+
+检查nginx配置，如果报错，建立下面的目录
+nginx -t
+
+不建立这个目录会报错
+mkdir -p /var/lib/nginx
+
+默认web目录
+/usr/local/nginx/html
+
+默认配置文件
+/usr/local/nginx/conf/nginx.conf
+
+/var/log/nginx/access.log
+/var/log/nginx/error.log
+
+apt-get install vim    //如要没有此命令
+vi /usr/local/nginx/conf/nginx.conf
+user www-data;                              //第一行，重点注意这里，不然会出现读取php没有权限
+client_max_body_size 8000m;                  //防止Nginx出现的413 Request Entity Too Large错误
+
+---使用Nginx-limit-traffic-rate-module模块\---
+Limit_traffic_rate模块提供了一种方法，通过客户端IP或下载URL来限制总的下载速度，即使有多个连接。
+http {
+    limit_traffic_rate_zone  rate $remote_addr 32m;
+ 
+    server {
+        location /download/ {
+            limit_traffic_rate rate 20k;
+        }
+    }
+}
+---使用Nginx-limit-traffic-rate-module模块/---
+
+
+设置例外目录except，不限速
+ln -s /var/www/repo/master /var/www/repo/except
+
+
+
+
+
+
+
+
+
