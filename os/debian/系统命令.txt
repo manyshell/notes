@@ -10,6 +10,17 @@ apt-get upgrade
 如果更新失败，可以考虑更换源
 ---更新---/
 
+开机启动
+
+取消开机启动
+apt-get install sysv-rc-conf    管理命令
+---sysv-rc-conf勾选情况\---
+mysql       2   3   4   5
+nginx       2   3   4   5
+php5-fpm    2   3   4   5
+
+---sysv-rc-conf勾选情况/---
+
 apt-cache search all                            //显示程序源所有可以安装的程序
 apt-cache search freetype                       //搜索程序源中有没有指定的程序
 dpkg --get-selections|grep install|grep jpeg    //显示已安装的程序，并根据条件筛选

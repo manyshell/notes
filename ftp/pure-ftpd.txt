@@ -1,0 +1,70 @@
+
+1. 先用rpm -qa| grep vsftpd命令检查是否已经安装，如果ftp没有安装，使用yum  -y  install vsftpd 安装,(ubuntu 下使用apt-get install vsftpd)
+
+2. 启动
+centos6
+service vsftpd start
+centos7
+/bin/systemctl start  vsftpd.service
+
+重启
+service vsftpd restart
+/bin/systemctl restart  vsftpd.service
+
+停止
+service vsftpd stop
+/bin/systemctl stop  vsftpd.service
+
+
+启动要让FTP每次开机自动启动，运行命令:  chkconfig --level 35 vsftpd on
+
+测试ftp连接，应该用匿名可以连入了，但没有上传文件的权限
+3. 设置ftp权限
+A.如果要匿名使用
+chmod 1777 /var/ftp/pub  （1为特殊权限，使上载后无法删除）
+chmod 777 /var/ftp/pub
+修改vsftpd.conf文件的配置(vi /etc/vsftpd/vsftpd.conf)
+＃允许匿名用户登录FTP
+anonymous_enable=YES
+
+＃设置匿名用户的登录目录（默认没有此项，如需要，需自己添加并修改）
+anon_root=/var/ftp/pub
+
+＃打开匿名用户的上传权限
+anon_upload_enable=YES
+
+#开启匿名用户的下载权限
+anon_world_readable_only=no 
+
+＃打开匿名用户创建目录的权限
+anon_mkdir_write_enable=YES
+＃打开匿名用户删除和重命名的权限（如需要，需自己添加）
+anon_other_write_enable=YES
+#匿名用户的掩码（如需要，需自己添加，含义：如umask是022,这时创建一个权限为666的文件，文件的实际权限为666-022=644）
+anon_umask=022
+
+如果还不能上传，执行此句
+setenforce 0
+
+B.系统用户使用
+vi /etc/vsftpd/vsftpd.conf
+将anonymous_enable=YES 改为 anonymous_enable=NO
+ESC返回,输入“:wq”保存并推出
+
+getsebool -a | grep ftp
+setsebool -P allow_ftpd_anon_write off
+setsebool -P ftp_home_dir .
+
+创建虚拟用户 
+先创建一个用户，然后修改用户的登陆shell为nologin，让用户不能登陆系统，只能使用ftp之内的服务，然后使用passwd  redhat修改密码  
+useradd susu
+usermod -s /sbin/nologin susu
+passwd susu                         //密码为123456
+
+重启vs，连接ftp
+如果不出意外，现在就可以连入了。
+
+chroot_local_user=YES               把所有用户都限制在家中
+chmod a-w /home/susu                去掉写权限，才允许登录
+只有在主目录下再建立可写的子目录，chmod 777加权限
+
