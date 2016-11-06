@@ -1,0 +1,10 @@
+性能优化：
+vi /etc/php5/fpm/pool.d/www.conf
+pm = dynamic
+pm.max_requests
+pm.max_children
+
+首先，我们关注一个前提设置： pm = static/dynamic，
+dynamic：表示，运行时fork出start_servers个进程，随着负载的情况，动态的调整，最多不超过max_children个进程。
+一般推荐用static，优点是不用动态的判断负载情况，提升性能，缺点是多占用些系统内存资源。
+上面的告诉我们max_chindren代表的worker的进程数。普遍认为，这个配置越多能同时处理的并发也就越多，这是一个比较大的误区

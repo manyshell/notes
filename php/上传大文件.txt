@@ -17,18 +17,53 @@ vi /usr/local/etc/php/php.ini
     需要保持 memory_limit > post_max_size > upload_max_filesize
 
 php-fpm注意参数
-        request_terminate_timeout
         request_slowlog_timeout
+        request_terminate_timeout
         这两个参数如果设置过小的话会导致文件传输了一部分后连接关闭。
 
+; The timeout for serving a single request after which a PHP backtrace will be
+; dumped to the 'slowlog' file. A value of '0s' means 'off'.
+; Available units: s(econds)(default), m(inutes), h(ours), or d(ays)
+; Default Value: 0
+;request_slowlog_timeout = 0
+当request_slowlog_timeout 设为一个具体秒时request_slowlog_timeout =5，表示如果哪个脚本执行时间大于5秒，会记录这个脚本到慢日志文件中
+request_slowlog_timeout =0表示关闭慢日志输出。
+慢日志文件位置默认在php的安装目录下的log文件夹中，可以通过修改slowlog = log/$pool.log.slow参数来指定。
+
+; The timeout for serving a single request after which the worker process will
+; be killed. This option should be used when the 'max_execution_time' ini option
+; does not stop script execution for some reason. A value of '0' means 'off'.
+; Available units: s(econds)(default), m(inutes), h(ours), or d(ays)
+; Default Value: 0
+request_terminate_timeout = 0
+0s的含义是让PHP-CGI一直执行下去而没有时间限制
+
+request_terminate_timeout = 30s，30秒不完成则超时
 
 
+-------------------------------------------------------------------------------------------------
 
+由于看到网上很多配置帖子中说要把 nginx.conf  中的  keepalive_timeout 时间设置加大才行
 
+我的服务器上设置为：
 
+keepalive_timeout 60;  默认 大概 75s 我设置的是 60，
 
+所以
 
+经过实际测试，本地限速 34KB/s 上传 9MB 文件，用时270秒左右，上传成功，
 
+表明实际上传不受 keepalive_timeout 时间影响，和该项配置无关
+
+而且这个时间加长会严重影响 nginx 的并发
+
+-------------------------------------------------------------------------------------------------
+
+至于 send_timeout  我在网上查询了半天也没搞清楚到底是怎么个超时，同样也测试过，
+
+将 send_timeout 设置为 60 后，
+
+上传超过 170s  仍然上传成功，所以我理解的是该超时时间应该为 客户端上传时网络断流后超过 60s 则停止接收接收操作，中断连接。只要持续发送数据则不会断掉，可能是这样的吧
 
 
 

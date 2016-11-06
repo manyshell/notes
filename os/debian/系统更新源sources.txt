@@ -1,4 +1,78 @@
-#/etc/apt/sources.list
+系统源路径:
+/etc/apt/sources.list
+
+源是否正确，需要看系统的版本，源是与系统版本相对应的
+------
+# cat /etc/*release*
+PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="8"
+VERSION="8 (jessie)"
+ID=debian
+HOME_URL="http://www.debian.org/"
+SUPPORT_URL="http://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+------
+root@localhost:/etc/apache2/mods-available# cat /etc/*release*
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=14.04
+DISTRIB_CODENAME=trusty
+DISTRIB_DESCRIPTION="Ubuntu 14.04.5 LTS"
+NAME="Ubuntu"
+VERSION="14.04.5 LTS, Trusty Tahr"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 14.04.5 LTS"
+VERSION_ID="14.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+
+Debian 8 jessie的源:
+https://linuxconfig.org/debian-apt-get-jessie-sources-list#h22-hong-kong-mirror
+
+香港
+deb http://ftp.hk.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.hk.debian.org/debian/ jessie main contrib non-free
+
+3. Austria Mirror
+deb http://ftp.at.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.at.debian.org/debian/ jessie main contrib non-free
+
+29. Korea Mirror
+# /etc/apt/sources.list :
+deb http://ftp.kr.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.kr.debian.org/debian/ jessie main contrib non-free
+
+如果vi不能用
+# apt-get install vim
+或
+可采取这种方法修改源
+echo "deb http://ftp.kr.debian.org/debian/ jessie main contrib non-free" > /etc/apt/sources.list
+echo "deb-src http://ftp.kr.debian.org/debian/ jessie main contrib non-free" >> /etc/apt/sources.list
+
+163的镜像
+# wget http://mirrors.163.com/.help/sources.list.squeeze
+# mv sources.list.squeeze sources.list
+
+ubuntu官方源:
+deb http://archive.ubuntu.com/ubuntu/ trusty main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+
+# apt-get update
+Reading package lists... Done
+
+# apt-get upgrade
+Running hooks in /etc/ca-certificates/update.d....done.
+
 
 ---163Դ---\
 deb http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse

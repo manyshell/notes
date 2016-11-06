@@ -55,7 +55,7 @@ listen = /var/run/php5-fpm.sock                 默认值
 
 重启fpm
 service php5-fpm restart
-
+kill -INT `cat /var/run/php5-fpm.pid`
 
 安装扩展
 apt-get install php5-gd

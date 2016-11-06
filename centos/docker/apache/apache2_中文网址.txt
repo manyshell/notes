@@ -1,0 +1,30 @@
+后台启动
+docker run --name test --privileged=true -v /mnt/code/p:/var/www/html -p 80:80 -d docker.io/pamtrak06/ubuntu14.04-apache2:latest
+
+维护启动
+docker run -i -t --privileged=true -v /mnt/code/p:/var/www/html -p 80:80 docker.io/pamtrak06/ubuntu14.04-apache2:latest /bin/bash
+
+/usr/sbin/apachectl -k start
+/usr/sbin/apachectl -k restart
+
+地址栏显示：
+http://192.168.1.145/中文.txt
+
+复制后显示：
+http://192.168.1.145/%E4%B8%AD%E6%96%87.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

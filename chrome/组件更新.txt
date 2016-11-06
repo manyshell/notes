@@ -1,0 +1,3 @@
+自动更新所有组件，比如flash
+
+chrome://components

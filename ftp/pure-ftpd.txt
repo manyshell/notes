@@ -1,70 +1,250 @@
+rpm -qa| grep pure-ftpd    检查是否已经安装
 
-1. 先用rpm -qa| grep vsftpd命令检查是否已经安装，如果ftp没有安装，使用yum  -y  install vsftpd 安装,(ubuntu 下使用apt-get install vsftpd)
+安装pure-ftpd
+yum方式：
+[root@localhost vsftpd]# yum list pure-ftpd
+pure-ftpd.x86_64                                                                     1.0.42-3.el7                                                                      epel
 
-2. 启动
-centos6
-service vsftpd start
-centos7
-/bin/systemctl start  vsftpd.service
+yum install pure-ftpd
 
-重启
-service vsftpd restart
-/bin/systemctl restart  vsftpd.service
+原码方式：
 
-停止
-service vsftpd stop
-/bin/systemctl stop  vsftpd.service
+docker run -i -t -p 21:21 docker.io/redis /bin/bash
+
+一、下载最新安装包并解压
+
+cd /usr/local/src
+wget https://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.43.tar.gz
+tar -vxf pure-ftpd-1.0.43.tar.gz
+cd pure-ftpd-1.0.43
+
+二、准备环境
+
+centos:
+yum -y install gcc    #安装编译器    
+yum -y install openssl  openssl-devel    #安装依赖文件
+
+debian & ubuntu:
+apt-get install gcc
+apt-get install openssl libssl-dev
+apt-get install make                    //bash: make: command not found     没有make命令
+
+三、配置编译参数并安装
+
+./configure \
+--prefix=/usr/local/pureftpd \
+--without-inetd \
+--with-altlog \
+--with-puredb \
+--with-throttling \
+--with-peruserlimits \
+--with-tls
+
+make && make install
 
 
-启动要让FTP每次开机自动启动，运行命令:  chkconfig --level 35 vsftpd on
 
-测试ftp连接，应该用匿名可以连入了，但没有上传文件的权限
-3. 设置ftp权限
-A.如果要匿名使用
-chmod 1777 /var/ftp/pub  （1为特殊权限，使上载后无法删除）
-chmod 777 /var/ftp/pub
-修改vsftpd.conf文件的配置(vi /etc/vsftpd/vsftpd.conf)
-＃允许匿名用户登录FTP
-anonymous_enable=YES
+四、配置pure-ftpd
 
-＃设置匿名用户的登录目录（默认没有此项，如需要，需自己添加并修改）
-anon_root=/var/ftp/pub
+cd configuration-file
+mkdir -p /usr/local/pureftpd/etc/
+cp pure-ftpd.conf /usr/local/pureftpd/etc/pure-ftpd.conf
+cp pure-config.pl /usr/local/pureftpd/sbin/pure-config.pl
+chmod 755 /usr/local/pureftpd/sbin/pure-config.pl
 
-＃打开匿名用户的上传权限
-anon_upload_enable=YES
+vim /usr/local/pureftpd/etc/pure-ftpd.conf
 
-#开启匿名用户的下载权限
-anon_world_readable_only=no 
 
-＃打开匿名用户创建目录的权限
-anon_mkdir_write_enable=YES
-＃打开匿名用户删除和重命名的权限（如需要，需自己添加）
-anon_other_write_enable=YES
-#匿名用户的掩码（如需要，需自己添加，含义：如umask是022,这时创建一个权限为666的文件，文件的实际权限为666-022=644）
-anon_umask=022
 
-如果还不能上传，执行此句
-setenforce 0
+修改如下两处存放目录：
 
-B.系统用户使用
-vi /etc/vsftpd/vsftpd.conf
-将anonymous_enable=YES 改为 anonymous_enable=NO
-ESC返回,输入“:wq”保存并推出
+PureDB                  /usr/local/pureftpd/etc/pureftpd.pdb
+PIDFile                 /usr/local/pureftpd/var/run/pure-ftpd.pid
+MinUID                  10           
+MaxClientsPerIP         3
 
-getsebool -a | grep ftp
-setsebool -P allow_ftpd_anon_write off
-setsebool -P ftp_home_dir .
+ 
 
-创建虚拟用户 
-先创建一个用户，然后修改用户的登陆shell为nologin，让用户不能登陆系统，只能使用ftp之内的服务，然后使用passwd  redhat修改密码  
-useradd susu
-usermod -s /sbin/nologin susu
-passwd susu                         //密码为123456
+pure-ftpd.conf文件中配置参数说明：
 
-重启vs，连接ftp
-如果不出意外，现在就可以连入了。
+ChrootEveryone                    yes        # 启用chroot    
+BrokenClientsCompatibility         yes        # 兼容不同客户端     
+Daemonize                          yes        # 后台运行     
+MaxClientsPerIP                     8          # 每个ip最大连接数     
+VerboseLog                          yes        # 记录日志     
+DisplayDotFiles                     no        # 显示隐藏文件     
+AnonymousOnly                      no          # 只允许匿名用户访问     
+NoAnonymous                        no          # 不允许匿名用户连接     
+SyslogFacility                     none        # 不将日志在syslog日志中显示     
+DontResolve                         yes        # 不进行客户端DNS解析     
+MaxIdleTime                         15         # 最大空闲时间     
+LimitRecursion                      2000 8     # 浏览限制，文件2000，目录8层     
+AnonymousCanCreateDirs              no         # 匿名用户可以创建目录     
+MaxLoad                              4         # 超出负载后禁止下载     
+PassivePortRange               45000 50000     # 被动模式端口范围     
+#AnonymousRatio                  1 10          # 匿名用户上传/下载比率     
+UserRatio                        1 10          # 所有用户上传/下载比率     
+AntiWarez                        yes           # 禁止下载匿名用户上传但未经验证的文件     
+#AnonymousBandwidth              200           # 匿名用户带宽限制（KB）     
+UserBandwidth                    8             # 所有用户最大带宽（KB）     
+Umask                            133:022       # 创建文件/目录默认掩码     
+MinUID                           10            # 可以登陆 用户的最小UID限制     
+AllowUserFXP                     no          # 仅运行用户进行FXP传输     
+AllowAnonymousFXP                no          # 对匿名用户和非匿名用户允许进行匿名 FXP 传输 
+ProhibitDotFilesWrite            no          # 不能删除/写入隐藏文件     
+ProhibitDotFilesRead             no          # 禁止读取隐藏文件     
+AutoRename                       yes         # 有同名文件时自动重新命名     
+AnonymousCantUpload              yes        # 不允许匿名用户上传文件     
+AltLog          clf:/var/log/pureftpd.log    # clf格式日志文件位置     
+PureDB          /usr/local/pure-ftpd/etc/pureftpd.pdb        # 用户数据库文件     
+MaxDiskUsage                    99           # 当磁盘使用量打到99%时禁止上传     
+CreateHomeDir                   yes          # 如果虚拟用户的目录不存在则自动创建     
+CustomerProof                   yes          # 防止命令误操作
 
-chroot_local_user=YES               把所有用户都限制在家中
-chmod a-w /home/susu                去掉写权限，才允许登录
-只有在主目录下再建立可写的子目录，chmod 777加权限
+ 
+
+五、启动pure-ftpd
+
+[root@localhost configuration-file]# /usr/local/pureftpd/sbin/pure-config.pl /usr/local/pureftpd/etc/pure-ftpd.conf
+Running: /usr/local/pureftpd/sbin/pure-ftpd -A -c50 -B -C8 -D -fftp -H -I15 -lpuredb:/usr/local/pureftpd/etc/pureftpd.pdb -L10000:8 -m4 -s -U133:022 -u100 -g/usr/local/pureftp/var/run/pure-ftpd.pid -k99 –Z
+
+如果是启动成功，会显示一行长长的以Running开头的信息，否则那就是错误信息。
+
+
+六、建立账号
+
+1、新建系统用户，建立虚拟ftp帐号的方式
+useradd ftp
+mkdir -p /home/ftp/user1
+chown -R ftp:ftp /home/ftp/user1
+/usr/local/pureftpd/bin/pure-pw useradd ftp_user1 -u ftp -d /home/ftp/user1
+Password:                                                                               提示输入密码        123456
+Enter it again:                                                                         提示重复输入密码    123456
+
+/usr/local/pureftpd/bin/pure-pw mkdb                                                    写入数据库
+
+-u将虚拟用户ftp_user1与系统用户ftp关联在一起，也就是说使用ftp_user1账号登陆ftp后，会以ftp的身份来读取文件或下载文件。
+-d 后边的目录为ftp_user1账户的家目录，这样可以使ftp_user1只能访问其家目录/home/ftp/user1
+
+现在，可以使用ftp_user1::123456登录ftp
+
+2、利用系统已有用户，建立虚拟ftp帐号的方式
+root@8028a816da37:# cat /etc/passwd
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin                                    这是一个web系统帐户
+
+mkdir -p /home/ftp/user2
+chown -R www-data:www-data /home/ftp/user2
+/usr/local/pureftpd/bin/pure-pw useradd ftp_user2 -u www-data -d /home/ftp/user2        提示输入密码        123456
+/usr/local/pureftpd/bin/pure-pw mkdb                                                    写入数据库
+
+至此，pure-ftpd已经基本可以使用了
+---------------------------------------------------------------------------------------------------------------------------------
+操作命令：
+
+/usr/local/pureftpd/bin/pure-pw mkdb                                                    写入数据库
+/usr/local/pureftpd/bin/pure-pw list                                                    显示所有ftp用户
+/usr/local/pureftpd/bin/pure-pw userdel ftp_user2                                       删除某个账号,ftp_user2为指定要删除的帐号
+
+八、启动pureFTPd服务及开机启动   
+#  /usr/local/pureftpd/sbin/pure-config.pl /usr/local/pureftpd/etc/pure-ftpd.conf   
+若要pureFTPd随系统启动，将命令加入到 /etc/rc.local文件中，如下    
+# echo "/usr/local/pureftpd/sbin/pure-config.pl /usr/local/pureftpd/etc/pure-ftpd.conf" >> /etc/rc.local
+
+ 
+
+pure-pw命令的格式及功能介绍
+
+pure-pw useradd <login> [-f <passwd file>] -u <uid> [-g <gid>]   
+-D/-d <home directory> [-c <gecos>]    
+[-t <download bandwidth>] [-T <upload bandwidth>]    
+[-n <max number of files>] [-N <max Mbytes>]    
+[-q <upload ratio>] [-Q <download ratio>]    
+[-r <allow client host>[/<mask>][,…]    
+[-R <deny client host>[/<mask>][,…]    
+[-i <allow local host>[/<mask>][,…]    
+[-I <deny local host>[/<mask>][,…]    
+[-y <max number of concurrent sessions>]    
+[-z <hhmm>-<hhmm>] [-m]
+
+ 
+
+例如：    
+pure-pw useradd joe -u ftpuser -d /home/ftpusers/joe    
+回车后提示输入两次密码    
+使用 -d 参数指定一个用户的home目录后，该用户就被固定到这个目录了，其不能切换到上级目录如果要想让用户可以访问到别的目录，那么使用-D参数来指定hone目录。    
+如果pureFTPd的配置文件中指定了CreateHomeDir yes 的话，/home/ftpusers/joe 目录是没有必要手动创建的。当用户首次登录时如果目录不存在程序会自动创建相应的目录。    
+使用-z参数可以指定用户只能在一天中的某个时间段可以登陆ftp服务器。例如 -z 0900-1800那么joe只能在早上9点和下午6点这个时间段登陆。注意：如果设置登陆时间的用户已经通过验证登陆到ftp服务器上了，那么所做的登陆时间限制只能在他下次登陆验证的时候才能生效。    
+-r 与 -R 参数是约束用户从哪些IP登陆的。可以使用IP/mask的形式，如-r 192.168.1.0/24多个段用逗号隔开，如：-r 192.168.1.0/24,10.1.0.0/16,127.0.0.1/32 。单独的IP：-r 192.168.1.4,10.1.1.5主机名：-r bla.bla.net,yopcitron.com。以及一些相兼容的格式。    
+-y 参数是限制同一时刻一个用户最多能发起多少个会话(sessions)。”或0 代表无限制。该选项可以降低系统负载。效果同配置文件中的 MaxClientsPerIP    
+ok，现在用户 “joe” 已经创建成功了默认的虚拟用户列表文件存储在 安装目录的/etc/目录下，可以使用-f参数指定文件的存储路径    
+查看一下文件内容    
+# cat /usr/local/pure-ftpd/etc/pureftpd.passwd
+joe:$1$ocfl1XW0$R0JaEh3CjGFByGbdN7qNy/:501:501::/home/ftpusers/joe/./::::::::::::    
+密码字段是经过加密的。
+
+●更改用户信息    
+虚拟用户创建之后，你也可以通过pure-pw命令来修改其相关的信息，如限制下载    
+带宽、磁盘配额、用户全名、下载上传率等等    
+例如：我要修改用户joe的最大文件数为1000个，大小为10MB，命令如下：    
+# pure-pw usermod joe -n 1000 -N 10    
+查看一下虚拟用户列表文件    
+# cat /usr/local/pure-ftpd/etc/pureftpd.passwd    
+joe:$1$ocfl1XW0$R0JaEh3CjGFByGbdN7qNy/:501:501::/home/ftpusers/joe/./::::::1000:10485760:::::
+
+●重置用户属性    
+要禁用文件数配额，执行 pure-pw usermod -n ”    
+要禁用文件大小配额，执行 pure-pw usermod -N ”    
+要禁用上传/下载比率，执行 pure-pw usermod -q ” -Q ”    
+要禁用下载带宽限制，执行 pure-pw usermod -t ”    
+要禁止上传带宽限制，执行 pure-pw usermod -T ”    
+要禁止IP地址过滤，使用 pure-pw usermod <-i,-I,-r or -R> ”    
+要禁止登陆时间限制，执行 pure-pw usermod -z ”    
+要禁止最大并发数控制，执行 pure-pw usermod -y ”
+
+●删除用户    
+使用pure-pw userdel 命令可以删除一个已经存在的用户    
+pure-pw userdel <login> [-f <passwd file>] [-m]    
+如：pure-pw userdel joe    
+用户home目录中的文件不会被删除，需要手动删除
+
+●更改密码    
+更改用户密码的命令    
+# pure-pw passwd <login> [-f <passwd file>] [-m]
+
+●利用pure-pw命令查看用户信息    
+# pure-pw show joe
+
+ 
+
+ 
+
+问题处理：
+
+1、不能连接服务端
+
+[root@localhost home]# lftp ftp_user1@192.168.222.200    
+口令:     
+lftp ftp_user1@192.168.222.200:~> ls      
+`ls' at 0 [重新连接前延时: 12]
+
+出现连接不上，而服务端用lftp ftp_user1@127.0.0.1自己连接自己可以 ，可能服务器防火墙没有配置好，或者关闭防火墙后再试
+
+systemctl stop firewalld.service
+
+2、登陆后访问目录出现：pureftpd 530 Sorry, but I can't trust you
+
+不受信任，可能一个原因是访问的用户名的ID在pure-ftpd.conf文件中配置参数（MinUID    100  # 可以登陆 用户的最小UID限制）导致
+
+先查用户ID
+
+[root@localhost data]# id ftp    
+uid=14(ftp) gid=50(ftp) 组=50(ftp)
+
+然后
+
+vim /usr/local/pureftpd/etc/pure-ftpd.conf
+
+找到并如下修改
+
+MinUID                      10 
 
