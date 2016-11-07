@@ -26,3 +26,13 @@ docker run --detach \
     --volume /var/local/gitlab/logs:/var/log/gitlab \
     --volume /var/local/gitlab/data:/var/opt/gitlab \
     gitlab/gitlab-ce:latest
+
+docker run --detach \
+    --hostname 60.205.168.240 \
+    --publish 2202:80 \
+    --name gitlab \
+    --restart always \
+    --volume /var/local/gitlab/config:/etc/gitlab \
+    --volume /var/local/gitlab/logs:/var/log/gitlab \
+    --volume /var/local/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:latest

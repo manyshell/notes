@@ -1,0 +1,61 @@
+# cat /etc/issue
+Debian GNU/Linux 7 \n \l
+
+root@safety:~# lsb_release -a
+No LSB modules are available.
+Distributor ID: Debian
+Description:    Debian GNU/Linux 7.9 (wheezy)
+Release:        7.9
+Codename:       wheezy
+
+cat /etc/*release*
+PRETTY_NAME="Debian GNU/Linux 7 (wheezy)"
+NAME="Debian GNU/Linux"
+VERSION_ID="7"
+VERSION="7 (wheezy)"
+ID=debian
+ANSI_COLOR="1;31"
+HOME_URL="http://www.debian.org/"
+SUPPORT_URL="http://www.debian.org/support/"
+BUG_REPORT_URL="http://bugs.debian.org/"
+
+
+系统升级
+$ apt-get update
+
+安装认证
+$ apt-get install apt-transport-https ca-certificates
+
+$ apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+
+编辑 vi /etc/apt/sources.list 新增
+deb https://apt.dockerproject.org/repo debian-wheezy main
+
+系统升级
+$ apt-get update
+
+查看docker安装版本
+root@safety:/var/ftp/susu# apt-cache policy docker-engine
+docker-engine:
+  Installed: (none)
+  Candidate: 1.12.3-0~wheezy
+  Version table:
+     1.12.3-0~wheezy 0
+        500 https://apt.dockerproject.org/repo/ debian-wheezy/main amd64 Packages
+     1.12.2-0~wheezy 0
+        500 https://apt.dockerproject.org/repo/ debian-wheezy/main amd64 Packages
+     1.12.1-0~wheezy 0
+        500 https://apt.dockerproject.org/repo/ debian-wheezy/main amd64 Packages
+     1.12.0-0~wheezy 0
+        500 https://apt.dockerproject.org/repo/ debian-wheezy/main amd64 Packages
+
+指定版本安装
+apt-get install docker-engine=1.12.3-0~jessie
+安装完成，则docker已启动
+
+---
+如果更新失败，提示 NO_PUBKEY ...，需要执行以下指令:
+W: GPG error: https://apt.dockerproject.org debian-jessie InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY F76221572C52609D
+
+# gpg --keyserver pgp.mit.edu --recv-keys F76221572C52609D
+# gpg -a --export F76221572C52609D | apt-key add -
