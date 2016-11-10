@@ -14,9 +14,16 @@ http://192.168.1.145/中文.txt
 http://192.168.1.145/%E4%B8%AD%E6%96%87.txt
 
 
+docker save -o apache2.tar.gz docker.io/pamtrak06/ubuntu14.04-apache2:latest
 
 
 
+[右] PASV
+[右] 227 Entering Passive Mode (101,201,148,142,109,87).
+[右] 正在打开数据连接 IP: 101.201.148.142 端口: 27991
+[右] LIST -al
+[右] 425 Security: Bad IP connecting.
+[右] 列表错误
 
 
 

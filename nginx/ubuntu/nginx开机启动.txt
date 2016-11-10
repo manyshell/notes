@@ -1,0 +1,33 @@
+https://github.com/JasonGiedymin/nginx-init-ubuntu
+
+Last tested with:
+Ubuntu 14.xx (works with prior versions)
+nginx-1.7.9 (works with prior versions)
+
+下载方式：
+wget https://raw.githubusercontent.com/JasonGiedymin/nginx-init-ubuntu/master/nginx -O /etc/init.d/nginx
+chmod +x /etc/init.d/nginx
+
+手动方式：
+找到 [开机启动脚本] 目录下的nginx
+复制到系统为
+/etc/init.d/nginx
+
+修改[第88行]DAEMON=${DAEMON:-$NGINXPATH/sbin/nginx}为DAEMON=/usr/sbin/nginx
+通过whereis nginx可以看到具体位置
+
+chmod +x /etc/init.d/nginx
+
+查看nginx运行情况
+service nginx status
+
+------
+出错:
+/etc/init.d/nginx: You don't have permissions to execute nginx.
+修改前：
+DAEMON=${DAEMON:-$NGINXPATH/sbin/nginx}       # path to daemon binary
+修改后：
+DAEMON=/usr/sbin/nginx
+
+
+

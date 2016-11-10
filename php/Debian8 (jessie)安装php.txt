@@ -1,0 +1,35 @@
+查看系统信息
+cat /etc/*release*
+PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
+
+查看php的安装情况
+dpkg --get-selections|grep install|grep php
+dpkg --get-selections|grep install|grep php-fpm
+dpkg --get-selections|grep install|grep php5-fpm
+
+查看安装源
+apt-cache search php5-fpm
+
+如果源没有php5-fpm安装包，则需要更新源
+apt-get update
+
+如果无法更新，需要换源
+/etc/apt/sources.list
+
+Debian 8 jessie的源:
+https://linuxconfig.org/debian-apt-get-jessie-sources-list#h22-hong-kong-mirror
+
+香港
+deb http://ftp.hk.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.hk.debian.org/debian/ jessie main contrib non-free
+
+如果vi不能用
+# apt-get install vim
+或
+echo "deb http://ftp.hk.debian.org/debian/ jessie main contrib non-free" > /etc/apt/sources.list
+echo "deb-src http://ftp.hk.debian.org/debian/ jessie main contrib non-free" >> /etc/apt/sources.list
+
+
+安装
+apt-get install php5-fpm
+
