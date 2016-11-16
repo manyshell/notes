@@ -1,3 +1,5 @@
+docker run -i -t -p 80:80 docker.io/redis:latest /bin/bash
+
 ---安装前准备工作\---
 查看系统信息
 cat /etc/*release*
@@ -34,6 +36,7 @@ apt-get install libpcre3 libpcre3-dev
 安装nginx必须要安装OpenSSL library
 apt-get install openssl libssl-dev
 
+
 下载nginx源码安装包
 apt-get install wget    //如要没有此命令
 wget http://nginx.org/download/nginx-1.10.2.tar.gz
@@ -63,6 +66,15 @@ mv nginx-1.10.2 /usr/local/download/nginx-1.10.2 && cd /usr/local/download/nginx
 --with-http_realip_module \
 --add-module=/usr/local/download/Nginx-limit-traffic-rate-module
 
+如果报c编译错误
+./configure: error: C compiler cc is not found
+apt-get install gcc
+
+没有make命令
+bash: make: command not found
+apt-get install make
+
+
 编译、安装
 make && make install
 
@@ -83,8 +95,15 @@ mkdir -p /var/lib/nginx
 
 apt-get install vim    //如要没有此命令
 vi /usr/local/nginx/conf/nginx.conf
-user www-data;                              //第一行，重点注意这里，不然会出现读取php没有权限
-client_max_body_size 8000m;                  //防止Nginx出现的413 Request Entity Too Large错误
+user www-data;                               //第一行，重点注意这里，不然会出现读取php没有权限
+
+http {
+#防止Nginx出现的413 Request Entity Too Large错误
+client_max_body_size 8000m;
+limit_traffic_rate_zone  rate $remote_addr 32m;
+limit_conn_zone $binary_remote_addr zone=addr:10m;
+}
+
 
 在当前目录下生成一个1G的test.rar文件
 dd if=/dev/zero of=test.rar bs=1M count=1000
@@ -95,6 +114,8 @@ http {
     limit_traffic_rate_zone  rate $remote_addr 32m;
  
     server {
+        limit_conn addr 20;
+
         location /download/ {
             limit_traffic_rate rate 20k;
         }
@@ -181,5 +202,11 @@ http {
 设置例外目录except，不限速
 ln -s /var/www/repo/master /var/www/repo/except
 
+------------------------
+apt-get install net-tools
+apt-get install iftop
 
-
+netstat -na | grep ESTABLISHED | awk '{print $5}' | sed -n '/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\:.*/p' | cut -d':' -f1 | sort | uniq -c | sort -nr | head -20
+iftop -N -n -i eth0
+iftop -B
+iftop -nNBP -i eth0

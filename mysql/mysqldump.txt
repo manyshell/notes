@@ -1,3 +1,20 @@
+mysqldump备份：
+mysqldump -u用户名 -p密码 -h主机 数据库 a -w "sql条件" --lock-all-tables > 路径
+
+例子：
+将本地数据库[smloft]导出到/root/backup/smloft_bk.sql
+mysqldump -h localhost -u root -puc0079ft smloft > /root/backup/smloft_bk.sql
+
+
+0 13 * * * mysqldump -h localhost -u root -puc0079ft smloft > /root/backup/smloft_bk.sql
+
+---
+
+mysqldump还原：
+mysqldump -u用户名 -p密码 -h主机 数据库 < 路径
+
+---
+
 1、导出整个数据库
 mysqldump -u 用户名 -p 数据库名 > 导出的文件名
 手动输入密码
