@@ -23,3 +23,16 @@ You need a license key to set up JIRA. Enter your license key or generate a new 
 https://id.atlassian.com/login?application=mac&continue=https://my.atlassian.com
 
 cyevo_b2ls@mail.com::b2ls_123
+
+------
+JIRA Core-7.2.4 
+注意：安装出来的jira只有30天的试用期
+
+增加中文语言插件：
+下载语言包
+https://translations.atlassian.com/dashboard/download?lang=zh_CN
+
+jira后台管理员设置
+超级管理员登录>add-ons>管理插件>上传插件
+
+
