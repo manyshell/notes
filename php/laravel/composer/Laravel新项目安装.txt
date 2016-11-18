@@ -4,6 +4,7 @@ composer create-project --prefer-dist laravel/laravel
 
 创建一个博客项目
 composer create-project --prefer-dist laravel/laravel blog
+composer create-project --prefer-dist laravel/laravel blog "5.2.*"
 
 手动安装laravel
 1、访问地址下载：
