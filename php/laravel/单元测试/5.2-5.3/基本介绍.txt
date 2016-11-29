@@ -1,0 +1,24 @@
+phpunit是以命令行的方法执行的
+一个新项目建立时，phpunit已被默认安装。
+###composer.json\###
+    "require-dev": {
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "~4.0",                      //这个就是单元测试插件
+        "symfony/css-selector": "2.8.*|3.0.*",
+        "symfony/dom-crawler": "2.8.*|3.0.*"
+    },
+###composer.json/###
+
+###laravel根目录\###
+tests
+    ExampleTest.php             默认例子，继承了TestCase
+    TestCase.php                单元测试基础类
+###laravel根目录/###
+
+测试方法：
+# vendor/bin/phpunit tests/ExampleTest.php
+
+如果要执行所有的单元测试，后面不加参数
+# vendor/bin/phpunit
+

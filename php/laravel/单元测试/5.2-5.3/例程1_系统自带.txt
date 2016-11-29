@@ -1,0 +1,50 @@
+###ExampleTest.php\###
+<?php
+
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * A basic functional test example.
+     *
+     * @return void
+     */
+    public function testBasicExample()
+    {
+        $this->visit('/')
+             ->see('Laravel 5');
+    }
+}
+###ExampleTest.php/###
+
+这是系统自带的例子
+->visit('/')                    表示访问系统路由 URL('/')
+->see('Laravel 5')              表示从返回的结果里搜索引号内的字符串
+
+这是一个正确的返回：因为在页面内容里有'Laravel 5'这个字符串
+[root@localhost laravelhelper]# vendor/bin/phpunit tests/ExampleTest.php 
+PHPUnit 4.8.27 by Sebastian Bergmann and contributors.
+ 
+.
+ 
+Time: 690 ms, Memory: 12.50MB
+ 
+OK (1 test, 2 assertions)
+成功，1个测试，2个断点
+
+---
+
+这是一个错误的返回：因为在页面内容里没有'Laravel 5.2'这个字符串
+Failed asserting that the page contains the HTML [Laravel 5.2]. Please check the content above.
+ 
+/mnt/code/laravelhelper/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Constraints/PageConstraint.php:90
+/mnt/code/laravelhelper/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/InteractsWithPages.php:249
+/mnt/code/laravelhelper/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/InteractsWithPages.php:263
+/mnt/code/laravelhelper/tests/ExampleTest.php:17
+ 
+FAILURES!
+Tests: 1, Assertions: 2, Failures: 1.
+1个测试，2个断点，1个失败
