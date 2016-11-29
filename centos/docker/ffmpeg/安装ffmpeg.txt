@@ -1,0 +1,89 @@
+http://www.ffmpeg.org/ffmpeg-bitstream-filters.html
+
+查看系统信息
+cat /etc/*release*
+
+拉取：
+docker pull jrottenberg/ffmpeg
+
+导出：
+docker save -o ffmpeg.tar.gz jrottenberg/ffmpeg:latest
+
+导入：
+docker load --input ffmpeg.tar.gz
+
+进入容器：
+docker run -it --privileged=true -v /root/video:/tmp/workdir --entrypoint='bash' jrottenberg/ffmpeg
+
+使用本地文件转换
+docker run --rm -v pwd:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -framerate 1/2 -i screenshots/%2d.png -c:v libx264 -r 25 -pix_fmt yuv420p output.mp4
+
+Example1:
+docker run jrottenberg/ffmpeg \
+-i http://url/to/media.mp4 \
+-stats \
+$ffmpeg_options  - > out.mp4
+
+Example2:
+从视频文件的00:19:42，取一段视频，保存为trow_ball.gif
+docker run jrottenberg/ffmpeg -stats  \
+-i http://192.168.1.33/test_jw7.7.4/uploader_640x360.mp4 \
+-loop 0  \
+-final_delay 500 -c:v gif -f gif -ss 00:19:42 -t 5 - > trow_ball.gif
+
+Example3:
+mp4 to m3u8
+docker run --rm jrottenberg/ffmpeg -stats  \
+-i http://192.168.1.33/test_jw7.7.4/uploader_640x360.mp4 \
+-c:v libx264 -c:a aac -strict -2 -f hls - > output.m3u8
+结果是，使用jwplayer无法播放
+
+Example4:
+docker run --rm jrottenberg/ffmpeg -stats  \
+-i http://192.168.1.33/test_jw7.7.4/uploader_640x360.mp4 \
+-c:v libx264 -c:a aac -strict -2 -f hls -hls_time 15 -hls_list_size 0 - > test.m3u8
+结果是，使用jwplayer无法播放
+QQ影音可以播放
+
+二  将mp4文件转为ts文件并生成m3u8
+A、docker外执行
+1. 将mp4转为完整的ts
+docker run --rm jrottenberg/ffmpeg -stats  \
+-i http://192.168.1.33/test_jw7.7.4/Clip_480_5sec_6mbps_h264.mp4 \
+-c copy -bsf h264_mp4toannexb - > output.ts
+
+2. 将ts切片，并生成m3u8文件
+docker run --rm jrottenberg/ffmpeg -stats  \
+-i http://192.168.1.33/test_jw7.7.4/output.ts \
+-c copy -map 0 -f segment -segment_list playlist.m3u8 -segment_time 10 - > output%03d.ts
+B、docker内执行
+docker run -it --privileged=true -v /root/video:/tmp/workdir --entrypoint='bash' jrottenberg/ffmpeg
+
+ffmpeg -i out.mp4 -c copy -bsf h264_mp4toannexb output.ts       运行失败
+ffmpeg -i output.ts -c copy -map 0 -f segment -segment_list playlist.m3u8 -segment_time 10 output%03d.ts
+
+error:
+[AVBSFContext @ 0xbd74c0] Codec 'aac' (86018) is not supported by the bitstream filter 'h264_mp4toannexb'. Supported codecs are: h264 (28) 
+Error initializing bitstream filter: h264_mp4toannexb
+
+成功运行
+ffmpeg -i out.mp4 -map 0 -flags:v +global_header -c:v libx264 -bsf:v dump_extra output.ts
+
+ffmpeg -i out.mp4 -codec copy -bsf:v h264_mp4toannexb output.ts
+ffmpeg -i out.mp4 -codec copy -bsf:v hevc_mp4toannexb output.ts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
