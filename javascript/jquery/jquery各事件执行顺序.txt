@@ -1,0 +1,11 @@
+jquery中各个事件执行顺序如下：
+1.ajaxStart(全局事件)
+2.beforeSend
+3.ajaxSend(全局事件)
+4.success
+5.ajaxSuccess(全局事件)
+6.error
+7.ajaxError (全局事件)
+8.complete
+9.ajaxComplete(全局事件)
+10.ajaxStop(全局事件)
