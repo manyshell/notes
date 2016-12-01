@@ -1,0 +1,33 @@
+#!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+ 
+prefix="smloft_dump_"
+fileName="/root/backup/"${prefix}$(date +%Y%m%d_%s)".sql"
+/usr/bin/mysqldump -h localhost -u root -ppasswd smloft > ${fileName}
+说明:
+%Y%m%d                  年月日
+%s                      unix时间戳
+
+---
+
+将数据库smloft导出到
+/root/backup/smloft_dump_20161117_1479387784.sql
+20161117     对应年月日
+
+保留最新的10个dump文件，并删除多余的文件
+ls -t smloft_dump_* | awk '{if(NR>10){print $0}}' | xargs rm -f
+说明:
+ls -t smloft_dump_*                 按时间由近到远排序，列出文件名
+ls -t /root/smloft_dump_*           按时间由近到远排序，列出文件名，这样列出的文件名含全路径
+awk '{if(NR>10){print $0}}'         根据条件，打印出[已读的记录数超过10条]的记录
+xargs rm -f                         删除这些结果
+
+---
+
+ls /root
+anaconda-ks.cfg  apache2.tar.gz
+
+ls /root/*
+/root/anaconda-ks.cfg  /root/apache2.tar.gz
+由此可看出，加*可输出路径

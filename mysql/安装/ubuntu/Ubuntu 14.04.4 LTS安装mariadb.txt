@@ -24,14 +24,14 @@ Ubuntu 14.04.4 LTS
 
 设置 MariaDB 仓库
 
-    apt-get install software-properties-common
+# apt-get install software-properties-common
 Reading package lists... Done
 Building dependency tree       
 Reading state information... Done
 software-properties-common is already the newest version.
 本次是已经装过了
 
-    apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+# apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
 Executing: gpg --ignore-time-conflict --no-options --no-default-keyring --homedir /tmp/tmp.Ob8cBdRijR --no-auto-check-trustdb --trust-model always --keyring /etc/apt/trusted.gpg --primary-keyring /etc/apt/trusted.gpg --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
 gpg: requesting key 1BB943DB from hkp server keyserver.ubuntu.com
 gpg: key 1BB943DB: public key "MariaDB Package Signing Key <package-signing-key@mariadb.org>" imported
@@ -39,12 +39,12 @@ gpg: Total number processed: 1
 gpg:               imported: 1
 key添加成功
 
-    添加源
-    add-apt-repository 'deb http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu trusty main'
+添加源  /etc/apt/sources.list
+add-apt-repository 'deb http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu trusty main'
 
 安装 MariaDB :
 
-    apt-get update
+# apt-get update
 W: An error occurred during the signature verification. The repository is not updated and the previous index files will be used. GPG error: http://repo.percona.com trusty InRelease: 
 The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 9334A25F8507EFA5
 更新失败，看来是key的原因
@@ -55,7 +55,7 @@ The following signatures couldn't be verified because the public key is not avai
 W: Failed to fetch http://repo.percona.com/apt/dists/trusty/main/source/Sources  404  Not Found    
 再次apt-get update，居然成功了
     
-    apt-get install mariadb-server
+# apt-get install mariadb-server
 安装过程中，提示要求设置Mariadb root的密码: 123456  试验就用最简单的密码
 然后会要求再输一次(repeat password for the MariaDB "root" user):    123456
 
