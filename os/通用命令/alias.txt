@@ -1,0 +1,5 @@
+如果想永久生效,就把这条写入到 ~/.bashrc 里面
+
+alias ll='ls -l --color=tty'                增加ll别名，ll实现文件列表功能
+
+
