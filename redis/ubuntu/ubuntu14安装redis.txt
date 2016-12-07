@@ -1,0 +1,52 @@
+#eD^7*vbMj78
+安装redis
+sudo apt-get install redis-server
+
+安装php5-redis扩展
+sudo apt-get install php5-redis
+
+---php测试\---
+<?php
+$redis = new Redis();
+$redis -> connect("localhost",6379);
+$redis -> set("say","Hello World");
+echo $redis -> get("say");
+?>
+---php测试/---
+    echo "origin:".$scoreSize."\n";
+//    echo formatBytes($scoreSize);
+//    exit;
+    $redis = new Redis();
+    $redis->connect('192.168.0.205',6379);
+//    $redis->del('file_1');  //删除指定的key
+//    $redis->hMset('file_1',['name'=>'a556465465.php',"size","888"]);      //设置hash值
+//    var_dump($redis->hMGet('file_1',['name','size']));                    //取hash值
+//    var_dump($redis->keys('*'));
+    $redis->set('test', $scoreSize);
+//    echo $redis->get('test');
+    $b = (float) $redis->get('test');
+    $c = $b - 888;
+    var_dump($c);
+    echo "count:".$c;
+//    $redis->keys('*');        //获取全部key
+//file_1 = "";
+//    $dir = "D:/code/ajw_server_ssh_key";
+//    $number = 0;
+//    if ($dh = opendir($dir)) {
+//        while (($file = readdir($dh)) !== false) {
+//            if (is_file($dir."/".$file)) {
+////                echo "is_file->filename: $file \n";
+//                $redis->hMset("file_{$number}",['name'=>$dir."/".$file,"size"=>formatBytes(filesize($dir."/".$file))]);      //设置hash值
+//                $number++;
+//            }
+//        }
+//        closedir($dh);
+//    }
+//    $keys = $redis->keys('*');
+//    for ($i=0;$i<count($keys);$i++) {
+//        print_r($redis->hMGet($keys[$i],['name','size']));                    //取hash值
+//    }
+//    echo filesize("D:\\code\\ajw_server_ssh_key/neptune_sell_5.sql");
+$redis = new Redis();
+$redis->connect("localhost",6379);
+var_dump($keys = $redis->randomKey());
