@@ -20,5 +20,8 @@ tests
 # vendor/bin/phpunit tests/ExampleTest.php
 
 如果要执行所有的单元测试，后面不加参数
+unix:
 # vendor/bin/phpunit
+dos:
+> vendor\bin\phpunit
 
