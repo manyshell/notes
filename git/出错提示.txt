@@ -1,0 +1,14 @@
+git.exe pull -v --progress  "origin"
+
+fatal: unable to access 'https://github.com/manyshell/laravelhelper.git/': SSL certificate problem: unable to get local issuer certificate
+
+
+git did not exit cleanly (exit code 1) (1685 ms @ 2016/12/26 ÐÇÆÚÒ» 20:27:52)
+
+---------------------------------------------------------------------------------------
+
+git config¡ªglobal http.sslVerify false
+
+
+
+
