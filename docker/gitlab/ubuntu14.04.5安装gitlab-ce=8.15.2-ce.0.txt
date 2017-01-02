@@ -1,0 +1,26 @@
+1.从服务器获取镜像
+docker pull gitlab/gitlab-ce
+
+2.建立运行环境
+mkdir -p /var/local/gitlab && cd /var/local/gitlab
+mkdir config logs data && mkdir -p /var/local/gitlab/logs/reconfigure
+chmod 777 -R /var/local/gitlab
+
+3.后台执行
+docker run -d \
+--hostname 192.168.0.15 \
+--publish 880:80 \
+--name gitlab \
+--restart always \
+--privileged=true \
+--volume /var/local/gitlab/config:/etc/gitlab \
+--volume /var/local/gitlab/logs:/var/log/gitlab \
+--volume /var/local/gitlab/data:/var/opt/gitlab \
+--volume /var/local/gitlab/logs/reconfigure:/var/log/gitlab/reconfigure \
+gitlab/gitlab-ce:latest
+
+4.访问web
+http://192.168.0.15:880/
+
+管理员用户名:	root
+首次进入设置初始密码
