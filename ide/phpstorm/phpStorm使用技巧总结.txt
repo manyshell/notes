@@ -25,13 +25,16 @@ settings->editor ->plugins->browse repositories ->搜索VIM
 Settings->General去掉Reopen last project on startup.
 
 9、取消自动保存
-appearance -> system settings -> save file的两个选项 去掉
+appearance -> system settings -> 以下两个选项的勾去掉
+[  ] Save files on frame deactivation
+[  ] Save files automatically if appliction is idle for 15 sec.
 
 10、将编辑的文件加星号标识:
-settings -> editor -> editor tabs -> 勾选 mark modifed tabs…
+settings -> editor -> editor tabs -> 勾选以下这项
+[√] mark modifed tabs with asterisk
 
 11、添加扩展名高亮显示:
-settings -> editor -> file types  
+settings -> editor -> file types 
 
 12、改为习惯用的快捷键操作方式
 Keymap -> Visual Studio

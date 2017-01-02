@@ -1,0 +1,43 @@
+第一步：安装RequireJS
+bower install requirejs
+bower install require-css
+
+第二步：安装JQuery
+bower install jquery
+bower install jquery-ui
+
+第三步：安装BootStrap
+bower install bootstrap
+
+bower install moment
+
+第四步：安装编辑器
+ckeditor
+http://docs.ckeditor.com/#!/guide/dev_package_managers-section-bower
+---
+bower:
+bower install ckeditor
+---
+composer:
+composer.json
+{
+    "require": {
+        "ckeditor/ckeditor": "4.*"
+    }
+}
+
+第五步：安装拖拽文件上传
+http://www.dropzonejs.com
+bower install dropzone
+
+http://www.jianshu.com/p/ae30f3997c2b
+bower install inline-attachment
+
+bower install paste.js
+
+bower install --save normalize-css
+
+拖拽，切图
+https://github.com/yuezhongxin/paste-upload-image.js/blob/master/scripts/paste-upload-image.js
+
+

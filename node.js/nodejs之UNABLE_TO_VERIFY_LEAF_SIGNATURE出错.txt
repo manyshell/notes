@@ -1,0 +1,27 @@
+方法一：
+UNABLE_TO_VERIFY_LEAF_SIGNATURE	错误的解决方法
+---------------------------------------------
+关掉strict-ssl即可，如下：
+npm config set strict-ssl false
+
+用完之后恢复：
+npm config set strict-ssl true
+
+------
+
+方法二：
+bower  UNABLE_TO_VERIFY_LEAF_SIGNATURE Request to 
+https://bower.herokuapp.com/packages/jquery failed: 
+unable to verify the first certificate
+---------------------------------------------
+In your .bowerrc (maybe put it in the home folder, 
+since it's something you want to set globally), do:
+在当前项目的目录下建立新文件，如果存在则直接编辑
+.bowerrc
+---文件内容\---
+{
+  "strict-ssl": false
+}
+---文件内容/---
+
+

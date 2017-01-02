@@ -50,8 +50,21 @@ docker-engine:
 
 
 指定版本安装
+---
+Candidate: 1.12.1-0~xenial
 apt-get install -y docker-engine=1.12.1-0~trusty
+---
+Candidate: 1.12.5-0~ubuntu-trusty
+apt-get install -y docker-engine=1.12.5-0~ubuntu-trusty
 安装完成，则docker已启动
+
+-----------
+如果更新失败，提示 NO_PUBKEY ...，需要执行以下指令:
+W: GPG error: https://apt.dockerproject.org debian-jessie InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY F76221572C52609D
+
+# gpg --keyserver pgp.mit.edu --recv-keys 9334A25F8507EFA5
+# gpg -a --export 9334A25F8507EFA5 | apt-key add -
+
 
 -----------
 root@dsba438cfd:/var/www# cat /etc/*release*
