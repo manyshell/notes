@@ -1,11 +1,27 @@
 说明：将一个档案拷贝至另一档案，或将数个档案拷贝至另一目录。
 scp	本地文件或目录	远程文件或目录	[-r:复制子目录|-a:带文件属性复制|-f:选删除旧的再复制]
 
+把本地目录复制到远程，执行后，有提示输入密码
+scp -r test	root@100.114.102.115:/opt/lampp/htdocs/chong/www
+scp -r test/	root@100.114.102.115:/opt/lampp/htdocs/chong/www/
+
+
 把远程目录复制到本地，执行后，有提示输入密码
-scp -r test	root@100.124.102.115:/opt/lampp/htdocs/chong/www
-scp -r test/	root@10.124.102.115:/opt/lampp/htdocs/chong/www/
+scp -r root@60.215.168.242:/var/local /var/local
+60.215.168.242的目录结构：
+/var/local/abc
+scp后，本机的目录结构：
+/var/local/local/abc
+目录多出来了一层[local]
+
+scp -r root@60.205.168.240:/var/local/ /var/local/
+目录还是多出来了一层[local]
+
+scp -r root@60.205.168.240:/var/local/ /var/
+难道要这样
 
 自定义端口复制
-scp -P 250 /tmp/test.rar root@119.204.10.149:/htdoc
+scp -P 250 /tmp/test.rar root@119.214.101.149:/htdoc
 
 
+scp -r test/	root@10.124.102.115:/opt/lampp/htdocs/chong/www/

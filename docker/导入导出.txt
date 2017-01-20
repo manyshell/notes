@@ -1,0 +1,31 @@
+导出镜像：
+docker save -o centos7.tar.gz docker.io/centos
+docker save -o mariadb.tar.gz 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+docker save -o hzg_php_5.6.17-fpm.tar.gz hzg/php:5.6.17-fpm
+docker save -o daocloud_nginx_1.9.14.tar.gz daocloud.io/library/nginx:1.9.14
+docker save -o redis_3.0.2.tar.gz docker.io/redis:latest
+docker save -o php_7.0.0RC8-fpm.tar.gz daocloud.io/library/php:7.0.0RC8-fpm
+docker save -o hzg_php_7.0.0RC8-fpm.tar.gz hzg/php:7.0.0RC8-fpm
+docker save -o jira_6.4.9.tar.gz cptactionhank/atlassian-jira:6.4.9
+
+导入镜像：
+docker load --input centos7.tar.gz
+docker load --input redis_3.0.2.tar.gz
+
+------------------------------------------------------------------------------
+
+导出容器：
+docker export 815aaacf8612 > hzg_php_7.0.0RC8-fpm.tar.gz        //save -o出错，这样却导出来了
+
+docker export 1a2c78a5ea0e > redis_3.0.2.tar.gz
+docker export 6c5563 > ubuntu_tomcat.tar.gz
+
+6c5563是容器的id，可以用docer ps -a 命令查看。
+导入容器：???
+cat exp_centcommit.tar | docker import - impcentos:v1.0.0
+impcentos:v1.0.0是新的镜像名称
+
+
+警告：
+Usage of loopback devices is strongly discouraged for production use. Either use `--storage-opt dm.thinpooldev` or use `--storage-opt dm.no_warn_on_loop_devices=true` to suppress this warning
+vi /etc/sysconfig/docker-storage

@@ -27,7 +27,7 @@ yum -y install openssl  openssl-devel    #安装依赖文件
 debian & ubuntu:
 apt-get install gcc
 apt-get install openssl libssl-dev
-apt-get install make                    //bash: make: command not found     没有make命令
+apt-get install make                    //bash: make: command not found     本条语句是在没有make命令时才执行
 
 三、配置编译参数并安装
 
