@@ -5,6 +5,19 @@ sudo apt-get install redis-server
 安装php5-redis扩展
 sudo apt-get install php5-redis
 
+如果是用apt-get或者yum install安装的redis，
+可以直接通过下面的命令停止/启动/重启redis
+
+/etc/init.d/redis-server stop
+/etc/init.d/redis-server start
+/etc/init.d/redis-server restart
+如果是通过源码安装的redis，则可以通过redis的客户端
+程序redis-cli的shutdown命令来重启redis
+
+redis-cli -h 127.0.0.1 -p 6379 shutdown
+如果上述方式都没有成功停止redis，则可以使用终极武器 kill -9
+
+
 ---php测试\---
 <?php
 $redis = new Redis();
@@ -50,3 +63,9 @@ echo $redis -> get("say");
 $redis = new Redis();
 $redis->connect("localhost",6379);
 var_dump($keys = $redis->randomKey());
+----------
+停止redis
+redis-cli shutdown
+
+redis-server /etc/redis/redis.conf &
+

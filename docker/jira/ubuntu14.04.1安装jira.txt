@@ -20,7 +20,7 @@ chmod 777 -R /var/local/jira
 
 docker run --name jira -v  /var/local/jira/home:/opt/jira/home -v  /var/local/jira/install:/opt/jira/install -e JIRA_HOME=/opt/jira/home -e JIRA_INSTALL=/opt/jira/install -d --publish 890:8080 cptactionhank/atlassian-jira:latest
 
-JIRA Core-7.2.4 
+JIRA Core-7.2.4
 
 获取license key
 You need a license key to set up JIRA. Enter your license key or generate a new license key below. You need an account at MyAtlassian to generate a license key.
@@ -41,7 +41,7 @@ jira后台管理员设置
 
 方法三：破解启动
 
-1、docker启动一个jira最终版本，目的是进入容器，查看原始文件，当前jira版本为 JIRA Core 7.2.4
+1、docker启动一个jira最新版本，目的是进入容器，查看原始文件，当前jira版本为 JIRA Core 7.2.4
 docker run -i -t cptactionhank/atlassian-jira:latest /bin/bash
 
 原始文件
@@ -50,7 +50,7 @@ docker run -i -t cptactionhank/atlassian-jira:latest /bin/bash
 /opt/atlassian/jira/atlassian-jira/WEB-INF/atlassian-bundled-plugins/atlassian-universal-plugin-manager-plugin-2.20.7.jar
 
 exit                退出docker
-docker rm xxx       删掉这个景时容器
+docker rm xxx       删掉这个临时容器
 
 2、准备好破解文件，启动jira
 mkdir /var/local/jira

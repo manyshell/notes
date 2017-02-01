@@ -1,3 +1,5 @@
+https://zhidao.baidu.com/question/1989892098897788907.html
+http://www.veryhuo.com/a/view/14140.html
 ---÷ÿ∆Ù---\
 /usr/local/nginx/sbin/nginx -s reload
 

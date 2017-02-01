@@ -1,0 +1,65 @@
+php5.6以前的版本
+windows 下redis 扩展需要igbinary扩展的支持
+https://github.com/nicolasff/phpredis/downloads
+
+这上面地址下载扩展dll，解压都放到php安装目录的ext文件夹下，
+然后再apache 的php.ini文件中加上
+extension=php_igbinary.dll
+extension=php_redis.dll
+先后顺序不能变。
+-----------------------------------------
+php5.6以后的版本
+redis扩展下载地址:http://windows.php.net/downloads/pecl/snaps/redis/
+
+1、查看phpinfo下载匹配的版本(一定要选对版本)
+例如：
+PHP Version 5.6.28
+Architecture	x86
+PHP Extension Build	API20131226,TS,VC11
+对应的redis应该是
+/downloads/pecl/snaps/redis/2.2.5/php_redis-2.2.5-5.6-ts-vc11-x86.zip
+
+2、将下载，解压后的php_redis.dll放入php的ext目录下
+
+3、修改php.ini配置文件,加入extension=php_redis.dll
+
+4、重启服务器(nginx或apache)
+
+5、查看phpinfo看是否扩展成功(下图表示已经扩展成功)
+
+------------
+出错列表:
+Fatal error: Uncaught exception 'RedisException' with message 
+'Redis server went away' in 
+E:\Project\smtransfer\test\test1.php:14 Stack trace: #0 
+E:\Project\smtransfer\test\test1.php(14): Redis->select(0) #1
+{main} thrown in E:\Project\smtransfer\test\test1.php on line 14
+
+解决办法：
+1、找到redis.conf
+/etc/redis/redis.conf
+原值：
+bind 127.0.0.1
+修改为：
+bind 0.0.0.0
+
+2、在命令行上自然就不会有出错提示了
+3、
+vi /selinux/enforce
+1 代表 enforcing 状态, 0 代表 permissive 状态
+
+SELinux启用也可能导致这个问题，关掉：
+setenforce 0
+或者禁掉：
+setenforce disable
+
+4、
+/usr/bin/setenforce 是用来修改SELinux的实时运行模式的  
+ 临时打开：  
+setenforce 1          ----设置SELinux 成为enforcing模式  
+ 临时关闭：  
+setenforce 0          ----设置SELinux 成为permissive模式  
+ 如果要彻底禁用SELinux 需要在/etc/sysconfig/selinux中设置参数selinux=0 ，或者在/etc/grub.conf中添加这个参数  
+ /usr/bin/setstatus -v  
+
+
