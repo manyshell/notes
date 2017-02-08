@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head><title>鼠标移进移出切换类</title>
+<meta charset="utf-8">
+<script src="jquery-3.1.1.min.js"></script>
+<style>
+.master {
+    margin:auto auto;cursor:pointer;background: #fff;color: #666;border: 1px solid #d8d8d8;width: 119px;padding: 12px 30px;border-radius: 20px;font-size: 14px;text-align:center;
+}
+.selected {
+    background: #666 !important;
+    color: #fff!important;
+}
+</style>
+</head>
+<body>
+
+<div style="display:flex;width:100%;height:100px;">
+	<div class="master">查看详情</div>
+</div>
+
+<pre style="font-size:18px;font-weithg:bold;">
+定义和用法
+toggleClass() 对设置或移除被选元素的一个或多个类进行切换。
+该方法检查每个元素中指定的类。如果不存在则添加类，如果已设置则删除之。这就是所谓的切换效果。
+不过，通过使用 "switch" 参数，您能够规定只删除或只添加类。
+
+将鼠标移到“查看详情”，会看到添加类“selected”之后的效果
+
+本例知识点：
+1、通过display:flex，可轻松实现下一级DIV的水平居中与垂直居中；
+2、mouseover与mouseout的位置交换，不会影响最终效果，原因在于toggleClass只是类的切换，没有指定的类就加上，有指定的类就会删除；
+3、!important，强制执行，通过这个方法，强制覆盖目标原有的效果。
+</pre>
+
+<script>
+    $(".master").on("mouseover mouseout",function(){
+        $(this).toggleClass("selected");
+    });
+</script>
+</body>
+</html>
