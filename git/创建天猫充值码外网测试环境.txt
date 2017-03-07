@@ -47,7 +47,9 @@ git --bare init /acs/tianmao.git
 ssh://root@121.199.167.234/acs/tianmao.git
 
 git clone /acs/tianmao.git /acs/15844/code
+git clone http://45.34.158.74:880/garden/smloft.git /var/www/test2
 git pull origin "factory"
+git pull origin "develop"
 
 /acs/15844/code/
 /acs/15844/code/public

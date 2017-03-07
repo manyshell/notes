@@ -1,0 +1,9 @@
+ttl [key]
+
+例如：
+127.0.0.1:6379[2]> ttl 6315c2171ad8696d5b8c4bac4fc4457db6dccaa9.mp4
+(integer) 434
+127.0.0.1:6379[2]> ttl 6315c2171ad8696d5b8c4bac4fc4457db6dccaa9.mp4
+(integer) 433
+127.0.0.1:6379[2]> ttl 6315c2171ad8696d5b8c4bac4fc4457db6dccaa9.mp4
+(integer) 431

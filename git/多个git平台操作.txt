@@ -15,5 +15,18 @@ Remote      wechatplt
 5、登录目标2服务器，到指定目录
 git pull origin "stage"
 
+一、实现多个分支完全一致，强制覆盖远程分支
+1、基础分支为develop，develop覆盖master
+master为主分支，develop为开发分支，平时在develop调试，调试完成后，
+需要将develop推送到master。这样就可以把本地的develop分支强制(-f)推送到远程master
+# git push origin develop:master -f
+2、基础分支为master，master覆盖develop
+# git push origin master:develop -f
 
 
+二、实现本地开发分支与服务器同步，强制覆盖本地文件
+当master强制推送到develop后，如果在本地直接拉取develop，会出现冲突提示，
+只有强制更新本地，才是正确的操作方法。
+git fetch --all
+git reset --hard origin/develop
+git pull

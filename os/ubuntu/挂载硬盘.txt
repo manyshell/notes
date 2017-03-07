@@ -1,0 +1,44 @@
+磁盘查看命令
+# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+udev            3.9G  8.0K  3.9G   1% /dev
+tmpfs           795M  600K  794M   1% /run
+/dev/sda2       3.6T  3.1T  317G  91% /
+none            4.0K     0  4.0K   0% /sys/fs/cgroup
+none            5.0M     0  5.0M   0% /run/lock
+tmpfs           3.9G     0  3.9G   0% /run/shm
+none            100M     0  100M   0% /run/user
+说明/dev/sda2是已挂载的设备
+
+显示设备信息
+# lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL
+brw-rw---- 1 root disk 8,  0 Feb 28 14:43 /dev/sda
+brw-rw---- 1 root disk 8,  1 Feb 28 14:43 /dev/sda1
+brw-rw---- 1 root disk 8,  2 Feb 28 14:43 /dev/sda2
+brw-rw---- 1 root disk 8,  3 Feb 28 14:43 /dev/sda3
+brw-rw---- 1 root disk 8, 16 Feb 28 14:43 /dev/sdb
+说明/dev/sdb是需要挂载的设备
+
+格式化
+# mkfs.ext4 /dev/sdb
+
+创建挂载点：
+# mkdir /var/www/repo/2_master
+# mount -t ext4 /dev/sdb /var/www/repo/2_master
+# chown www-data:www-data -R /var/www/repo/2_master
+
+显示设备信息
+# lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL
+
+输出所有可用的设备、它们的通用唯一识别码（UUID）、文件系统类型以及卷标
+# blkid
+/dev/sda2: UUID="31d93ed6-bb05-4fcd-afbc-02f182ba9daf" TYPE="ext4" 
+/dev/sda3: UUID="7bd8537a-f10f-4f09-922a-8170423f77d7" TYPE="swap" 
+/dev/sdb: UUID="7d598365-cb1b-4795-a329-bbc5dfe0faa6" TYPE="ext4" 
+可以看到/dev/sdb的唯一ID
+
+设置开机自动启动
+#vi /etc/fstab
+UUID=7d598365-cb1b-4795-a329-bbc5dfe0faa6 /var/www/repo/2_master   ext4    defaults        0       2
+通常ext4    defaults        0       2
+除非引导区为ext4    defaults        0       1

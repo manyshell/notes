@@ -1,0 +1,6 @@
+停止crontab
+service cron stop
+
+service cron start
+
+service cron restart

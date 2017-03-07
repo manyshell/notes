@@ -15,6 +15,12 @@ https://github.com/laravel/laravel
 3、进入laravel目录
 composer install
 
+4、首次安装需要配置初始环境才可以运行
+#cp .env.example .env
+执行以下命令会自动在.env文件产生32位字符长度的APP_KEY
+#php artisan key:generate
+Application key [base64:2KjMMGTHfgF5wIm9cEDFK1zd2ugiv5jY45mhnH3F44k=] set successfully.
+
 出错提示：
 laravel/framework v5.2.9 requires ext-mbstring * -> the requested PHP extension mbstring is missing from your system.
 安装mbstring扩展
