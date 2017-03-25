@@ -1,12 +1,17 @@
 https://zhidao.baidu.com/question/1989892098897788907.html
 http://www.veryhuo.com/a/view/14140.html
+---Õ£÷π---\
+nginx -s stop
+---Õ£÷π---/
+
 ---÷ÿ∆Ù---\
 /usr/local/nginx/sbin/nginx -s reload
-
+nginx -s reload
 ---÷ÿ∆Ù---/
 
-Õ£÷πnginx -s stop
-÷ÿ∆Ùnginx -c nginx.conf
+---∆Ù∂Ø---\
+nginx -c nginx.conf
+---∆Ù∂Ø---/
 
 //---192.168.1.146---\
 vi /usr/local/php/etc/php-fpm.conf

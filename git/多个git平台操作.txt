@@ -29,4 +29,3 @@ master为主分支，develop为开发分支，平时在develop调试，调试完成后，
 只有强制更新本地，才是正确的操作方法。
 git fetch --all
 git reset --hard origin/develop
-git pull

@@ -1,5 +1,13 @@
-转为字符串
-JSON.stringify(arr)
+1、初始化json对像
+var data = {};
+data.name = "abc";
+data.category = 1;
+
+2、将json对像转为普通字符串
+var data = {"name":"wo", "age":18};
+console.log(data);                      //Object {name: "wo", age: 18}
+console.log(JSON.stringify(data));      //{"name":"wo","age":18}
+
 
 转为JSON
 JSON.parse(XMLHttpRequest.responseText);

@@ -1,0 +1,4 @@
+nginx.conf中要在http一节里面添加
+
+access_log off;
+error_log off;
