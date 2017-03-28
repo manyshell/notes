@@ -2,6 +2,7 @@ debian系统
 
 ---查看操作系统---\
 cat /etc/issue
+cat /etc/lsb-release
 ---查看操作系统---/
 
 ---更新---\

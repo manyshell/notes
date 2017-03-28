@@ -1,3 +1,9 @@
+查看操作系统
+cat /etc/issue
+cat /etc/lsb-release
+cat /etc/*release*
+uname -r
+--------------------------
 1、常规安装
 
 系统升级
@@ -23,6 +29,9 @@ $ apt-get install apt-transport-https ca-certificates
 
 $ apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
+！新服务器首次安装找不到/etc/apt/sources.list，手动添加
+# vi /etc/apt/sources.list
+$ sudo sed  -i  's/archive.ubuntu.com/mirrors.aliyun.com/g'  /etc/apt/sources.list
 编辑 vi /etc/apt/sources.list
 deb https://apt.dockerproject.org/repo ubuntu-xenial main
 
@@ -50,29 +59,8 @@ docker-engine:
 
 指定版本安装
 apt-get install -y docker-engine=1.12.1-0~xenial
-
+apt-get install -y docker-engine=17.03.0~ce-0~ubuntu-xenial
 启动docker（奇怪的是，没有手动启动，发现docker是启动着的）
 service docker start
-
------------
-root@dsba438cfd:/var/www# cat /etc/*release*
-DISTRIB_ID=Ubuntu
-DISTRIB_RELEASE=16.04
-DISTRIB_CODENAME=xenial
-DISTRIB_DESCRIPTION="Ubuntu 16.04.1 LTS"
-NAME="Ubuntu"
-VERSION="16.04.1 LTS (Xenial Xerus)"
-ID=ubuntu
-ID_LIKE=debian
-PRETTY_NAME="Ubuntu 16.04.1 LTS"
-VERSION_ID="16.04"
-HOME_URL="http://www.ubuntu.com/"
-SUPPORT_URL="http://help.ubuntu.com/"
-BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
-UBUNTU_CODENAME=xenial
-
-
-root@dsba438cfd:/var/www# uname -r
-4.4.0-28-generic
 
 

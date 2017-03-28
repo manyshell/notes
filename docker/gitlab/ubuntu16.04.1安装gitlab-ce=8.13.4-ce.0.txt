@@ -1,7 +1,28 @@
-从服务器获取镜像
+一、从服务器获取镜像
 docker pull gitlab/gitlab-ce
 
-Example:
+二、建立jira数据目录
+mkdir -p /var/local/gitlab
+cd /var/local/gitlab
+mkdir config logs data
+mkdir -p /var/local/gitlab/logs/reconfigure
+chmod 777 -R /var/local/gitlab
+
+三、启动jira
+Example 1:
+绑定gitlab到8077端口
+docker run --detach \
+    --hostname gitlab.supcoding.com \
+    --publish 8077:80 \
+    --name gitlab \
+    --restart always \
+    --volume /var/local/gitlab/config:/etc/gitlab \
+    --volume /var/local/gitlab/logs:/var/log/gitlab \
+    --volume /var/local/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:latest
+
+Example 2:
+绑定gitlab到880端口，并发布多个端口
 docker run --detach \
     --hostname gitlab.example.com \
     --publish 843:443 --publish 880:80 --publish 822:22 \
@@ -12,27 +33,7 @@ docker run --detach \
     --volume /var/local/gitlab/data:/var/opt/gitlab \
     gitlab/gitlab-ce:latest
 
-----------------------------------------------------------------------
-
-mkdir -p /var/local/gitlab
-cd /var/local/gitlab
-mkdir config logs data
-mkdir -p /var/local/gitlab/logs/reconfigure
-chmod 777 -R /var/local/gitlab
-
-后台执行：
-docker run -d \
-    --hostname 192.168.0.205 \
-    --publish 2202:80 \
-    --name gitlab \
-    --restart always \
-    --privileged=true \
-    --volume /var/local/gitlab/config:/etc/gitlab \
-    --volume /var/local/gitlab/logs:/var/log/gitlab \
-    --volume /var/local/gitlab/data:/var/opt/gitlab \
-    --volume /var/local/gitlab/logs/reconfigure:/var/log/gitlab/reconfigure \
-    gitlab/gitlab-ce:latest
-
+Example 3:
 前台执行，可以看到执行效果，如果有问题，可以用此方法：
 docker run -i \
     --hostname ubuntu \
@@ -46,6 +47,9 @@ docker run -i \
     --volume /var/local/gitlab/logs/reconfigure:/var/log/gitlab/reconfigure \
     gitlab/gitlab-ce:latest
 
+
+
+----------------------------------------------------------------------
 Thank you for using GitLab Docker Image!
 Current version: gitlab-ce=8.13.4-ce.0
  
@@ -69,4 +73,11 @@ cp: cannot create regular file '/etc/gitlab/gitlab.rb': Permission denied
 
 ---------------------------------------------------------------------------
 
---hostname 192.168.0.205            经试验不能带端口，否则无法运行
+--hostname 192.168.0.205            经试验，hostname不能带端口，否则无法运行
+---------------------------------------------------------------------------
+
+首次使用，要求创建root的密码
+Change your password
+
+
+

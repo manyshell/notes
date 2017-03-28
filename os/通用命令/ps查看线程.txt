@@ -1,0 +1,2 @@
+得到如上线程
+ps -ef | grep java
