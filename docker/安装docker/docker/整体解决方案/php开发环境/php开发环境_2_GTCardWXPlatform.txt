@@ -1,0 +1,91 @@
+本环境是基于docker的，没有安装docker就别往下看了。
+
+案例二:
+mount -t cifs -o username=administrator,password=77 //192.168.1.32/code /mnt/code
+mount -t cifs -o username=administrator,password=77,dir_mode=0777,file_mode=0777 //192.168.1.32/code /mnt/code
+
+umount /mnt/code
+
+git clone http://192.168.1.241/GT/GTCardWXPlatform.git
+git checkout -b develop_v1.3 origin/develop_v1.3
+
+cd /mnt/code/GTCardWXPlatform
+vi composer.json
+删除前:
+        "pre-update-cmd": [
+            "php artisan clear-compiled"
+        ],
+删除后:
+        "pre-update-cmd": [
+        ],
+
+删除前:
+    "config": {
+        "preferred-install": "dist"
+    },
+    "repositories": [
+      {"type": "composer", "url": "http://packagist.phpcomposer.com"},
+      {"packagist": false}
+    ]
+删除后:
+    "config": {
+        "preferred-install": "dist"
+    }
+
+composer install
+
+win8项目目录:       d:\code\GTCardWXPlatform
+centos项目目录:     /mnt/code/GTCardWXPlatform
+mysql数据库目录：   /home/mysqldata
+
+1、准备工作
+a.确认所需的docker mirror是否存在，php, nginx, mariadb
+docker load --input mariadb.tar.gz
+docker load --input hzg_php_5.6.17-fpm.tar.gz
+docker load --input daocloud_nginx_1.9.14.tar.gz
+
+# docker images
+REPOSITORY                                     TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+hzg/php                                        5.6.17-fpm          f7cd4bb62cf3        22 hours ago        764.3 MB
+5kmji0bo.mirror.aliyuncs.com/library/mariadb   latest              1b3805319b03        3 weeks ago         382.1 MB
+daocloud.io/library/nginx                      1.9.14              9287e6da3f65        6 weeks ago         182.6 MB
+
+b.确认数据库目录[mysqldata]是否存在
+drwxr-xr-x. 5 systemd-bus-proxy ssh_keys      4096 May  6 05:02 mysqldata
+如果mysqldata目录不存在，启动mariadb时，会自动初始化。
+
+c.确认nging配置文件[nginx-php.conf]是否存在
+查看nginx-php.conf, 注意server里面的配置。
+如果是laravel框架，重点关注32行、49行。
+
+2、维护
+php:
+docker run -i -t --privileged=true -v /mnt/code/GTCardWXPlatform:/var/www/html -p 9000:9000 hzg/php:5.6.17-fpm /bin/bash
+chmod 777 -R storage
+启动php-fpm, [php-fpm &]
+
+mariadb:
+docker run -i -t --privileged=true -v /home/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 5kmji0bo.mirror.aliyuncs.com/library/mariadb /bin/bash
+
+nginx:
+#docker run -i -t --privileged=true -v /mnt/code/conf/nginx-GTCardWXPlatform.conf:/etc/nginx/nginx.conf -v /mnt/code/GTCardWXPlatform:/usr/share/nginx/html -p 80:80 daocloud.io/library/nginx:1.9.14 /bin/bash
+docker run -i -t --privileged=true -v /mnt/code/logs:/var/log/nginx -v /mnt/code/conf/nginx-GTCardWXPlatform.conf:/etc/nginx/nginx.conf -v /mnt/code/GTCardWXPlatform:/usr/share/nginx/html -p 80:80 daocloud.io/library/nginx:1.9.14 /bin/bash
+启动nginx, [nginx -c /etc/nginx/nginx.conf]
+
+
+3、启动服务
+启动php
+docker run --name php_wx --privileged=true -v /mnt/code/GTCardWXPlatform:/var/www/html -p 9000:9000 -d hzg/php:5.6.17-fpm php-fpm
+
+启动mariadb
+docker run --name mariadb_server --privileged=true -v /home/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+
+启动nginx
+docker run --name nginx_wx --privileged=true -v /mnt/code/logs/GTCardWXPlatform:/var/log/nginx -v /mnt/code/conf/nginx-GTCardWXPlatform.conf:/etc/nginx/nginx.conf -v /mnt/code/GTCardWXPlatform:/usr/share/nginx/html -p 80:80 -d daocloud.io/library/nginx:1.9.14
+
+
+8ad65e6969e4
+
+
+
+1ce7e77c0bb2

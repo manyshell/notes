@@ -1,0 +1,27 @@
+# docker pull docker.io/pamtrak06/ubuntu14.04-apache2
+
+# docker run --name test -i -t -p 8080:80 docker.io/pamtrak06/ubuntu14.04-apache2:latest /bin/bash
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+# apachectl -v
+Server version: Apache/2.4.7 (Ubuntu)
+Server built:   Jul 15 2016 15:34:04
+
+1. 如果提示ServerName出错，要在最后一行增加:
+# vi /etc/apache2/apache2.conf
+ServerName localhost:80
+
+2. 实际上apxs2只是apxs的链接，没有apxs2，看看有没有 /usr/bin/apxs ，如果没有则
+新安装apache2的时候，带上参数，就会有apxs了，如果已经安装了apache2，则用扩展的方式安装
+# apt-get install apache2-dev
+
+3. apache2-dev只是apache的开发工具，所以只安装apache2-dev是不能运行apache2的
+先装
+# apt-get install apache2
+再装
+# apt-get install apache2-dev
+

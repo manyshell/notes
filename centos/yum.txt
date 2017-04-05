@@ -1,11 +1,16 @@
+---Centos6阿里云开源镜像---\
 为了提高软件安装速度，将yum源设置为阿里云开源镜像
 $ cd /etc/yum.repos.d
 $ wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
+---Centos6阿里云开源镜像---/
 
+YUM常用操作命令：
+yum -y update
+升级所有包，改变软件设置和系统设置,系统版本内核都升级
 
-Linux系统下yum命令查看安装了哪些软件包：
-$yum list installed      //列出所有已安装的软件包
-yum针对软件包操作常用命令：
+yum -y upgrade
+升级所有包，不改变软件设置和系统设置，系统版本升级，内核不改变
+
 1.使用YUM查找软件包
 命令：yum search 
 
@@ -21,13 +26,7 @@ yum针对软件包操作常用命令：
 5.列出所有已安装但不在 Yum Repository 内的软件包
 命令：yum list extras
 
-6.列出所指定的软件包
-命令：yum list
-
 7.使用YUM获取软件包信息
-命令：yum info
-
-8.列出所有软件包的信息
 命令：yum info
 
 9.列出所有可更新的软件包信息

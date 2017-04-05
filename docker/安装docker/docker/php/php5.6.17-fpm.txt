@@ -1,0 +1,131 @@
+
+一、拉取
+docker pull daocloud.io/library/php:5.6.17-fpm
+
+二、进入
+1、进入容器
+docker run -i -t daocloud.io/library/php:5.6.17-fpm /bin/bash
+２、映射目录进入容器
+手动运行:
+docker run -i -t -v /root/www/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro --privileged=true -v /root/www:/var/www/html -p 9000:9000 daocloud.io/library/php:5.6.17-fpm /bin/bash
+docker run -i -t -v /root/www/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro --privileged=true -v /root/www:/var/www/html -p 9000:9000 hzg/php:5.6.17-fpm /bin/bash
+docker run -i -t --privileged=true -v /root/www/laravel-master:/var/www/html -p 9000:9000 hzg/php:5.6.17-fpm /bin/bash
+php-fpm &
+后台运行:
+docker run --name php_5.6.17 -d --privileged=true -v /root/www:/var/www/html -p 9000:9000 daocloud.io/library/php:5.6.17-fpm
+docker run --name php_5.6.17 -d --privileged=true -v /root/www:/var/www/html -p 9000:9000 hzg/php:5.6.17-fpm php-fpm
+docker run --name php_5.6.17 -d --privileged=true -v /root/www/laravel-master:/var/www/html -p 9000:9000 hzg/php:5.6.17-fpm php-fpm
+
+php执行目录
+/var/www/html
+
+php-fpm配置文件
+/usr/local/etc/php-fpm.conf
+端口9000
+
+???
+复制php.ini-development 到/usr/local/lib/php.ini
+cp /usr/src/php/php.ini-development /usr/local/etc/php/php.ini
+
+cp /usr/local/etc/php/php.ini ./
+-------------------------------------
+这个镜像没有php.ini，如果要安装新的扩展，需要创建php.ini
+cp /usr/src/php/php.ini-development /usr/local/etc/php/php.ini
+安装php扩展：
+１、安装mbstring
+cd /usr/src/php/ext/mbstring
+phpize
+php-config
+./configure
+make
+make install clean
+vi /usr/local/etc/php/php.ini
+cp php.ini /usr/local/etc/php/php.ini
+
+-------------------------------------
+其它相关：
+nginx+php
+手动方式：
+docker run -i -t -v /root/www/nginx-php.conf:/etc/nginx/nginx.conf:ro -v /root/www:/usr/share/nginx/html:ro -p 80:80 daocloud.io/library/nginx:1.9.14 /bin/bash
+nginx -c /etc/nginx/nginx.conf
+后台方式：
+docker run --name nginx_1.9.14 -d -v /root/www/nginx-php.conf:/etc/nginx/nginx.conf:ro -v /root/www:/usr/share/nginx/html:ro -p 80:80 daocloud.io/library/nginx:1.9.14
+docker run --name nginx_1.9.14 -d -v /root/www/nginx-php.conf:/etc/nginx/nginx.conf:ro -v /root/www/laravel-master:/usr/share/nginx/html:ro -p 80:80 daocloud.io/library/nginx:1.9.14
+
+/root/www
+/var/www/html
+/usr/share/nginx/html
+
+安装composer
+wget https://getcomposer.org/composer.phar
+
+docker pull webdevops/php-nginx:debian-8
+
+
+---/etc/nginx/nginx-php.conf---\
+user  root;
+worker_processes  1;
+ 
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+ 
+ 
+events {
+    worker_connections  1024;
+}
+ 
+ 
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+ 
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+ 
+    access_log  /var/log/nginx/access.log  main;
+ 
+    sendfile        on;
+    #tcp_nopush     on;
+ 
+    keepalive_timeout  65;
+ 
+    #gzip  on;
+ 
+    server {
+        listen          80;
+#        server_name     *.wx.jaeapp.com;
+        index           index.html index.htm index.php;
+        root            /usr/share/nginx/html;
+
+        location / {
+            index  index.html index.htm index.php;
+            if (!-e $request_filename) {
+                 rewrite ^.*$ /index.php last;
+            }
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        location ~ .*\.(php|php5)?$ {
+            fastcgi_pass   192.168.1.146:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  /home/wwwroot/default/$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+    }
+}
+---nginx-php.conf---/
+
+---启动docker容器出错---\
+WARNING: IPv4 forwarding is disabled. Networking will not work.
+#sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 0     //0为关闭,1为开启
+
+
+sysctl -w net.ipv4.ip_forward=1     //at startup
+
+---启动docker容器出错---/

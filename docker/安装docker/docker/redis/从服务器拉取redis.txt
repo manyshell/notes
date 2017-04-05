@@ -1,0 +1,16 @@
+docker pull docker.io/redis:latest
+
+[root@localhost ~]# docker images
+REPOSITORY                                     TAG                 IMAGE ID            CREATED             SIZE
+docker.io/redis                                latest              4465e4bcad80        9 days ago          185.7 MB
+
+docker run --name redis_3.0.2 -p 6379:6379 -d docker.io/redis:latest
+
+docker run -i -t -p 6379:6379 docker.io/redis:latest /bin/bash
+
+查看系统信息
+cat /etc/*release*
+
+
+
+

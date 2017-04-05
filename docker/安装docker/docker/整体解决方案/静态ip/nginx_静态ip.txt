@@ -1,0 +1,54 @@
+本环境是基于docker的，没有安装docker就别往下看了。
+nginx:
+
+一、开启80端口，使用本机IP，创建一个静态页面web服务，http://192.168.1.146/
+docker run -i -t -p 80:80 daocloud.io/library/nginx:1.9.14 /bin/bash
+启动nginx, [nginx -c /etc/nginx/nginx.conf]
+
+二、开启80端口，使用虚拟IP，创建一个静态页面web服务，http://192.168.1.147/
+1、临时处理办法
+enp0s3为真实网卡
+enp0s3:1为网卡enp0s3增加一个别名，并设置新ip
+ifconfig enp0s3:1 192.168.1.147 netmask 255.255.255.0 up
+
+2、永久生效方法
+cd /etc/sysconfig/network-scripts
+cp ifcfg-enp0s3 ifcfg-enp0s3:0
+
+---编辑ifcfg-enp0s3:0---\
+vi ifcfg-enp0s3:0
+TYPE="Ethernet"
+BOOTPROTO="none"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+NAME="enp0s3:0"                                     //修改
+UUID="2c6d19ed-e0b6-47b2-a00f-ec50dda1a126"
+DEVICE="enp0s3:0"                                   //修改
+ONBOOT="yes"
+IPADDR="192.168.1.147"                              //修改
+PREFIX="24"
+GATEWAY="192.168.1.1"
+DNS1="61.128.128.68"
+IPV6_PEERDNS="yes"
+IPV6_PEERROUTES="yes"
+IPV6_PRIVACY="no"
+---编辑ifcfg-enp0s3:0---/
+
+3、启动docker服务
+docker run -i -t -p 192.168.1.147:80:80 daocloud.io/library/nginx:1.9.14 /bin/bash
+启动nginx, [nginx -c /etc/nginx/nginx.conf]
+
+
+错误：
+1、IP不存在时会报以下错误，需要为网卡增加别名ip
+docker run -i -t -p 192.168.1.147:80:80 daocloud.io/library/nginx:1.9.14 /bin/bash
+Error response from daemon: Cannot start container 0e2bb4daf29b293c96a4d263ccf0aa558fe65105fb6c5020a19c71d620b95019: 
+failed to create endpoint kickass_panini on network bridge: Error starting userland proxy: listen tcp 192.168.1.147:80: 
+bind: cannot assign requested address
+
+
+

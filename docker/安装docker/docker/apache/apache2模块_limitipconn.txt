@@ -1,0 +1,128 @@
+limitipconn的作用：限制ip并发访问
+limitipconn不是apache的标准模块，需要手工下载安装。
+
+limitipconn的网站
+http://dominia.org/djao/limitipconn2.html
+
+如果没有wget命令，则需要安装
+# apt-get install wget
+
+# wget http://dominia.org/djao/limit/mod_limitipconn-0.24.tar.bz2
+# tar jxvf mod_limitipconn-0.24.tar.bz2 && cd mod_limitipconn-0.24
+安装模块到apache2
+# /usr/bin/apxs2 -c -i mod_limitipconn.c
+实际上apxs2只是apxs的链接
+
+# ll /usr/lib/apache2/modules/mod_limitipconn.so
+-rw-r--r--. 1 root root  44090 Sep 18 23:40 mod_limitipconn.so
+表示模块安装成功
+
+加载limitipconn
+# vi /etc/apache2/mods-available/limitipconn.load
+LoadModule limitipconn_module /usr/lib/apache2/modules/mod_limitipconn.so
+
+配置limitipconn
+# vi /etc/apache2/mods-available/limitipconn.conf
+---临时配置---\
+<IfModule mod_limitipconn.c>
+    MaxConnPerIP 2
+</IfModule>
+---临时配置---/
+
+---真实配置---\
+<IfModule mod_limitipconn.c>
+    <Location />
+        MaxConnPerIP 7
+        OnlyIPLimit audio/mpeg video
+    </Location>
+</IfModule>
+---真实配置---/
+
+
+启用limitipconn
+ln -s /etc/apache2/mods-available/limitipconn.load /etc/apache2/mods-enabled/limitipconn.load
+ln -s /etc/apache2/mods-available/limitipconn.conf /etc/apache2/mods-enabled/limitipconn.conf
+
+重启apache让配置生效
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+-----------------------------------------------------
+1. 如果并发限制生效，返回503错误
+127.0.0.1 - - [10/Jan/2009:19:01:16 +0800] "GET / HTTP/1.0" 503 323
+
+2. 如果没有apxs2，需要安装:
+# apt-get install apache2-dev
+
+3. 根据安装提示，可能需要对系统资源进行升级。
+# apt-get update
+# apt-get upgrade
+
+4. 如果更新失败，提示 NO_PUBKEY ...，需要执行以下指令:
+# gpg --keyserver pgp.mit.edu --recv-keys 3B4FE6ACC0B21F32
+# gpg -a --export 3B4FE6ACC0B21F32 | apt-key add -
+
+5. limitipconn官方配置：
+<IfModule mod_limitipconn.c>
+    <Location />#要限制的目录，此处表示的根目录 
+        MaxConnPerIP 3 #要限制每个IP的并发连接数，此处为3 
+        NoIPLimit image/* #对图片文件夹不做IP限制 
+    </Location>
+    <Location /mp3>#要限制的目录，此处表示/mp3目录
+        MaxConnPerIP 1 #限制每个IP的并发连接数为1个 
+        OnlyIPLimit audio/mpeg video #该限制只对视频和音频格式的文件 
+    </Location>
+</IfModule>
+
+<IfModule mod_limitipconn.c>
+    <Location />
+        MaxConnPerIP 3
+        NoIPLimit image/*
+    </Location>
+</IfModule>
+
+6、检测并发过大，常用到的命令
+查看端口:               netstat -tulnp | grep 80
+httpd线程数:            ps -aux | grep httpd
+httpd线程数统计:        ps -aux | grep httpd | wc -l
+连接数:                 netstat -ant | grep $ip:80 | wc -l
+并发连接数:             netstat -ant | grep $ip:80 | grep EST | wc -l
+IP总数:                 netstat -tn 2>/dev/null | grep :80 |grep "ESTABLISHED"| awk '{print $5}'|wc -l
+                        netstat -tn 2>/dev/null | grep :80 |grep "ESTABLISHED"| awk '{print $5}' | cut -d: -f 4 | sort | uniq -c | sort -nr | head
+
+排序统计前10IP连接数:   netstat -na | awk '{print $5}' | sed -n '/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\:.*/p' | cut -d':' -f1 | sort | uniq -c | sort -nr | head -10
+
+crontab -e              创建定时计划
+*/2 *   *   *   *   sh /var/www/find_cause.sh >> /var/www/find_cause.log                  每2分钟执行一次
+
+
+*/3	*	*	*	*	sh /opt/lampp/shell/updateindex.sh	每三分钟执行一次
+45	23	*	*	*	/usr/sbin/ntpdate -u 10.154.5.128	每天23:45执行一次
+
+*/2 *   *   *   *   date >> ~/time.log                  每2分钟执行一次
+
+netstat -ant | grep $ip:80 | wc -l && netstat -ant | grep $ip:80 | grep EST | wc -l && free
+159     89
+             total       used       free     shared    buffers     cached
+Mem:      32912164   32723028     189136       7948      31380   31831720
+
+127     73
+             total       used       free     shared    buffers     cached
+Mem:      32912164   32692308     219856       7944      31316   31832364
+
+108     59
+             total       used       free     shared    buffers     cached
+Mem:      32912164   32709892     202272       7944      31428   31873072
+
+# 
+
+find_cause.sh
+#!/bin/bash
+
+echo "Sessions:" && netstat -ant | grep $ip:80 | wc -l
+echo "ESTABLISHED:" && netstat -ant | grep $ip:80 | grep EST | wc -l
+echo "Memory usage:" && free
+echo "----------------------------------------------------------------"

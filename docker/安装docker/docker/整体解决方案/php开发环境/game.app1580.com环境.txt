@@ -1,0 +1,13 @@
+docker load --input hzg_nginx_1.9.14.tar.gz
+docker load --input hzg_php_5.6.17-fpm.tar.gz
+
+docker run --name php_game --privileged=true -v /var/www:/var/www/html -p 9080:9000 -d hzg/php:5.6.17-fpm php-fpm
+
+docker run --name nginx_game --privileged=true -v /var/www/logs:/var/log/nginx -v /var/www/game/.nginx-conf:/etc/nginx/nginx.conf -v /var/www:/usr/share/nginx/html -p 8080:80 -d daocloud.io/library/nginx:1.9.14
+
+docker save -o hzg_nginx_1.9.14.tar.gz daocloud.io/library/nginx:1.9.14
+
+°²×°docker
+wget -qO- https://get.docker.com/ | sh
+
+.nginx-conf

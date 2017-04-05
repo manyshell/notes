@@ -1,0 +1,32 @@
+本环境是基于docker的，没有安装docker就别往下看了。
+
+docker load --input php_7.0.0RC8-fpm.tar.gz
+
+
+
+、编辑配置文件
+创建、修改nginx-GTCardCenter.conf
+第[49行]    fastcgi_pass   192.168.0.205:9002;
+
+三、创建运行环境
+启动php
+docker run --name php7_ajw --privileged=true -v /mnt/code/ajw/source:/var/www/html -p 9002:9000 -d hzg/php:7.0.0RC8-fpm php-fpm
+
+启动nginx
+docker run --name nginx_ajw --privileged=true -v /mnt/code/logs/ajw:/var/log/nginx -v /mnt/code/conf/nginx-ajw.conf:/etc/nginx/nginx.conf -v /mnt/code/ajw/source:/usr/share/nginx/html -p 8082:80 -d daocloud.io/library/nginx:1.9.14
+
+启动mariadb:(数据库是共享的，只需启动一个)
+docker run --name mariadb_server --privileged=true -v /home/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d 5kmji0bo.mirror.aliyuncs.com/library/mariadb
+
+
+
+
+
+docker stop 8d3fbf3da0ce
+docker stop 7e12f8e7a6b1
+docker rm 8d3fbf3da0ce
+docker rm 7e12f8e7a6b1
+
+
+
+

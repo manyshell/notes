@@ -1,0 +1,95 @@
+apache内存使用情况：
+ps -ylC apache2 | awk '{x += $8;y += 1} END {print "Apache Memory Usage (MB): "x/1024; print "Average Proccess Size (MB): "x/((y-1)*1024)}'
+Apache Memory Usage (MB):       1243.29     共使用
+Average Proccess Size (MB):     15.7379     单进程使用
+
+
+if in average, let’s assume that one Apache process consumes 50MB RAM and server has got RAM is 2048MB, and you want to leave 512MB for the rest of the processes, then:
+平均来讲，我们假设一个Apache进程占用50MB的RAM，服务器有2048MB的RAM，并且要排除512MB内存给别的的进程，那么：
+
+                (内存总数   -   预留内存数)     /10MB
+MaxClients =    (2048MB     -   512MB)          /10MB = 153.6 ~ 153
+                (32G        -   2G)             /10MB = 3000
+                (32G        -   2G)             /30 = 1000
+
+MaxClients = (1002 – 21) / 30 therefore MaxClients = 32.7
+
+
+MaxClients:     最大客户端承载总数
+
+/etc/apache2/apache2.conf
+
+keepAliveOn                #开启长连接
+KeepAliveTimeout3          #连接超时时间为3秒
+MaxKeepAliveRequests50     #一个连接可以最多发送多少次请求
+
+
+---apache2正在试用的mpm_event_module配置---\
+
+ln -s /etc/apache2/mods-available/mpm_event.conf /etc/apache2/mods-enabled/mpm_event.conf
+ln -s /etc/apache2/mods-available/mpm_event.load /etc/apache2/mods-enabled/mpm_event.load
+
+mpm_event.conf
+mpm_event.load
+
+<IfModule mpm_event_module>
+    StartServers            2
+    MinSpareThreads         25
+    MaxSpareThreads         75
+    ThreadLimit             64
+    ThreadsPerChild         25
+    MaxRequestWorkers       200
+    MaxConnectionsPerChild  1500
+</IfModule>
+---apache2正在试用的mpm_event_module配置---/
+
+---apache2默认的mpm_event_module配置---\
+<IfModule mpm_event_module>
+    StartServers             2
+    MinSpareThreads      25
+    MaxSpareThreads      75
+    ThreadLimit          64
+    ThreadsPerChild      25
+    MaxRequestWorkers     150
+    MaxConnectionsPerChild   0
+</IfModule>
+---apache2默认的mpm_event_module配置---/
+
+---原FT的mpm_prefork配置---\
+
+ln -s /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
+ln -s /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
+
+root@DE5-2670-1122:/etc/apache2/mods-enabled# cat mpm_prefork.load
+<IfModule mpm_prefork_module>
+	StartServers		30
+	MinSpareServers		30
+	MaxSpareServers		66
+	MaxRequestWorkers	200
+	MaxConnectionsPerChild	7000
+</IfModule>
+---原FT的mpm_prefork配置---/
+
+StartServers       2
+MinSpareServers    3
+MaxSpareServers    3
+ServerLimit       30
+MaxClients        30
+MaxRequestsPerChild  1000
+
+
+apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+
+启动出错：
+oot@DE5-2670-1122:/var/log/apache2# service apache2 restart
+ * Restarting web server apache2                                                                                                                                     [fail] 
+ * The apache2 configtest failed.
+Output of config test was:
+[Mon Oct 17 17:22:47.310340 2016] [:crit] [pid 5444:tid 140426140514176] Apache is running a threaded MPM, but your PHP Module is not compiled to be threadsafe.  You need to recompile PHP.
+AH00013: Pre-configuration failed
+Action 'configtest' failed.
+The Apache error log may have more information.

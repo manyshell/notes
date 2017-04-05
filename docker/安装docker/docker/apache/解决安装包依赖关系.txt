@@ -1,0 +1,126 @@
+方案一:换源
+
+# apt-get install apache2-dev
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+ 
+The following packages have unmet dependencies:
+ apache2-dev : Depends: libapr1-dev but it is not going to be installed
+               Depends: libaprutil1-dev but it is not going to be installed
+               Depends: debhelper (>= 9) but it is not going to be installed
+E: Unable to correct problems, you have held broken packages.
+如果出现以上错误，说明出现了安装包的依赖问题。解决办法为换正确的源。
+
+源是否正确，需要看系统的版本，源是与系统版本相对应的
+------
+# cat /etc/*release*
+PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="8"
+VERSION="8 (jessie)"
+ID=debian
+HOME_URL="http://www.debian.org/"
+SUPPORT_URL="http://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+------
+root@localhost:/etc/apache2/mods-available# cat /etc/*release*
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=14.04
+DISTRIB_CODENAME=trusty
+DISTRIB_DESCRIPTION="Ubuntu 14.04.5 LTS"
+NAME="Ubuntu"
+VERSION="14.04.5 LTS, Trusty Tahr"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 14.04.5 LTS"
+VERSION_ID="14.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+------
+
+系统源路径:
+/etc/apt/sources.list
+
+------
+Debian 8 jessie的源:
+https://linuxconfig.org/debian-apt-get-jessie-sources-list#h22-hong-kong-mirror
+香港
+deb http://ftp.hk.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.hk.debian.org/debian/ jessie main contrib non-free
+
+3. Austria Mirror
+deb http://ftp.at.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.at.debian.org/debian/ jessie main contrib non-free
+
+29. Korea Mirror
+# /etc/apt/sources.list :
+deb http://ftp.kr.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.kr.debian.org/debian/ jessie main contrib non-free
+
+echo "deb http://ftp.kr.debian.org/debian/ jessie main contrib non-free" > /etc/apt/sources.list
+echo "deb-src http://ftp.kr.debian.org/debian/ jessie main contrib non-free" >> /etc/apt/sources.list
+------
+ubuntu官方源:
+deb http://archive.ubuntu.com/ubuntu/ trusty main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+
+
+如果vi不能用
+# apt-get install vim
+
+# apt-get update
+Reading package lists... Done
+
+# apt-get upgrade
+Running hooks in /etc/ca-certificates/update.d....done.
+---------------------------------------------------------------
+方案二:彻底卸载
+
+apt-get install libapr1-dev
+The following packages have unmet dependencies:
+ libapr1-dev : Depends: libapr1 (= 1.5.0-1) but 1.5.2-2+deb.sury.org~precise+1 is to be installed
+E: Unable to correct problems, you have held broken packages.
+
+卸载libapr1
+apt-get purge libapr1
+
+apt-get install libapr1-dev
+
+感觉这样最简单，但可能有风险。
+---------------------------------------------------------------
+1. 如果更新失败，提示 NO_PUBKEY ...，需要执行以下指令:
+W: GPG error: http://mirrors.163.com trusty Release: 
+The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 40976EAF437D05B5 NO_PUBKEY 3B4FE6ACC0B21F32
+# gpg --keyserver pgp.mit.edu --recv-keys 40976EAF437D05B5
+# gpg -a --export 40976EAF437D05B5 | apt-key add -
+
+# gpg --keyserver pgp.mit.edu --recv-keys 3B4FE6ACC0B21F32
+# gpg -a --export 3B4FE6ACC0B21F32 | apt-key add -
+
+2. apacche启动和重启
+# service apache2 start
+# service apache2 restart
+# service apache2 stop
+
+3. apt-get update失败
+W: Failed to fetch http://ftp.kr.debian.org/debian/dists/jessie/contrib/binary-amd64/Packages  Hash Sum mismatch
+apt-get clean  
+apt-get update --fix-missing
+
+6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉4҉6҉6҉6҉6҉6҉6҉6҉6҉
+
