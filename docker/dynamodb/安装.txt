@@ -1,0 +1,8 @@
+拉取
+docker pull peopleperhour/dynamodb
+
+运行
+docker run -d -p 8000:8000 --name dynamodb peopleperhour/dynamodb
+
+成功运行后，可以通过http访问
+http://xx.xx.xx.xx:8000/shell/
