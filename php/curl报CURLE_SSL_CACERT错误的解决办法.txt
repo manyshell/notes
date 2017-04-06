@@ -1,0 +1,47 @@
+问题描述：
+本地xampp环境v3.2.2调用aws接口时，会报以下错误
+Aws\DynamoDb\Exception\DynamoDbException
+
+Error executing "ListTables" on "https://dynamodb.us-west-1.amazonaws.com"; AWS HTTP error: cURL error 60: SSL certificate problem: unable to get local issuer certificate (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)
+↵
+Caused by: GuzzleHttp\Exception\RequestException
+cURL error 60: SSL certificate problem: unable to get local issuer certificate (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)
+
+in D:\xampp\htdocs\com.ikandee.api\vendor\guzzlehttp\guzzle\src\Handler\CurlFactory.php at line 187
+
+----------
+寻找问题：
+根据http://curl.haxx.se/libcurl/c/libcurl-errors.html的指引，具体错误是
+
+CURLE_SSL_CACERT (60)
+
+Peer certificate cannot be authenticated with known CA certificates.
+----------
+解决办法一：
+        $sdk = new Aws\Sdk([
+//            'endpoint'   => 'http://192.168.8.181:8000',      //本地环境
+            'region'   => 'us-east-1',                          //[us-west-2:本地环境的默认值|us-west-1:帐号指定]
+            'version'  => 'latest',                             //当前版本3.0
+            'credentials' => [
+                'key' => 'AKIAIEBLPLO35DMZXPEA',
+                'secret' => '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',
+            ],
+//            'scheme' => 'http',                                 //You can disable SSL by setting the scheme parameter in a client factory method to 'http'.
+        ]);
+        You can disable SSL by setting the scheme parameter in a client factory method to 'http'.
+意思是可以强制使用http，就可以避免这个错误了，这只是回避了问题。
+
+解决办法二：
+适用于xampp
+１、到  https://curl.haxx.se/docs/caextract.html    下载最新的cacert.pem
+２、打开php.ini，增加以下内容
+---
+[Curl]
+curl.cainfo = "D:\xampp\php\certificate\cacert-2017-01-18.pem"
+---
+certificate是自己创建的目录
+cacert-2017-01-18.pem是下载的最新认证文件
+３、重启web服务
+
+
+
