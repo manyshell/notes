@@ -1,5 +1,5 @@
 说明：将一个档案拷贝至另一档案，或将数个档案拷贝至另一目录。
-scp	本地文件或目录	远程文件或目录	[-r:复制子目录|-a:带文件属性复制|-f:选删除旧的再复制]
+scp	文件或目录 文件或目录 [-r:复制子目录|-a:带文件属性复制|-f:选删除旧的再复制]
 
 把远程目录复制到本地，执行后，有提示输入密码
 scp -r test	root@100.124.102.115:/opt/lampp/htdocs/chong/www
@@ -8,4 +8,5 @@ scp -r test/	root@10.124.102.115:/opt/lampp/htdocs/chong/www/
 自定义端口复制
 scp -P 250 /tmp/test.rar root@119.204.10.149:/htdoc
 
+scp root@47.92.27.27:/root/dynamodb.tar.gz ./
 

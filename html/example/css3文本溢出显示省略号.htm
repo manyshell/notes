@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head><title>css3文本溢出显示省略号</title>
+<meta charset="utf-8">
+<body>
+CSS3属性之text-overflow:ellipsis;的用法和注意之处
+
+语法：
+
+text-overflow：clip | ellipsis
+
+默认值：clip
+
+适用于：所有元素
+
+clip： 当对象内文本溢出时不显示省略标记（...），而是将溢出的部分裁切掉。 
+ellipsis： 当对象内文本溢出时显示省略标记（...）。
+
+<style type="text/css">
+.line1 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 160px;
+    margin: 0 auto;
+    border: 1px solid;
+    padding: 10px;
+}
+
+.line3 {
+    margin: 10px auto 0 auto;
+    font-size: 12px;
+    color: red;
+    margin-bottom: 4px;
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    width: 160px;
+    border: 1px solid #000;
+	text-align: justify;
+}
+.line3-1 {
+    margin: 10px auto 0 auto;
+    font-size: 12px;
+    color: green;
+    margin-bottom: 4px;
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    width: 160px;
+    border: 1px solid #000;
+	padding: 10px;
+}
+
+.line3-2 {
+    width: 160px;
+    font-size: 12px;
+    color: red;
+    margin-bottom: 4px;
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+</style>
+
+<div class="line1">这是普通单行的效果，超出 css3实现文本溢出显示省略号。</div>
+
+
+<div class="line3">这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行。</div>
+
+<div class="line3-1">这是3行的效果，超出3行， css3实现文本溢出显示省略号。但是发现不能使用padding</div>
+
+<div style="width: 160px;padding:10px;border: 1px solid #000;margin: 10px auto 0 auto;">
+	<div class="line3-2">这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行， css3实现文本溢出显示省略号。这是3行的效果，超出3行。</div>
+</div>
+
+</body>
+</html>

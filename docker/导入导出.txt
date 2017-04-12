@@ -7,6 +7,7 @@ docker save -o redis_3.0.2.tar.gz docker.io/redis:latest
 docker save -o php_7.0.0RC8-fpm.tar.gz daocloud.io/library/php:7.0.0RC8-fpm
 docker save -o hzg_php_7.0.0RC8-fpm.tar.gz hzg/php:7.0.0RC8-fpm
 docker save -o jira_6.4.9.tar.gz cptactionhank/atlassian-jira:6.4.9
+docker save -o dynamodb.tar.gz peopleperhour/dynamodb:latest
 
 µ¼Èë¾µÏñ£º
 docker load --input centos7.tar.gz

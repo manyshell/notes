@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>css3闪烁效果</title>
+<meta charset="utf-8">
+<style>
+@-webkit-keyframes zblink {
+    0% {
+        box-shadow: 0 0 2px rgba(255, 0, 0, 0.2), inset 0 0 12px rgba(255, 0, 0,.1);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 0, 0,.6), inset 0 0 15px rgba(255, 0, 0,.4);
+    }
+}
+@keyframes zblink {
+    0% {
+        box-shadow: 0 0 2px rgba(255, 0, 0, 0.2), inset 0 0 50px rgba(255, 0, 0,.1);
+    }
+    100% {
+        box-shadow: 0 0 2px rgba(255, 0, 0,.6), inset 0 0 55px rgba(255, 0, 0,.4);
+    }
+}
+</style>
+<script src="../../javascript/jquery/example/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<button class="tryBlink" style="font-size:30px;padding:5px 40px;">test</button>
+<script>
+$(".tryBlink").css({
+    "border": "3px solid #333",
+    "-webkit-animation": "zblink 0.2s infinite 0.1s ease-in-out alternate",
+    "animation": "zblink 0.2s infinite 0.1s ease-in-out alternate"
+});
+</script>
