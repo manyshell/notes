@@ -6,8 +6,8 @@ cat /etc/lsb-release
 ---查看操作系统---/
 
 ---更新---\
-apt-get update
-apt-get upgrade
+apt-get update              更新软件列表
+apt-get upgrade             更新软件版本或系统版本升级，
 如果更新失败，可以考虑更换源
 ---更新---/
 

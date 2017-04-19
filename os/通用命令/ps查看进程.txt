@@ -1,0 +1,4 @@
+ps -ef | grep php-fpm                               查看进程,-ef是System V风格
+ps aux | grep php-fpm                               查看进程,aux是BSD风格,aux会截断command列
+ps aux | grep -c php-fpm                            查看进程php-fpm的数量
+ps aux | grep nginx                                 查看进程nginx
