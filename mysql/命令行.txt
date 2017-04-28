@@ -23,6 +23,7 @@ CREATE USER 'GtMallApi'@'%';
 ---修改管理员密码---\
 
 /usr/local/src/mysql/bin/mysqladmin -u root password "gt#4329i^abc"
+/usr/bin/mysqladmin -u root password "123456"
 
 ---修改管理员密码---/
 
@@ -73,5 +74,40 @@ TRUNCATE gt_verify_code_users;
 
 
 
+--------------
+出错信息
+1251 - Client does not support authentication protocol requested by server; consider upgrading
+客户端用了老的密码验证方式，
+1、升级客户端
+2、将密码改为老的验证方式
+mysql>set password for root@"localhost"=old_password('123456');
+
+update mysql.user SET Password = OLD_PASSWORD('newpwd') where Host = 'some_host' AND User = 'some_user'; 
+mysql>; 
+FLUSH PRIVILEGES;
+
+A：你使用的数据库是4.1以上，用命令行连接MySQL数据库后，执行下面的命令：
+UPDATE mysql.user SET password=OLD_PASSWORD("123456") WHERE Host="localhost" AND User="root@";
+即可解决。
+
+your_password：改成你连接数据库的密码，比如 123
+your_host：改成你连接数据库的主机，如果是本地的话，就是localhost
+your_username：改成你连接数据库的用户，比如 root
+
+MariaDB
+Server version: 10.0.29-MariaDB-0ubuntu0.16.04.1 Ubuntu 16.04
+
+默认安装只允许本地连接
+vi /etc/mysql/mariadb.conf.d/50-server.cnf
+原设置
+bind-address            = 127.0.0.1
+
+新设置
+#bind-address            = 127.0.0.1
 
 
+查看远程用户
+SELECT User, Host FROM mysql.user WHERE Host <> 'localhost';
+
+让这个用户在 所有 地址内能连接到服务器
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;

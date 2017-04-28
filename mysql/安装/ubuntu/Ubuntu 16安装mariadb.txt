@@ -1,0 +1,28 @@
+添加key
+apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+
+apt-get update
+
+apt-get install mariadb-server
+
+输入mysql可立即进入数据库测试
+
+管理mysql
+Usage: /etc/init.d/mysql start|stop|restart|reload|force-reload|status
+
+------------
+更新报错
+W: http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu/dists/trusty/InRelease: Signature by key 199369E5404BD5FC7D2FE43BCBCB082A1BB943DB uses weak digest algorithm (SHA1)
+这个问题的根源就是/etc/apt/sources.list出了问题，可能手动添加了源，引起了冲突造成的。
+
+
+
+
+
+
+
+
+
+
+
+

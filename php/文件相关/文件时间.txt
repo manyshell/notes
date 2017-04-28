@@ -1,0 +1,8 @@
+文件创建时间
+filemtime()
+例如：
+echo "filemtime: ".date("Y-m-d H:i:s.",filemtime("/var/www/test.rar"));
+
+文件修改时间
+例如：
+echo "filectime: ".date("Y-m-d H:i:s.",filectime("/var/www/test.rar"));

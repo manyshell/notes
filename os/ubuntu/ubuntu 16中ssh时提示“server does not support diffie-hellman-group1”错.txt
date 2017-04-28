@@ -1,0 +1,14 @@
+1.修改sshd_config
+#cd /etc/ssh
+进入该目录下，
+#vi sshd_config
+文件中添加以下内容：
+KexAlgorithms diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1
+
+2、然后运行
+ssh-keygen -A
+来重新生成所有钥匙
+
+3.重启sshd服务
+service sshd restart
+

@@ -39,7 +39,8 @@ gpg: Total number processed: 1
 gpg:               imported: 1
 key添加成功
 
-添加源  /etc/apt/sources.list
+添加到源  /etc/apt/sources.list
+执行以下命令
 add-apt-repository 'deb http://sfo1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu trusty main'
 
 安装 MariaDB :

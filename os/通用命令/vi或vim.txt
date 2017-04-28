@@ -1,0 +1,7 @@
+Jump To End Of File Command
+跳转到文件最后一行的命令
+G
+大写的G
+------
+
+

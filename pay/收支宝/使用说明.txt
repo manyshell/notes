@@ -1,0 +1,108 @@
+收支宝支付原理
+一、转帐支付
+1、用户通过支付宝转帐给网站支付宝，备注里手动填写网站帐号，然后完成转帐操作，不会曝露用户的支付宝密码。
+
+2、收支宝是一个软件，在软件里登录了网站的支付宝帐号，收支宝软件可以监控该帐号的转帐情况。
+当有新的转帐记录进来后，收支宝会根据“充值设置”里的“接收网址”，提交POST数据。
+例如：https://47.92.27.27/pay/post.php
+请求的数据：
+[
+    name =>     备注
+    money =>    付款金额(两者肯定有区别)
+    cny =>      付款金额(两者肯定有区别)
+    key =>      收支宝设置的密钥
+    ddh =>      定单号(支付宝交易号)
+    pay =>      支付类型[1:支付宝|2:财付通|3:微信]
+    a1 =>       付款说明,参数一
+    tim =>      时间戳
+]
+网站回调post.php，根据备注里填写的用户名，为该用户充值。
+
+二、扫码支付
+使用收支宝的二维码生成工具时，点鼠标左键就进入截图模式，点右键就会生成一张图片
+如果是支付宝，就会在收支宝目录下的alipay生成与“收款理由”相同的文件名，扩展名为“.png”
+在生成这个图片的同时，数据库表: ewmszb，也会产生一条记录
+需要注意的是，如果是修改，数据库的记录不会发生改变，经测试，不会新增
+
+
+----------------------------
+问题描述：
+ssl请求会出现找不到地址，访问得不到数据，而ip就可以
+
+解决办法：
+由于apache是好的，而nginx却出现问题，故从nginx的配置找原因
+修改前conf:
+    server {
+        listen 80;
+        server_name www.abc.tv abc.tv www.bbc.com bbc.com;
+        return 301 https://www.ok.com$request_uri;
+    }
+
+    server {
+        listen 443 ssl; 
+        listen [::]:443 ssl; 
+        server_name www.abc.tv abc.tv;
+
+        ssl_certificate /etc/sslmate/www.abc.tv.crt;
+        ssl_certificate_key /etc/sslmate/www.abc.tv.key;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+        location ~ \.php$ {
+            fastcgi_pass unix:/var/run/php/php5.6-fpm.sock;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+            fastcgi_read_timeout 7200;
+        }
+
+    }
+
+修改后conf:
+
+    server {
+        listen 80;
+        server_name www.bbc.com bbc.com;
+        return 301 https://www.ok.com$request_uri;
+    }
+
+    server {
+        listen 80;
+        listen 443 ssl; 
+        listen [::]:443 ssl; 
+        server_name www.abc.tv abc.tv;
+
+        ssl_certificate /etc/sslmate/www.abc.tv.crt;
+        ssl_certificate_key /etc/sslmate/www.abc.tv.key;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+        location ~ \.php$ {
+            fastcgi_pass unix:/var/run/php/php5.6-fpm.sock;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+            fastcgi_read_timeout 7200;
+        }
+
+    }
+
+
+分析：
+这问题非常奇怪，访问https却进到了http里面去执行？
+
+结论：
+收支宝只支持http，不支持https
+
+
+
+
+
+
+
+
+
+
+
