@@ -11,27 +11,17 @@
 Laravel 5.1文档：
 * * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1
 
+Laravel 5.4文档：
+* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
 
-*/1 * * * * php /path/to/artisan schedule:run
+经测试 * * * * * 是可以正常运行的，系统每分钟执行一次
+注意 /path/to/artisan ，这是你项目所在的目录，要根据实际情况调整
 
-php artisan schedule:run 1>> /dev/null 2>&1
+如果想手动执行，可以这样：
+php /path/to/artisan schedule:run
 
-
-php artisan schedule:run >> /dev/null 2>&1
 
 计划任务的特点：
     同一分钟内，是可以反复执行的，所以everyMinute()可以反复执行。
     如果是everyFiveMinutes()，那么在第五分钟到达至第五分钟结束期间，都是可以被执行的。
 
-
-
-2015121600011669	230100001432789	7540	1e16d92aae6c3edeccf686a8680d01012ae5b3dc	2015-12-24 03:31:05	2015-12-25 06:29:31
-2015121600011669	230100001432789	7500	7a1b7b5af690019809884b6f19a019ad9cc22bcf	2015-12-24 03:31:05	2015-12-25 07:35:57
-2015121600011669	230100001432789	2632	a04be9d8cf33771012c53335ca3b98c67fc4cc95	2015-12-24 03:31:05	2015-12-25 07:36:33
-2015121600011669	230100001432789	8415	be4dfa0505de05d6625678658b4f0874a3894a11	2015-12-24 03:31:05	2015-12-25 07:38:54
-2c28db8279f4ee336a16a411f054bb58cc71dafa
-dd40f9c172fb8fd5d16a483e7dba2d0705a3d63b
-39798994676229a5cb4c89ab60425fd3b7313fba
-
-http://192.168.0.32:83/test
-http://192.168.0.32:83/personal

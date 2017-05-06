@@ -13,24 +13,31 @@ ls -Slh                     //显示为K或M
 ls -Slr
 ls -Slrh                    //显示为K或M
 
+mtime       Modify, 文件创建时间，修改文件内容的时间(系统默认显示mtime时间)
+ctime       Change, 文件的属性改变时间，不是修改内容。例如：文件从件从A复制到B，最终完成时的时间,chmod,chown等
 
--rw-r--r-- 1 root root          0 Aug  6  2016 baidu_37550_20160806_180040_320x180_5868.mp4
--rw-r--r-- 1 root root          0 Jul  2  2016 baidu_35394_20160702_184102_320x180_3620.mp4
--rw-r--r-- 1 root root          0 Jul  2  2016 baidu_35327_20160702_140352_320x180_9882.mp4
--rw-r--r-- 1 root root          0 Jun 23  2016 baidu_35146_20160623_151622_320x180_2217.mp4
--rw-r--r-- 1 root root          0 Jun 22  2016 baidu_35020_20160623_111821_320x180_1455.mp4
--rw-r--r-- 1 root root          0 Jun 22  2016 baidu_35020_20160623_111821_131_640x360_8916.mp4
--rw-r--r-- 1 root root          0 Jul  3  2016 baidu_34665_20160703_073627_320x180_4531.mp4
--rw-r--r-- 1 root root          0 Jun 23  2016 baidu_34592_20160623_154523_320x180_6309.mp4
--rw-r--r-- 1 root root          0 Jun 23  2016 baidu_34591_20160623_154805_320x180_6985.mp4
--rw-r--r-- 1 root root          0 Jun 24  2016 baidu_32935_20160625_113423_320x180_6314.mp4
--rw-r--r-- 1 root root          0 Mar 17 15:22 baidu_31438_20160625_113353_320x180_0617.mp4
--rw-r--r-- 1 root root          0 Mar 16 15:49 baidu_31438_20160625_113353_190.mp4
--rw-r--r-- 1 root root          0 Mar  8 17:14 baidu_31438_20160625_113353_190_640x360_6350.mp4
--rw-r--r-- 1 root root          0 Mar 16 11:28 baidu_27166_20160625_153310_115.mp4
--rw-r--r-- 1 root root          0 Jul 12  2016 baidu_23212_20160712_190051_320x180_3645.mp4
--rw-r--r-- 1 root root          0 Nov  8 18:54 202809_20161107_200209_320x180_9199.mp4
--rw-r--r-- 1 root root          0 Nov  1 14:00 202809_20161101_163847_320x180_2058.mp4
--rw-r--r-- 1 root root          0 Mar  9 21:40 202809_20160623_120935_129.mp4
--rw-r--r-- 1 root root          0 Sep  3  2016 100930_20160903_021632_320x180_3898.mp4
--rw-r--r-- 1 root root          0 Sep  3  2016 100930_20160903_021632_189_640x360_0383.mp4
+显示文件的ctime时间
+ls -lc
+
+###
+修改文件时间
+
+创建文件我们可以通过touch来创建。同样，我们也可以使用touch来修改文件时间。touch的相关参数如下：
+
+-a : 仅修改access time。
+-c : 仅修改时间，而不建立文件。
+-m : 仅修改mtime。
+-d : 后面可以接日期，也可以使用 --date="日期或时间"
+-t : 后面可以接时间，格式为 [YYMMDDhhmm]
+
+example:
+touch -m -d "2016-05-31 08:10:30" test.log
+经测试，Modify可以成功修改
+
+touch -c -d "2016-05-31 08:10:30" test.log
+经测试，Change不能这样修改，这样的结果只会更新Change到当前系统时间，如果一定要改这个时间，除非先修改系统时间
+
+###
+
+只显示前10条
+ls -1 | sort -u | head -10

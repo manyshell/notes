@@ -15,7 +15,7 @@ https://github.com/laravel/laravel
 3、进入laravel目录
 composer install
 
-4、首次安装需要配置初始环境才可以运行
+4、首次安装需要配置初始环境才可以运行，以下操作依次执行
 #cp .env.example .env
 执行以下命令会自动在.env文件产生32位字符长度的APP_KEY
 #php artisan key:generate

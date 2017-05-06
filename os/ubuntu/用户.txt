@@ -1,0 +1,13 @@
+增加用户指定组
+
+创建用户"hzg"，指定到"www-data"组，并创建用户目录
+useradd -G www-data -d /home/hzg -m -s /bin/bash hzg
+
+创建用户"hzg"，指定到"www-data"组，该用户不能通过本地或远程登录，也不能通过su hzg进行切换，
+如必须要切换，修改/etc/passwd为/bin/bash即可
+useradd -G www-data -s /usr/sbin/nologin hzg
+---
+cat /etc/passwd
+hzg:x:1000:1000::/home/hzg:/usr/sbin/nologin
+可以看出，虽然没有指定用户目录，但系统还是给了用户一个指定的目录，只是未创建
+---

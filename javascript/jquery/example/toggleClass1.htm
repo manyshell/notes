@@ -37,6 +37,17 @@ toggleClass() 对设置或移除被选元素的一个或多个类进行切换。
     $(".master").on("mouseover mouseout",function(){
         $(this).toggleClass("selected");
     });
+
+	$("#upfileBlock").on({
+		mouseover: function () {
+			$(this).css("background","#CFD8DC");
+		},
+		mouseout: function () {
+			$(this).css("background","#fff");
+		}
+	});
+
+
 </script>
 </body>
 </html>

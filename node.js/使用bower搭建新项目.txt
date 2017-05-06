@@ -10,6 +10,7 @@ bower install jquery-ui
 bower install bootstrap
 
 bower install moment
+bower install normalize-css
 
 第四步：安装编辑器
 ckeditor
@@ -39,5 +40,7 @@ bower install --save normalize-css
 
 拖拽，切图
 https://github.com/yuezhongxin/paste-upload-image.js/blob/master/scripts/paste-upload-image.js
+
+bower install sweetalert
 
 
