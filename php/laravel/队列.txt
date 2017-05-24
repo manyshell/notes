@@ -4,7 +4,7 @@
 
 后改为“database”，MYSQL方式后，队列效果就有了。
 一、打开 config/queue.php，更改默认队列驱动为数据库：
-default’ => env(‘QUEUE_DRIVER’, ‘database’)
+'default’ => env('QUEUE_DRIVER', 'database')
 
 二、生成队列需要的数据表
 执行以下两条命令：
@@ -12,10 +12,29 @@ php artisan queue:table
 php artisan migrate
 
 三、当它监听到有要执行的任务时，就会自动按照指定条件执行。
+Laravel 5.1:
 php artisan queue:listen
 
+Laravel 5.4:
+php artisan queue:work
+php artisan queue:work --tries=3            //重试3次
+--sleep=3
+
 四、自动产生commands目录下的程序文件
+Laravel 5.1:
 php artisan make:command SendEmail --queued
+
+Laravel 5.4:
+php artisan make:job PushCheckedFile
+
+五、入队操作
+Laravel 5.4:
+立即入队
+dispatch(new PushCheckedFile($targetHost, $fileId, $tries));
+延时入队--1分钟后入队
+dispatch((new PushCheckedFile($targetHost, $fileId, $tries))->delay(Carbon::now()->addMinutes(1)));
+
+
 
 到这里，生产者就写完了，找个控制器。
 将这个生产者生成的内容推进队列里边吧。

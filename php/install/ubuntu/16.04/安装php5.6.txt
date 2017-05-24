@@ -1,0 +1,60 @@
+查看已安装的php
+dpkg --get-selections|grep install|grep php
+------
+添加源
+apt-get install python-software-properties
+apt install software-properties-common
+add-apt-repository ppa:ondrej/php
+apt-get update
+
+安装基础php
+apt-get install php5.6
+###
+关联安装
+libssl1.0.2
+php-common
+php5.6-common
+php5.6-json
+php5.6-opcache
+php5.6-readline
+php5.6-cli
+###
+root@iZ8vbhtj3lgsb953j0hx2aZ:~# php -v
+PHP 5.6.30-10+deb.sury.org~xenial+2 (cli) 
+
+安装扩展
+apt-get install php5.6-mcrypt
+apt-get install php5.6-mbstring
+apt-get install php5.6-curl
+apt-get install php5.6-mysql
+apt-get install php5.6-gd
+apt-get install php5.6-fpm
+apt-get install php5.6-xml
+
+php安装完成
+---------------------------------
+root@iZ8vbhtj3lgsb953j0hx2aZ:~# apt-get install php5.6
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Note, selecting 'php5.6-json' for regex 'php5.6'
+Note, selecting 'php5.6-common' for regex 'php5.6'
+0 upgraded, 0 newly installed, 0 to remove and 24 not upgraded.
+
+root@iZ8vbhtj3lgsb953j0hx2aZ:~# apt-get install php5.6-common
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Package php5.6-common is not available, but is referred to by another package.
+This may mean that the package is missing, has been obsoleted, or
+is only available from another source
+
+E: Package 'php5.6-common' has no installation candidate
+
+这个问题的原因是ubuntu的/etc/apt/source.list中的源比较旧了，需要更新一下，更新方法：
+$ sudo apt-get -y update
+更新完毕之后，在使用apt-get就没有问题了。
+
+
+apt-get install php5.6-intl
+apt-get install php5.6-xsl

@@ -1,0 +1,20 @@
+5.4在控制台这块有些变化，目录结构如下：
+/app/Console
+/app/Console/Kernel.php
+以前的Commands目录不见了，经测试，如果要使用laravel命令行，5.4的Commands还是在Console目录下的
+
+首次创建命令行，建议使用以下命令：
+php artisan make:command CheckNewFile
+php artisan make:command MonitorDisk
+
+使用后的目录结构如下：
+/app/Console
+/app/Console/Commands
+/app/Console/Commands/CheckNewFile.php
+/app/Console/Kernel.php
+
+上述命令将会生成一个类app/Console/Commands/CheckNewFile.php，
+当创建命令时，--command选项可用于分配终端命令名（在终端调用命令时用）：
+
+php artisan checknewfile
+php artisan monitordisk

@@ -1,4 +1,9 @@
 nginx.conf中要在http一节里面添加
 
-access_log off;
-error_log off;
+需要注意的是：error_log off并不能关闭错误日志，而是会将错误日志记录到一个文件名为off的文件中。
+正确的关闭错误日志记录功能的方法如下：
+error_log /dev/null;
+上面表示将存储日志的路径设置为“垃圾桶”。
+
+access_log /dev/null;
+error_log /dev/null;
