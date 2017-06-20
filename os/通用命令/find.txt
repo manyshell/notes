@@ -24,3 +24,4 @@ find /var/www -name '*' -newerct '2017-04-27 00:05:06' ! -newerct '2017-04-29 00
 -maxdepth N     N代表查找的深度
 find /var/www/repo/test -maxdepth 1 -name '*' -newerct '2017-05-18 20:26:01' ! -newerct '2017-05-24 07:00:27'
 --------------------------------
+find /var/www/repo/2_master -maxdepth 1 -name '*' -newerct '2017-03-03 10:07:56' ! -newerct '2017-03-03 10:07:57'

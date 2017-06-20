@@ -42,5 +42,6 @@ bower install --save normalize-css
 https://github.com/yuezhongxin/paste-upload-image.js/blob/master/scripts/paste-upload-image.js
 
 bower install sweetalert
+bower install sweetalert2
 
 

@@ -1,6 +1,43 @@
+只显示目录
+ls -l | grep '^d'
+ls -F | grep '/$'
+
+只显示文件
+ls -l | grep ^-
+ls -l | grep ^- | wc -l
+ls -F | grep [^/]$
+
 
 时间最近的在前面
 ls -lt
+-rw-r--r--  1 root root   1583 May 11 15:39 composer.json
+-rw-r--r--  1 root root    563 May  9 16:55 server.php
+
+时间最旧的在前面
+ls -ltr
+-rw-r--r--  1 root root    563 May  9 16:55 server.php
+-rw-r--r--  1 root root   1583 May 11 15:39 composer.json
+
+时间最旧的在前面，但只显示文件名
+ls -tr -1
+server.php
+composer.json
+
+时间最旧的在前面，但只显示文件名，并且只显示一条数据
+ls -tr -1 | head -n 1
+ls -ltcr --time-style=full-iso | head -n 2
+ls -ltr --time-style=full-iso | head -n 1
+
+root@iZuf69ks512rbaochkcgrnZ:/var/www/repo/2_master/preview# ls -ltr |more
+total 33897132
+-rw-r--r-- 1 root         root          1279423 Oct  4  2015 18408_04237656815.mp4
+-rw-r--r-- 1 root         root          1279423 2015-10-04 16:55:06.000000000 +0800 18408_04237656815.mp4
+
+root@iZuf69ks512rbaochkcgrnZ:/var/www/repo/2_master/preview# ls -ltcr --time-style=full-iso | head -n 2
+total 33897132
+-rw-r--r-- 1 wildwindfeng wildwindfeng  2005699 2017-03-25 18:03:24.729416955 +0800 46791_52965893718.mp4
+
+
 
 显示当前文件的文件全路径
 ls | sed "s:^:`pwd`/: "
@@ -19,6 +56,10 @@ ctime       Change, 文件的属性改变时间，不是修改内容。例如：
 显示文件的ctime时间
 ls -lc
 
+显示详细时间
+ls -l --time-style=long-iso
+ls -l --time-style=full-iso
+ls -lc --time-style=full-iso
 ###
 修改文件时间
 
