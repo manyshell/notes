@@ -14,3 +14,27 @@ C:\Users\Administrator>npm -v
 3.10.3
 
 nodejs安装成功，
+
+-------------------------
+nodejs升级
+很简单的一个事情，windows下需要升级nodejs 仅仅需要安装最新的msi 。下载地址：
+https://nodejs.org/download/
+
+1、查看版本号
+node -v
+v7.3.0
+
+2、安装n模块
+npm install -g n
+
+
+3、
+
+
+4、
+
+
+5、
+
+
+

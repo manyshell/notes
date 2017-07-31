@@ -1,0 +1,86 @@
+一、inotify
+
+notify是Linux内核2.6.13 (June 18, 2005)版本新增的一个子系统（API），它提供了一种监控文件系统（基于inode的）事件的机制，
+可以监控文件系统的变化如文件修改、新增、删除等，并可以将相应的事件通知给应用程序。该机制由著名的桌面搜索引擎项目beagle引
+入用于替代此前具有类似功能但存在诸多缺陷的dnotify。
+
+inotify既可以监控文件，也可以监控目录。当监控目录时，它可以同时监控目录及目录中的各子目录及文件的。此外，inotify 使用文件
+描述符作为接口，因而可以使用通常的文件I/O操作select、poll和epoll来监视文件系统的变化。实现上来说，可以使用大名鼎鼎
+的inotify-tools（只能记录时间点，无法记录哪个用户和进程操作），也可以通过实pynotify模块自已实现。
+
+二、inotify-tools
+
+1、安装和监控
+
+这里以 inotify-tools 为例，安装方法如下：
+
+# git clone https://github.com/rvoicilas/inotify-tools
+# cd inotify-tools
+# sh autogen.sh
+---
+autogen.sh: 3: autogen.sh: autoreconf: not found
+apt-get install autoconf
+apt-get install libtool
+---
+# ./configure
+# make && make install 
+inotify-tools安装完成后，会生成inotifywait和inotifywatch两个指令，其中，inotifywait用于等待文件或文件集上的一个特定事件，
+它可以监控任何文件和目录设置，并且可以递归地监控整个目录树。inotifywatch用于收集被监控的文件系统统计数据，包括每个inotify事件
+发生多少次等信息。
+
+/usr/local/bin/inotifywait
+/usr/local/bin/inotifywatch
+
+-------------
+
+inotifywait 参数说明
+
+参数名称	参数说明
+-m, -monitor	始终保持事件监听状态
+-r, -recursive	递归查询目录
+-q, -quiet	只打印监控事件的信息
+-excludei	排除文件或目录时，不区分大小写
+-t, -timeout	超时时间
+-timefmt	指定时间输出格式
+-format	指定时间输出格式
+-e, -event	后面指定删、增、改等事件
+inotifywait events事件说明
+
+事件名称	事件说明
+access	读取文件或目录内容
+modify	修改文件或目录内容
+attrib	文件或目录的属性改变
+close_write	修改真实文件内容
+close_nowrite	 
+close	 
+open	文件或目录被打开
+moved_to	文件或目录移动到
+moved_from	文件或目录从移动
+move	移动文件或目录移动到监视目录
+create	在监视目录下创建文件或目录
+delete	删除监视目录下的文件或目录
+delete_self	 
+unmount	卸载文件系统
+
+------------------------
+
+如果遇到以下错误：
+inotifywait: error while loading shared libraries: libinotifytools.so.0: cannot open shared object file: No such file or directory
+解决方法：
+32位系统：ln -s /usr/local/lib/libinotifytools.so.0 /usr/lib/libinotifytools.so.0
+64位系统：ln -s /usr/local/lib/libinotifytools.so.0 /usr/lib64/libinotifytools.so.0
+
+------------------------
+
+inotifywait 单独分析
+
+1、
+/usr/local/bin/inotifywait -mrq --format '%Xe %w%f' -e modify,create,delete,attrib /data/
+让inotifywait监听/data/目录，当监听到有发生modify,create,delete,attrib等事件发生时，按%Xe %w%f的格式输出。
+
+2、
+/usr/local/bin/inotifywait -mrq --timefmt '%d/%m/%y/%H:%M' --format '%T %Xe %w %f' -e modify,delete,create,attrib /var/www/pay/config.php
+让inotifywait监听/var/www/pay/config.php，当监听到有发生modify,create,delete,attrib等事件发生时，按%T %Xe %w %f的格式输出。
+
+日志输出：
+30/07/17/22:43 MODIFY /var/www/pay/config.php

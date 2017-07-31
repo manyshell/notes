@@ -1,0 +1,17 @@
+From hub.docker.com search "nginx rtmp"
+
+取得nginx-rtmp的docker镜像
+docker pull jasonrivers/nginx-rtmp
+
+mkdir -p /var/local/nginx-rtmp
+chmod 777 -R /var/local/nginx-rtmp
+
+
+在前台执行
+docker run -p 1935:1935 -p 1936:8080 jasonrivers/nginx-rtmp
+
+在后台执行
+docker run -p 1935:1935 -p 1936:8080 -d jasonrivers/nginx-rtmp
+
+自定义在后台执行
+docker run --privileged=true -v /var/local/nginx-rtmp/nginx.conf:/opt/nginx/conf/nginx.conf -p 1935:1935 -p 1936:8080 -d jasonrivers/nginx-rtmp

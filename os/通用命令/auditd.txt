@@ -1,0 +1,84 @@
+auditd概述
+auditd（或 auditd 守护进程）是Linux审计系统中用户空间的一个组件，其负责将审计记录写入磁盘。其可以跟踪到改变该文件的相关进程。
+
+安装auditd
+apt-get install auditd
+完全没有中间操作
+
+安装完毕后将自动安装以下auditd和相关的工具：
+
+auditctl : 即时控制审计守护进程的行为的工具，比如如添加规则等等。
+/etc/audit/audit.rules : 记录审计规则的文件。
+aureport : 查看和生成审计报告的工具。
+ausearch : 查找审计事件的工具
+auditspd : 转发事件通知给其他应用程序，而不是写入到审计日志文件中。
+autrace : 一个用于跟踪进程的命令。
+/etc/audit/auditd.conf : auditd工具的配置文件。
+首次安装 auditd 后, 审计规则是空的。
+
+---------------
+
+可以使用以下命令查看:
+
+$ sudo auditctl -l
+auditctl -l
+
+---------------
+
+文件审计
+auditctl
+
+    选项:
+        -w path : 指定要监控的路径，上面的命令指定了监控的文件路径 /etc/passwd
+        -p : 指定触发审计的文件/目录的访问权限
+        rwxa ： 指定的触发条件，r 读取权限，w 写入权限，x 执行权限，a 属性（attr）
+
+例如：
+监控文件
+auditctl -w /etc/passwd -p rwxa
+-w指定要监控的文件[/etc/passwd]
+-p指定触发条件rwxa读、写、执行、修改属性
+
+监控目录
+auditctl -w /production/
+
+监控config.php文件被写入
+auditctl -w /var/www/pay/config.php -p w
+auditctl -w /var/www/pay/config.php -p rwxa
+
+--------
+
+查看审计日志
+ausearch -f /etc/passwd
+备注：，这样的命令
+echo "test" >> test
+无法检测到echo，没有记录
+
+解读输出结果
+
+time : 审计时间。
+name : 审计对象
+cwd : 当前路径
+syscall : 相关的系统调用
+auid : 审计用户ID
+uid 和 gid : 访问文件的用户ID和用户组ID
+comm : 用户访问文件的命令
+exe : 上面命令的可执行文件路径
+
+例如：
+ausearch -f /var/www/pay/config.php
+
+--------
+
+查看审计报告
+aureport
+
+--------
+
+删除指定规则（同-w对应）
+auditctl -W /var/www/pay/config.php -p w
+auditctl -W /var/www/pay/config.php -p rwxa
+
+删除所有规则
+auditctl -D
+

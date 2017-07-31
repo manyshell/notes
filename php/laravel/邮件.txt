@@ -1,0 +1,16 @@
+use Illuminate\Support\Facades\Mail;
+
+        //---注意 emails.test ，这是一个视图，传递了$name过去---\
+        $name = 'hzg';
+        $flag = Mail::send('emails.test',['name'=>$name],function($message){
+            $to = '9980996@qq.com';
+            $message ->to($to)->subject('邮件测试');
+        });
+        //---注意 emails.test ，这是一个视图，传递了$name过去---/
+
+        //---纯文本邮件---\
+        $flag = Mail::raw('你好，word！', function ($message) {
+            $to = '9980996@qq.com';
+            $message ->to($to)->subject('纯文本信息邮件测试');
+        });
+        //---纯文本邮件---/

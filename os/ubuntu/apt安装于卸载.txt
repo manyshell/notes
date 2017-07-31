@@ -7,3 +7,10 @@ apt-get remove php5-fpm
 卸裁，并删除配置文件
 apt-get purge php5-fpm
 
+apt-get purge php5-curl
+apt-get purge php5-mysql
+apt-get purge php5-gd
+apt-get purge php5-cli
+apt-get purge php5-fpm
+apt-get purge php5-json
+apt-get purge php5-common

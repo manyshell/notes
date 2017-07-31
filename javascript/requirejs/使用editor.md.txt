@@ -1,0 +1,60 @@
+Editor.md v1.5.0
+是一款markdown编辑器，可以在编辑器内写代码
+
+如何在RequireJs中使用Editor.md？
+
+一、如果只是简单使用，Editor.md官方已给出了RequireJs调用的例子，下载后就能使用。
+
+二、由于官方提供的RequireJs调用例子，对Editor.md的目录结构有一定要求，如果想自定义安装目录，则需要修改一些代码才可用。
+
+比如当前项目是由bowser管理的，所有的程序包都是安装在bower_components这个目录下
+
+bower_components\editor.md
+bower_components\editor.md\editormd.amd.js
+bower_components\editor.md\editormd.amd.min.js
+
+1、修改路径
+A:如果编辑editormd.amd.js
+(1)
+修改前
+[25行]            var cmModePath  = "./lib/codemirror/mode/";
+[26行]            var cmAddonPath = "./lib/codemirror/addon/";
+
+修改后
+[25行]            var cmModePath  = "editor.md/lib/codemirror/mode/";
+[26行]            var cmAddonPath = "editor.md/lib/codemirror/addon/";
+
+(2)
+修改前
+[32行]                "./lib/codemirror/lib/codemirror",
+
+修改后
+[32行]                "editor.md/lib/codemirror/lib/codemirror",
+
+B:如果编辑editormd.amd.min.js
+(1)
+修改前
+t="codemirror/mode/",i="codemirror/addon/"
+
+修改后
+t="editor.md/lib/codemirror/mode/",i="editor.md/lib/codemirror/addon/"
+
+(2)
+修改前
+,"codemirror/lib/codemirror",
+
+修改后
+,"editor.md/lib/codemirror/lib/codemirror",
+
+2、调用Editor.md
+
+    editormd.loadCSS("/bower_components/editor.md/lib/codemirror/addon/fold/foldgutter");
+
+    testEditor = editormd("test-editormd", {
+        width: "100%",
+        height: 640,
+        codeFold : true,
+        syncScrolling : "single",
+        path : '/bower_components/editor.md/lib/'
+    });
+如果没有报错，Editor.md应该就可以正常使用了。

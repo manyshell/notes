@@ -1,0 +1,9 @@
+开源在线 Markdown 编辑器 Editor.md
+
+安装
+bower install editor.md
+
+bower install katex
+bower install bramp/js-sequence-diagrams
+bower install jquery.flowchart
+

@@ -1,0 +1,26 @@
+# stat common.php
+  File: ‘common.php’
+  Size: 73810     	Blocks: 152        IO Block: 4096   regular file
+Device: fd01h/64769d	Inode: 1054965     Links: 1
+Access: (0755/-rwxr-xr-x)  Uid: (   33/www-data)   Gid: (   33/www-data)
+Access: 2017-07-28 13:59:29.677069845 +0800
+Modify: 2017-07-18 10:00:50.313034760 +0800
+Change: 2017-07-18 10:00:50.313034760 +0800
+ Birth: -
+
+
+a:  文件access time，文件访问时间，有性能问题，不使用
+c:  文件change time，文件修改时间
+m:  文件modify time，文件创建时间
+
+关于对atime的详细说明：
+atime updates are by far the biggest IO performance deficiency that Linux has today. 
+Getting rid of atime updates would give us more everyday Linux performance than all 
+the pagecache speedups of the past 10 years, _combined_.
+As of 2.6.30 (9 June 2009), Linux defaults to relatime,[3] so that it will not update 
+atime on all file reads. The behavior offers sufficient performance for most purposes 
+and should not break any significant applications. Extended discussion of filesystem 
+
+performance preceded the decision.[4] Indeed, relatime by default was the first patch 
+Linux applied following the 2.6.29 release. In initial patches relatime only updated 
+atime if atime < mtime or atime < ctime;
