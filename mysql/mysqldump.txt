@@ -1,43 +1,26 @@
 mysqldump备份：
 mysqldump -u用户名 -p密码 -h主机 数据库 a -w "sql条件" --lock-all-tables > 路径
 
-例子：
-将本地数据库[smloft]导出到/root/backup/smloft_bk.sql
-mysqldump -h localhost -u root -puc0079ft smloft > /root/backup/smloft_bk.sql
+导出
+1、导出单个数据库
+mysqldump -uroot -p --databases db1 db2 > dbs.mysql
+注意：导出单个数据库时，不会生成CREATE DATABASE语句，意味着导入时，不能自动完成，要手动创表数据库名称
 
-
-0 13 * * * mysqldump -h localhost -u root -puc0079ft smloft > /root/backup/smloft_bk.sql
-
----
-
-mysqldump还原：
-mysqldump -u用户名 -p密码 -h主机 数据库 < 路径
+2、导出多个数据库
+mysqldump -uroot -p --databases db1 > db1.mysql
 
 ---
 
-1、导出整个数据库
-mysqldump -u 用户名 -p 数据库名 > 导出的文件名
-手动输入密码
-mysqldump -u jinmayi -p kaixin > kaixin_db.mysql
-mysqldump -u jinmayi -p xcrj_test > xcrj_test.mysql
-2、
-导入一：
-mysql -u root -p		手动输密码
-mysql -uroot -pdj_3f8z97#	自动输密码
-mysql>use 数据库
-use kaixin;
-mysql>source d:\wcnc_db.sql
-source /usr/home/hzg/kaixin_db.mysql
+导入
+1、单个数据库
+mysql -uroot -p		手动输密码
+创建数据库
+mysql>use db1;
+mysql>source /root/db1.mysql
 
-192.168.0.240
-Lotteryweb_wx
-Lotteryweb_wx
-Lotteryweb_wx
+2、多个数据库
+mysql -uroot -p		手动输密码
+mysql>source /root/dbs.mysql
 
-mysql -h 192.168.0.240 -u Lotteryweb_wx -p Lotteryweb_wx;
+3、导入到远程数据库
 mysqldump -h 192.168.0.240 -u Lotteryweb_wx -p Lotteryweb_wx > Lotteryweb_wx
-
-导入二：
-mysql -h 192.168.0.240 -P 3306 --database=GTCP -u root --password=vmnode0mysql < ./sql.sql
-
-mysqldump -u GTmallAPI -p GTmallAPI > GTmallAPI.mysql
