@@ -5,5 +5,5 @@
 [credential]
 	helper = store
 [user]
-	name = trush
+	name = hzg
 	email = 3203342240@qq.com

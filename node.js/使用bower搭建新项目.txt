@@ -5,6 +5,7 @@ bower install require-css
 第二步：安装JQuery
 bower install jquery
 bower install jquery-ui
+bower install jquery-validation
 
 第三步：安装BootStrap
 bower install bootstrap

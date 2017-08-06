@@ -24,6 +24,7 @@ service nginx status
 ------
 出错:
 /etc/init.d/nginx: You don't have permissions to execute nginx.
+vi /etc/init.d/nginx
 修改前：
 DAEMON=${DAEMON:-$NGINXPATH/sbin/nginx}       # path to daemon binary
 修改后：

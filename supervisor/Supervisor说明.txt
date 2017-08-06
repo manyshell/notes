@@ -76,8 +76,12 @@ stdout_logfile=/var/www/vFileSync/storage/logs/supervisor.log
 
 当这个配置文件被创建后，你需要更新 Supervisor 的配置，并用以下命令来启动该进程：
 
-sudo supervisorctl reread       //读入，如果有错，会出现提示
-sudo supervisorctl update       //更新，执行这条后，supervisorctl就已经在运行了
+#sudo supervisorctl reread       //读入，如果有错，会出现提示。
+如果无错，则显示：
+vfilesync: available
+
+#sudo supervisorctl update       //更新，执行这条后，supervisorctl就已经在运行了
+vfilesync: added process group
 
 sudo supervisorctl start laravel-worker:*
 更多有关 Supervisor 的设置与使用，请参考 Supervisor 官方文档。
