@@ -96,10 +96,34 @@ php artisan migrate:install     初始化迁移表，创建[migrations]表
 使用方法：
 1、首次进行迁移操作
 php artisan migrate             执行所有未执行的迁移，会自动创建表，可进数据库查看
+如果建新表，再次执行就可以
 
 2、添加一张表
 php artisan make:migration create_columns_table --create=columns        创建一个2016_09_15_152223_create_columns_table.php的迁移文件
 如果需要自定义，可自行修改，修改完成后，执行
 php artisan migrate
+
+3、修改字段
+php artisan make:migration alter_tablename_table --table=tablename      注意tablename是表名
+例如我要修改表【lists】的某个字段
+创建用于修改的迁移文件
+php artisan make:migration alter_lists_table --table=lists
+---
+    public function up()
+    {
+        Schema::table('lists', function (Blueprint $table) {
+            //
+            $table->string('content',200)->default('')-> change();      //原来是text，现改为string(200)
+        });
+    }
+---
+执行迁移
+php artisan migrate
+
 ----------------------------------------------------------------------------------------------------------------------------------
 php artisan migrate:rollback    如果要放弃上一次操作，回滚上一次的迁移
+
+php artisan make:migration -h
+php artisan make:migration alter_tablename_table --table=lists
+
+php artisan make:migration create_products_table --create=products

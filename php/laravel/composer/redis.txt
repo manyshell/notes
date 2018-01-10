@@ -7,3 +7,8 @@
 
 2、然后在项目根目录执行更新，可能需要VPN，等待时间较长
 composer update
+
+最近一次使用2017-12-25
+"require": {
+	"predis/predis": "^1.0"
+},

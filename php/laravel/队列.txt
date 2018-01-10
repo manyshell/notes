@@ -26,6 +26,10 @@ php artisan make:command SendEmail --queued
 
 Laravel 5.4:
 php artisan make:job PushCheckedFile
+php artisan make:job MergeVideoClipJob        //合并视频片段
+
+Laravel 5.5:
+php artisan make:job VideoEncodeH265Job        //视频转码
 
 五、入队操作
 Laravel 5.4:
@@ -40,7 +44,7 @@ dispatch((new PushCheckedFile($targetHost, $fileId, $tries))->delay(Carbon::now(
 将这个生产者生成的内容推进队列里边吧。
 我这里演示，
 是自己在 app\Http\Controllers\TestController.php 中进行的调用。
-还是贴以下源码吧：
+还是贴一下源码吧：
 
         Queue::push(new PushMessage);		// 立即推进队列
         Queue::later(60, new PushMessage);	// 延时推进队列

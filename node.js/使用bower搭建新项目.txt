@@ -4,21 +4,24 @@ bower install require-css
 
 第二步：安装JQuery
 bower install jquery
+bower install jquery#2.1.0 --save       //swipebox
 bower install jquery-ui
-bower install jquery-validation
+bower install jquery-validation         //表单验证
 
 第三步：安装BootStrap
 bower install bootstrap
 
-bower install moment
-bower install normalize-css
+bower install moment                    //时间
+bower install normalize-css             //标准css
 
 第四步：安装编辑器
 ckeditor
 http://docs.ckeditor.com/#!/guide/dev_package_managers-section-bower
 ---
 bower:
-bower install ckeditor
+bower install ckeditor                  //默认是stand版本，少很多功能
+bower install ckeditor#full/4.7.1       //WEB编辑器，完整版
+
 ---
 composer:
 composer.json
@@ -30,19 +33,29 @@ composer.json
 
 第五步：安装拖拽文件上传
 http://www.dropzonejs.com
-bower install dropzone
+bower install dropzone                  //拖拽文件上传
 
 http://www.jianshu.com/p/ae30f3997c2b
 bower install inline-attachment
 
 bower install paste.js
 
-bower install --save normalize-css
-
 拖拽，切图
 https://github.com/yuezhongxin/paste-upload-image.js/blob/master/scripts/paste-upload-image.js
 
 bower install sweetalert
-bower install sweetalert2
+bower install sweetalert2               //提示框
+bower update sweetalert2
+
+bower install swipebox                  //lightbox类型，效果好，图片全屏放大，手机上可滑动，但只支持jquery#2.1.0
+bower install simplelightbox            //lightbox类型，效果一般，图片全屏放大，手机上可滑动，可只支持到jquery#3.x
+
+bower install jquery.serializeJSON      form表单转换为Json数据
+https://github.com/marioizquierdo/jquery.serializeJSONserializejson.js
 
 
+
+------
+Update available 1.8.0 → 1.8.2
+Run npm i -g bower to update 
+------

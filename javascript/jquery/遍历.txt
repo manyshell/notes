@@ -1,4 +1,4 @@
-var obj = $("#input[name='score[]']");
+var obj = $("input[name='score[]']");
 obj.each(function(){
 	if (!...) {
 		this.select();

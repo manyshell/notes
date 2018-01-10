@@ -28,3 +28,10 @@ service iptables stop
 nginx -c /usr/local/nginx/conf/nginx.conf
 /home/wwwroot/default/
 //---192.168.1.146---/
+
+查看版本
+nginx -v
+
+查看模块
+nginx -V
+

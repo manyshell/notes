@@ -4,6 +4,7 @@ http://www.ffmpeg.org/ffmpeg-bitstream-filters.html
 cat /etc/*release*
 
 拉取：
+https://hub.docker.com/r/jrottenberg/ffmpeg/
 docker pull jrottenberg/ffmpeg
 
 导出：
@@ -17,73 +18,62 @@ docker run -it --privileged=true -v /root/video:/tmp/workdir --entrypoint='bash'
 
 使用本地文件转换
 docker run --rm -v pwd:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -framerate 1/2 -i screenshots/%2d.png -c:v libx264 -r 25 -pix_fmt yuv420p output.mp4
+--------------------------
+例子：
+------
+滤镜：将视频灰度处理
+docker run --rm -v `pwd`:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i http://host/test.mp4 -filter_complex colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131 -af "chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3" -vcodec h264 -acodec aac -strict -2 test_video_docker.mp4
+2503860     原大小
+2223876     现大小
+文件减小0.2M
+------
+将视频转为mp4
+docker run --rm -v `pwd`:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i http://host/test.mp4 -c:v libx264 -crf 28 -strict -2 test_video_docker2.mp4
+2503860     原大小
+1298766     现大小
+文件减小接近一半
+------
+将视频转为gif
+docker run --rm -v `pwd`:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i http://host/test.mp4 -loop 0 -final_delay 500 -c:v gif -f gif -ss 00:00:03 -t 5 trow_ball.gif
+12171644     现大小
+动态图片很大，比原视频还大
+------
+自定义截取多少秒的视频   -t参数多少秒
 
-Example1:
-docker run jrottenberg/ffmpeg \
--i http://url/to/media.mp4 \
--stats \
-$ffmpeg_options  - > out.mp4
+转H.265，android手机浏览器上可以播放，电脑却不能播
+docker run --rm -v `pwd`:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i http://host/test.mp4 -c:v libx265 -c:a copy output.mp4
 
-Example2:
-从视频文件的00:19:42，取一段视频，保存为trow_ball.gif
-docker run jrottenberg/ffmpeg -stats  \
--i http://192.168.1.33/test_jw7.7.4/uploader_640x360.mp4 \
--loop 0  \
--final_delay 500 -c:v gif -f gif -ss 00:19:42 -t 5 - > trow_ball.gif
+又一个H.265的例子
+ffmpeg -i input_video.mp4 -c:v libx265 -preset medium -x265-params crf=28 -c:a aac -strict experimental -b:a 128k output_video.mkv
+你喜欢的话可以用MP4也可以，需要好音质的话把-b:a 128k改成 -b:a 256k.
 
-Example3:
-mp4 to m3u8
-docker run --rm jrottenberg/ffmpeg -stats  \
--i http://192.168.1.33/test_jw7.7.4/uploader_640x360.mp4 \
--c:v libx264 -c:a aac -strict -2 -f hls - > output.m3u8
-结果是，使用jwplayer无法播放
 
-Example4:
-docker run --rm jrottenberg/ffmpeg -stats  \
--i http://192.168.1.33/test_jw7.7.4/uploader_640x360.mp4 \
--c:v libx264 -c:a aac -strict -2 -f hls -hls_time 15 -hls_list_size 0 - > test.m3u8
-结果是，使用jwplayer无法播放
-QQ影音可以播放
+---网上示例，未验证---
+m3u8保存为mp4格式到本地
+docker run -v $PWD:/root/download  jrottenberg/ffmpeg:3.4-scratch  \   
+-i https://www.****.com/71651438.m3u8   \
+-codec  copy    /root/download/out.mp4
+------
+截取视频28秒到58秒片段
+ffmpeg -ss 00:00:28 -i "int.mp4f" -acodec copy -vcodec copy -t 00:00:58 output.mp4
 
-二  将mp4文件转为ts文件并生成m3u8
-A、docker外执行
-1. 将mp4转为完整的ts
-docker run --rm jrottenberg/ffmpeg -stats  \
--i http://192.168.1.33/test_jw7.7.4/Clip_480_5sec_6mbps_h264.mp4 \
--c copy -bsf h264_mp4toannexb - > output.ts
 
-2. 将ts切片，并生成m3u8文件
-docker run --rm jrottenberg/ffmpeg -stats  \
--i http://192.168.1.33/test_jw7.7.4/output.ts \
--c copy -map 0 -f segment -segment_list playlist.m3u8 -segment_time 10 - > output%03d.ts
-B、docker内执行
-docker run -it --privileged=true -v /root/video:/tmp/workdir --entrypoint='bash' jrottenberg/ffmpeg
 
-ffmpeg -i out.mp4 -c copy -bsf h264_mp4toannexb output.ts       运行失败
-ffmpeg -i output.ts -c copy -map 0 -f segment -segment_list playlist.m3u8 -segment_time 10 output%03d.ts
-
-error:
-[AVBSFContext @ 0xbd74c0] Codec 'aac' (86018) is not supported by the bitstream filter 'h264_mp4toannexb'. Supported codecs are: h264 (28) 
-Error initializing bitstream filter: h264_mp4toannexb
-
-成功运行
-ffmpeg -i out.mp4 -map 0 -flags:v +global_header -c:v libx264 -bsf:v dump_extra output.ts
-
-ffmpeg -i out.mp4 -codec copy -bsf:v h264_mp4toannexb output.ts
-ffmpeg -i out.mp4 -codec copy -bsf:v hevc_mp4toannexb output.ts
+docker run --rm -v /var/www/palegreenapi/public:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i http://www.w3school.com.cn/i/movie.ogg -filter_complex colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131 -af "chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3" -vcodec h264 -acodec aac -strict -2 test_video_docker.mp4
 
 
 
 
+docker run --rm -v /var/www/palegreenapi/storage/app/videos/f7d05613a688f78253e9fa3fa984b223c6925f9c3:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i /var/www/palegreenapi/storage/app/videos/f7d05613a688f78253e9fa3fa984b223c6925f9c3/f7d05613a688f78253e9fa3fa984b223c6925f9c3.mp4 -c:v libx265 -c:a copy f7d05613a688f78253e9fa3fa984b223c6925f9c3_265.mp4
+docker run --rm -v /var/www/palegreenapi/storage/app/videos/f7d05613a688f78253e9fa3fa984b223c6925f9c3:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i movie.ogg -c:v libx265 -c:a copy fff_265.mp4
+
+docker run -it --privileged=true -v /var/www/palegreenapi/storage/app/videos/f7d05613a688f78253e9fa3fa984b223c6925f9c3:/tmp/workdir --entrypoint='bash' jrottenberg/ffmpeg
+
+ffmpeg -i f7d05613a688f78253e9fa3fa984b223c6925f9c3.mp4 -c:v libx265 -c:a copy f7d05613a688f78253e9fa3fa984b223c6925f9c3_265.mp4
 
 
-
-
-
-
-
-
-
+转为H.265-AAC格式
+docker run --rm -v `pwd`:/tmp/workdir -w="/tmp/workdir" jrottenberg/ffmpeg -i http://www.w3school.com.cn/i/movie.ogg -c:v libx265 -c:a aac test_aac.mp4
 
 
 

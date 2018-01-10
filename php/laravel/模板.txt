@@ -20,3 +20,18 @@ echo response()->json($profile);
 
 
 
+我们在Laravel Blade模板中经常在循环输出前先判断一下集合是否有值，然后再 foreach 比如:
+@if ($posts->count())
+  @foreach ($posts as $post)
+    <p>This is post {{ $user->id }}</p>
+  @endforeach
+@else
+  <p>No posts found.</p>
+@endif
+
+其实在Laravel Blade中可以使用 forelse :
+@forelse ($posts as $post)
+    <p>This is post {{ $post->id }}</p>
+@empty
+    <p>No posts found.</p>
+@endforelse

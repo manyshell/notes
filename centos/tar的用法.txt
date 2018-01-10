@@ -15,6 +15,9 @@ tar -cvf *.tar.gz file
 tar -cvf xcrj.tar.gz /usr/local/www/apache22/jinmayi/xcrjtestsite
 
 tar -cvf 23iweb /usr/local/www/apache22/website/23iweb.com
+tar -czvf phpmyadmin.tar.gz /var/www/phpmyadmin
+tar -zxvf phpmyadmin.tar.gz
+tar -zxvf phpMyAdmin-4.7.5-all-languages.tar.gz
 
 /usr/local/www/apache22/
 /usr/local/www/apache22/data

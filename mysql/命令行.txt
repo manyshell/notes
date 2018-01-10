@@ -72,6 +72,11 @@ TRUNCATE gt_users;
 TRUNCATE gt_verify_code_users;
 ---清空表---/
 
+---查看表结构---\
+show columns from 表名;
+show columns from file_resource;
+---查看表结构---/
+
 
 
 --------------
@@ -109,5 +114,8 @@ bind-address            = 127.0.0.1
 查看远程用户
 SELECT User, Host FROM mysql.user WHERE Host <> 'localhost';
 
-让这个用户在 所有 地址内能连接到服务器
+让这个用户在 所有 地址内能连接到服务器，密码为123456
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+
+
+

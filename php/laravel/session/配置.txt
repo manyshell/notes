@@ -1,2 +1,9 @@
+'lifetime' => 120   默认是120分钟/60*24=1440分钟（1天）/43200分钟（30天）
+
 expire_on_close     配置项用于设置是否在浏览器关闭时立即让Session失效。
 
+如果'expire_on_close'设置为false，'lifetime'有效
+如果'expire_on_close'设置为true ，'lifetime'无效
+
+'expire_on_close' => true       浏览器关闭时立即让Session失效
+'expire_on_close' => false      浏览器关闭Session依然有效，只有当超过lifetime，才失效
