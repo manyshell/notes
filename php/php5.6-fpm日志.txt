@@ -1,0 +1,50 @@
+/etc/php/5.6/fpm/php.ini
+php.ini
+---
+; 错误日志
+log_errors = On
+
+log_errors_max_len = 1024
+
+; 显示错误
+display_errors = Off
+; 日志路径
+error_log = "/var/log/php/error_log"
+; 错误等级
+error_reporting = E_ALL&~E_NOTICE
+---
+
+/etc/php/5.6/fpm/php-fpm.conf
+---
+[global]
+; php-fpm pid文件
+pid = /run/php/php5.6-fpm.pid
+; php-fpm 错误日志路径
+error_log = /var/log/php/php5.6-fpm.log
+; php-fpm 记录错误日志等级 alert, error, warning, notice, debug
+log_level = error
+---
+
+/etc/php/5.6/fpm/pool.d/www.conf    启用了以下后PHP就坏掉
+---
+user = www-data
+group = www-data
+
+[www]
+; 记录错误到php-fpm的日志中
+;catch_workers_output = yes
+; 慢日志
+slowlog = /var/log/php/php5.6-fpm_slow.log
+; 关闭打印日志
+php_flag[display_errors] = off
+; 错误日志
+php_admin_value[error_log] = /var/log/php/php5.6-fpm_error.log
+; 记录错误
+php_admin_flag[log_errors] = on
+; 内存使用量
+php_admin_value[memory_limit] = 32M
+---
+
+重启php5.6-fpm
+/etc/init.d/php5.6-fpm restart
+

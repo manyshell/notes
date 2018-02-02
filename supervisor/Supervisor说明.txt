@@ -72,6 +72,17 @@ numprocs=1
 redirect_stderr=true
 stdout_logfile=/var/www/vFileSync/storage/logs/supervisor.log
 
+vi /etc/supervisor/conf.d/palegreenapi.conf
+[program:palegreenapi]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/palegreenapi/artisan queue:work --sleep=3 --tries=3
+autostart=true
+autorestart=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/www/palegreenapi/storage/logs/supervisor.log
+
 启动 Supervisor
 
 当这个配置文件被创建后，你需要更新 Supervisor 的配置，并用以下命令来启动该进程：
@@ -91,4 +102,12 @@ supervisorctl
 ?   查看帮助
 
 
+上面这些命令都有相应的输出，除了进入 supervisorctl 的 shell 界面，也可以直接在 bash 终端运行：
 
+
+supervisorctl status
+supervisorctl stop all
+supervisorctl start all
+supervisorctl restart all             代码若有更新，需要重启此项服务
+supervisorctl reread
+supervisorctl update

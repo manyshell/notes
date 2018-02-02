@@ -1,0 +1,7 @@
+如果版本>php v7.0，则会安装laravel 5.5及以上，否则安装出来是laravel 5.4
+
+composer create-project --prefer-dist laravel/laravel
+
+cp .env.example .env
+
+php artisan key:generate

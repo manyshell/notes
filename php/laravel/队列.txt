@@ -26,10 +26,14 @@ php artisan make:command SendEmail --queued
 
 Laravel 5.4:
 php artisan make:job PushCheckedFile
-php artisan make:job MergeVideoClipJob        //合并视频片段
+php artisan make:job MergeVideoClipJob          //合并视频片段
+php artisan make:job TraversesJob               //遍历指定目录
+php artisan make:job InvalidFilesJob            //遍历指定目录
+php artisan make:job EmptyInvalidFilesJob       //处理无效文件
 
 Laravel 5.5:
 php artisan make:job VideoEncodeH265Job        //视频转码
+php artisan make:job MessageCounterJob         //消息计数
 
 五、入队操作
 Laravel 5.4:

@@ -1,0 +1,32 @@
+说明
+这个多国语言是中国人搞的，实际上就是在原语言包的基础上添加了很多默认语言，并没有多大用处
+
+命令行
+$ composer require "overtrue/laravel-lang:~3.0"
+
+composer.json
+###
+"require": {
+        "overtrue/laravel-lang": "~3.0"
+    },
+###
+
+Laraval 5.*
+完成上面的操作后，将项目文件 config/app.php 中的下一行
+Illuminate\Translation\TranslationServiceProvider::class,
+替换为：
+Overtrue\LaravelLang\TranslationServiceProvider::class,
+
+Lumen
+在 bootstrap/app.php 中添加下面这行:
+$app->register(Overtrue\LaravelLang\TranslationServiceProvider::class);
+
+publish the language files to your project resources/lang/ directory:
+
+$ php artisan lang:publish [LOCALES] {--force}
+
+examples:
+
+$ php artisan lang:publish zh-CN,zh-HK,th,tk
+
+php artisan lang:publish zh-CN,zh-HK,en

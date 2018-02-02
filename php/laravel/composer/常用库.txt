@@ -1,0 +1,14 @@
+验证码
+"gregwar/captcha": "dev-master",
+
+
+curl封装，网络接口
+"guzzlehttp/guzzle": "~6.0",
+
+
+各种单位转换
+"abhimanyusharma003/conversion": "dev-master",
+
+
+二维码
+"endroid/qrcode": ">=2.3.1"

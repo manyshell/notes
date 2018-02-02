@@ -1,0 +1,55 @@
+一、创建通知类
+Laravel 中一条通知就是一个类（通常存在 app/Notifications 文件夹里）。
+看不到的话不要担心，运行一下 make:notification 命令就能创建了：
+
+php artisan make:notification InvoicePaid
+
+这样的话，app/Notifications下面就会多出一个类，app/Notifications/InvoicePaid.php
+
+二、创建数据库通知
+产生一个通知迁移文件
+php artisan notifications:table
+
+执行数据库迁移，创建一张表【notifications】
+php artisan migrate
+
+三、在模型中启用通知
+use Illuminate\Notifications\Notifiable;
+
+class User extends Model
+{
+    use Notifiable;
+}
+
+四、在控制器中，给某人发消息
+
+use App\Models\User;
+use App\Notifications\InvoicePaid;
+
+class TestController
+{
+
+    public function send() {
+        //给一个用户发送消息
+        $user = User::find(1);
+
+        $user->notify(new InvoicePaid());
+    }
+}
+
+五、在控制器中查看全部消息
+
+    public function test2() {
+        $user = User::find(1);
+
+        foreach ($user->notifications as $notification) {
+            if ($notification->id == "81fda374-d230-4815-95ad-8534441a74d9") {
+                print_r($notification->data);
+                $notification->markAsRead();
+            }
+        }
+    }
+
+六、如果要细化操作通知消息
+建议创建通知模型
+这样就可以实现分页等操作
